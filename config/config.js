@@ -144,7 +144,7 @@ export const hobbys = {
 
 export const contact = {
 	title: "Get in touch",
-	description: "Coffee Chat! Please do not hesitate to schedule a meeting. Alternatively, feel free to reach out directly by email at mr.ali.alouane@gmail.",
+	description: "Coffee Chat! Please do not hesitate to schedule a meeting. Alternatively, feel free to reach out directly by email at mr.ali.alouane@gmail.com",
 	buttons: [
 		{
 			title: "Email Me",
@@ -162,9 +162,8 @@ export const contact = {
 // SEARCH ENGINE 
 export const SEO = {
 	// 50 - 60 char  
-	title: "Ali Alouane | Computer Engineer | Flutter | Reactjs developer",
-	description: "I create mobile apps and static websites. I graduated from National University of Sciences and Technology (NUST) in 2020 with a degree in Computer Engineering.",
-	image: profile.src,
+	title: "Ali Alouane | Machine Learning Engineer | MLOps | AWS practitioner",
+	description: "I build and deploy ML pipeline. Robotics enthusiast."
 }
 
 export const links = {
@@ -174,7 +173,7 @@ export const links = {
 	cards: [
 		{
 			title: "My website",
-			link: "https://hashirshoaeb.com/",
+			link: "https://mralioo.github.io/",
 		},
 		{
 			title: "My GitHub",

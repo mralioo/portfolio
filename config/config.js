@@ -1,10 +1,10 @@
 
-import profile from './profile.png';
+import profile from './profile.jpg';
 import { faAppStore, faGithub, faGooglePlay } from '@fortawesome/free-brands-svg-icons';
 import { } from '@fortawesome/free-solid-svg-icons';
 
 export const navigation = {
-	name: "Hashir",
+	name: "Ali Alouane",
 	links: [
 		{
 			title: "About",
@@ -25,8 +25,8 @@ export const navigation = {
 	],
 }
 export const intro = {
-	title: "Hey, I'm Hashir",
-	description: "A Computer Engineer creating mobile apps and static websites.",
+	title: "Hey, I'm Ali",
+	description: "A Machine Learning Engineer.",
 	image: profile.src,
 	buttons: [
 		{
@@ -36,7 +36,7 @@ export const intro = {
 		},
 		{
 			title: "Resume",
-			link: "https://docs.google.com/document/d/13_PWdhThMr6roxb-UFiJj4YAFOj8e_bv3Vx9UHQdyBQ/edit?usp=sharing",
+			link: "https://drive.google.com/file/d/1KgJ10iIV2W10Bcg8YQMOePLHBkIAROxV/view?usp=sharing",
 			isPrimary: false,
 		},
 	],
@@ -45,9 +45,10 @@ export const intro = {
 export const about = {
 	title: "Who I am",
 	description: [
-		"I graduated from National University of Sciences and Technology (NUST) in 2020 with a degree in Computer Engineering. I kick started my professional career as a mobile application developer working remotely for a UK based startup — Lessgo.",
-		"The tech industry is ever-evolving and I love being able to grow with it, while continually solidifying the fundamentals. I opensource my code from a place of empathy - for future developers, teammates, users, and with accessibility in mind. I also love joining communities, helping and mentoring new developers, and supporting organizations to promote diversity in tech. I’m sharing my programming journey on instagram, helping people who are just getting into the space of programming.",
-		"When I’m not programming, I focus on my hobbies which are: diary writing, doodling, meeting people and growing my network.",
+		"I received my bachelor of science degree at the University of Stuttgart in electrical engineering, and currently finishing my master's degree at TU Berlin.\n" +
+		"I kick-started my professional career as a machine learning engineer working as a freelancer at a startup –Trumetrics. Before that, I gained a lot of experience in both technical and soft skills working as a working student at IAV GmbH; one of the pioneer companies in the automotive software solution sector. Also, during my master's study, I did different machine learning projects including an academic open-source Toolbox for neuroscience application.\n",
+		"My core competence is to design and implement an automated ML pipeline according to the MLOps standards, to facilitate using and deploy machine learning solutions, to deliver easy access to the state of the art machine learning algorithms, and most importantly democratize ML to empower the modern business. Therefore, I keep myself updated on the latest technologies by joining communities and learning new skills.",
+		"When I’m not programming, I like to spend my time getting my hands dirty by rebuilding DIY projects like; FPV race drone, autonmous robocar, and home assistant. To clear my mind, I enjoy jogging and hiking in the wilderness. ",
 	],
 }
 
@@ -55,13 +56,8 @@ export const work = {
 	title: "What I do",
 	cards: [
 		{
-			title: "Mobile App Development",
-			description: "I create pixel perfect iOS and Andriod apps using Flutter.",
-			icons: null,
-		},
-		{
-			title: "Web Development",
-			description: "I create responsive static websites using Reactjs.",
+			title: "Machine Learning Engineer",
+			description: "",
 			icons: null,
 		}
 	],
@@ -71,59 +67,94 @@ export const projects = {
 	title: "Projects",
 	cards: [
 		{
-			title: "StarBook",
-			description: "A digital diary and mood tracking app that helps you in keeping track of your mood and productivity throughout the month/year.",
+			title: "AutoML_BCI",
+			description: "An AutoML pipeline for Brain Computer Interface (BCI) application\n" +
+				"\n.",
 			icons: [
 				{
-					icon: faAppStore,
-					link: "https://apps.apple.com/us/app/starbook-journal-ai-diary/id1552418289",
-				},
-				{
 					icon: faGithub,
-					link: "https://github.com/hashirshoaeb/star_book",
+					link: "https://github.com/mralioo/AutoML_BCI",
 				},
 			]
 		},
 		{
-			title: "QuranTalk",
-			description: "An emotional well being and mental health app. The app helps people to navigate their emotions in the light of the Quran.",
+			title: "GnuGym",
+			description: "A generic tool-kit to use GNU-Radio as OpenAI Gym environment for reinforcement learning .",
 			icons: [
 				{
-					icon: faAppStore,
-					link: "https://apps.apple.com/us/app/qurantalk/id1563425149",
-				},
-				{
-					icon: faGooglePlay,
-					link: "https://play.google.com/store/apps/details?id=com.ayahemotion.quran_talk",
+					icon: faGithub,
+					link: "https://github.com/mralioo/GnuGym",
 				},
 			]
 		},
 		{
-			title: "Portfolio",
-			description: "A portfolio website template that helps you showcase your work, projects and skills as a software developer or freelancer.",
+			title: "Bearing_DNN",
+			description: "A ML framework for anomaly classification of faulty bearing using deep neural network.",
 			icons: [
 				{
 					icon: faGithub,
-					link: "https://github.com/hashirshoaeb/portfolio",
+					link: "https://github.com/mralioo/Bearing_DNN",
 				},
 			]
 		},
 	],
 }
 
+export const skills = {
+		title: "Skills",
+	cards: [
+		{
+			title: "Python",
+			description: "OOP, data structures, data types, exception handling, file handling, Concurrency"
+		},
+		{
+			title: "MLOps",
+			description: "Tensorboard, MLFlow, BentoML"
+		},
+		{
+			title: "AWS",
+			description: "SageMaker, AWS Lambda, S3"
+		},
+		{
+			title: "ML/DL frameworks",
+			description: "Scikit-learn, Tensorflow, Pytorch"
+		},
+		{
+			title: "Data processing",
+			description: "DVC, Pandas, Bokeh"
+		},
+	],
+
+}
+
+export const hobbys = {
+	title: "hobbies",
+	cards: [
+		{
+			title: "FPV-Drone",
+			description: "Build a drone from scratch and control it using the First Person View (FPV) perspective. ",
+		},
+		{
+			title: "RoboCar",
+			description: "Build a small scale RC car with self driving capability and compete in local races (DEEP BERLIN Robocars).",
+		},
+	],
+}
+
+
 export const contact = {
 	title: "Get in touch",
-	description: "Coffee Chat! Please do not hesitate to schedule a meeting. Alternatively, feel free to reach out directly by email at hashirshoaeb@gmail.com.",
+	description: "Coffee Chat! Please do not hesitate to schedule a meeting. Alternatively, feel free to reach out directly by email at mr.ali.alouane@gmail.",
 	buttons: [
 		{
 			title: "Email Me",
-			link: "mailto:hashirshoaeb@gmail.com",
+			link: "mailto:mr.ali.alouane@gmail.com",
 			isPrimary: true,
 		},
 		{
 			title: "Schedule Meeting",
-			link: "",
-			isPrimary: false,
+			link: "https://calendly.com/mr_ali-alouane",
+			isPrimary: true,
 		},
 	]
 }
@@ -131,35 +162,27 @@ export const contact = {
 // SEARCH ENGINE 
 export const SEO = {
 	// 50 - 60 char  
-	title: "Hashir Shoaib | Computer Engineer | Flutter | Reactjs developer",
+	title: "Ali Alouane | Computer Engineer | Flutter | Reactjs developer",
 	description: "I create mobile apps and static websites. I graduated from National University of Sciences and Technology (NUST) in 2020 with a degree in Computer Engineering.",
 	image: profile.src,
 }
 
 export const links = {
 	image: profile.src,
-	title: "@hashirshoaeb",
-	description: "Computer Engineer | Flutter | Reactjs Developer",
+	title: "@ali_alouane",
+	description: "Machine Learning Engineer | MLOps | AWS practitioner ",
 	cards: [
 		{
 			title: "My website",
 			link: "https://hashirshoaeb.com/",
 		},
 		{
-			title: "QuranTalk App",
-			link: "https://www.qurantalk.app/",
-		},
-		{
-			title: "StarBook App",
-			link: "https://starbook.dev/",
-		},
-		{
 			title: "My GitHub",
-			link: "https://github.com/hashirshoaeb/",
+			link: "https://github.com/mralioo",
 		},
 		{
 			title: "My LinkedIn",
-			link: "https://www.linkedin.com/in/hashirshoaeb/",
+			link: "https://www.linkedin.com/in/ali-alouane/",
 		},
 	]
 }

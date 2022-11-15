@@ -46,9 +46,9 @@ export const about = {
 	title: "Who I am",
 	description: [
 		"I received my bachelor of science degree at the University of Stuttgart in electrical engineering, and currently finishing my master's degree at TU Berlin.\n" +
-		"I kick-started my professional career as a machine learning engineer working as a freelancer at a startup –Trumetrics. Before that, I gained a lot of experience in both technical and soft skills working as a working student at IAV GmbH; one of the pioneer companies in the automotive software solution sector. Also, during my master's study, I did different machine learning projects including an academic open-source Toolbox for neuroscience application.\n",
-		"My core competence is to design and implement an automated ML pipeline according to the MLOps standards, to facilitate using and deploy machine learning solutions, to deliver easy access to the state of the art machine learning algorithms, and most importantly democratize ML to empower the modern business. Therefore, I keep myself updated on the latest technologies by joining communities and learning new skills.",
-		"When I’m not programming, I like to spend my time getting my hands dirty by rebuilding DIY projects like; FPV race drone, autonmous robocar, and home assistant. To clear my mind, I enjoy jogging and hiking in the wilderness. ",
+		"I kick-started my professional career as a machine learning engineer working as a freelancer at a startup –Trumetrics. Before that, I gained a lot of experience in both technical and soft skills as a working student at IAV GmbH one of the pioneer companies in the automotive software solution sector. Also, during my master's study, I worked different machine learning projects such developing open-source Toolbox for neuroscience application.\n",
+		"My core competence is the design and implementation of an automated ML pipeline according to the MLOps standards, for facilitating the usage and deployment of machine learning solutions, and hence deliver easy access to the state of the art ML algorithms. Therefore, I keep myself up to date by joining communities and learning new skills.",
+		"When I’m not programming, I enjoy spending my time rebuilding DIY projects like; FPV race drone, autonmous robocar. To clear my mind, I enjoy jogging and hiking in the wilderness.",
 	],
 }
 

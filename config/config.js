@@ -49,6 +49,12 @@ export const about = {
 		"I kick-started my professional career as a machine learning engineer working as a freelancer at a startup –Trumetrics. Before that, I gained a lot of experience in both technical and soft skills as a working student at IAV GmbH one of the pioneer companies in the automotive software solution sector. Also, during my master's study, I worked different machine learning projects such developing open-source Toolbox for neuroscience application.\n",
 		"My core competence is the design and implementation of an automated ML pipeline according to the MLOps standards, for facilitating the usage and deployment of machine learning solutions, and hence deliver easy access to the state of the art ML algorithms. Therefore, I keep myself up to date by joining communities and learning new skills.",
 		"When I’m not programming, I enjoy spending my time rebuilding DIY projects like; FPV race drone, autonmous robocar. To clear my mind, I enjoy jogging and hiking in the wilderness.",
+
+		"I completed my Bachelor of Science degree in Electrical Engineering at the University of Stuttgart, and I am currently finishing my Master's degree at TU Berlin. I began my professional career as a machine learning engineer, working as a freelancer for a startup Trumetrics." +
+		"Prior to that, I gained valuable technical and soft skills as a working student at IAV GmbH, a pioneering company in the automotive software solution sector. During my Master's studies, I also worked on various machine learning projects, including developing an open-source toolbox for neuroscience applications."
+		"My core expertise lies in designing and implementing automated ML pipelines in accordance with MLOps standards, which facilitate the usage and deployment of machine learning solutions. This ensures easy access to state-of-the-art ML algorithms. I stay up-to-date by participating in communities and continuously learning new skills."
+		"When I am not programming, I enjoy spending my time rebuilding DIY projects, such as FPV race drones and autonomous robocars. To clear my mind, I enjoy jogging and hiking in the wilderness."
+
 	],
 }
 
@@ -109,19 +115,19 @@ export const skills = {
 		},
 		{
 			title: "MLOps",
-			description: "Tensorboard, MLFlow, BentoML"
+			description: "Tensorboard, MLFlow, BentoML, DVC"
 		},
 		{
 			title: "AWS",
-			description: "SageMaker, AWS Lambda, S3"
+			description: "SageMaker, AWS serverless, AWS storage"
 		},
 		{
 			title: "ML/DL frameworks",
 			description: "Scikit-learn, Tensorflow, Pytorch"
 		},
 		{
-			title: "Data processing",
-			description: "DVC, Pandas, Bokeh"
+			title: "ETL",
+			description: "SQL, Bokeh, API"
 		},
 	],
 

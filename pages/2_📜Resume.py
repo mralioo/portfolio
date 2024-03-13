@@ -40,31 +40,6 @@ st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
 
 st.title("📝 Resume")
 
-st.write('\n')
-st.subheader("Experience & Qulifications")
-st.write(
-    """
-- ✔️ 7 Years expereince extracting actionable insights from data
-- ✔️ Strong hands on experience and knowledge in Python and Excel
-- ✔️ Good understanding of statistical principles and their respective applications
-- ✔️ Excellent team-player and displaying strong sense of initiative on tasks
-"""
-)
-
-
-# --- SKILLS ---
-st.write('\n')
-st.subheader("Hard Skills")
-st.write(
-    """
-- 👩‍💻 Programming: Python (Scikit-learn, Pandas), SQL, VBA
-- 📊 Data Visulization: PowerBi, MS Excel, Plotly
-- 📚 Modeling: Logistic regression, linear regression, decition trees
-- 🗄️ Databases: Postgres, MongoDB, MySQL
-"""
-)
-
-
 # Education
 st.subheader("Education 🎓")
 col1, col2 = st.columns([4, 1])

@@ -55,7 +55,7 @@ def ask_bot(input_text):
         openai_api_key=openai.api_key,
     )
     # llm_predictor = LLMPredictor(llm=llm)
-    service_context = ServiceContext.from_defaults(llm_predictor=llm)
+    service_context = ServiceContext.from_defaults(llm=llm)
 
     # load index
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
@@ -89,6 +89,10 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
+def display_devicon(icon_name, icon_color, width="50px"):
+    icon_url = f"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/{icon_name}/{icon_name}-{icon_color}.svg"
+    st.markdown(f"<img src='{icon_url}' style='width: {width};'>", unsafe_allow_html=True)
+
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
@@ -99,28 +103,6 @@ apply_custom_css()
 
 # loading assets
 lottie_gif = load_lottieurl("https://lottie.host/37c60167-ebe6-4b9c-af2d-a86ecd0cf363/LsxpluDtba.json")
-python_lottie = load_lottieurl("https://assets6.lottiefiles.com/packages/lf20_2znxgjyt.json")
-java_lottie = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_zh6xtlj9.json")
-my_sql_lottie = load_lottieurl("https://assets4.lottiefiles.com/private_files/lf30_w11f2rwn.json")
-git_lottie = load_lottieurl("https://assets9.lottiefiles.com/private_files/lf30_03cuemhb.json")
-github_lottie = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_6HFXXE.json")
-docker_lottie = load_lottieurl("https://assets4.lottiefiles.com/private_files/lf30_35uv2spq.json")
-figma_lottie = load_lottieurl("https://lottie.host/5b6292ef-a82f-4367-a66a-2f130beb5ee8/03Xm3bsVnM.json")
-js_lottie = load_lottieurl("https://lottie.host/fc1ad1cd-012a-4da2-8a11-0f00da670fb9/GqPujskDlr.json")
-
-# Load Lottie animations for your skills
-pytorch_lottie = load_lottieurl(
-    "https://assets9.lottiefiles.com/packages/lf20_m54a654a.json")  # Creative brain animation
-tensorflow_lottie = load_lottieurl(
-    "https://assets4.lottiefiles.com/private_files/lf30_7s5wz54i.json")  # TensorFlow logo animation
-aws_lottie = load_lottieurl(
-    "https://lottie.host/6eae8bdc-74d1-4b5d-9eb7-37662274cd19/Nduizk8IOf.json")  # You already had this one
-streamlit_lottie = load_lottieurl(
-    "https://assets5.lottiefiles.com/packages/lf20_4a15i54u.json")  # Rocket launch animation
-scikit_learn_lottie = load_lottieurl(
-    "https://assets8.lottiefiles.com/packages/lf20_a054a854.json")  # Data analysis animation
-linux_lottie = load_lottieurl("https://assets8.lottiefiles.com/private_files/lf30_45vtmwz5.json")  # Penguin animation
-
 
 # ----------------- info ----------------- #
 def gradient(color1, color2, color3, content1, content2):
@@ -136,46 +118,69 @@ with st.container():
     # Add some space after the gradient header
     st.write('<br><br>', unsafe_allow_html=True)
 
-with st.container():
-    col1, col2 = st.columns([9, 3])
 
-with col1:
-    st.write(info['About'])
 
-with col2:
-    st_lottie(lottie_gif, height=280, key="data")
+st.write(info['About'])
+
 
 # ----------------- skillset ----------------- #
 with st.container():
     st.subheader('⚒️ Skills')
-    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
-
-    # Replace placeholders with Lottie animations for your specific skills
+    # Programming Skills
+    st.markdown("- 👩‍💻 **Programming:**")
+    col1, col2, col3 = st.columns(3)
     with col1:
-        st_lottie(python_lottie, height=70, width=70, key="python", speed=2.5)  # Replace with relevant animation
-
-    # Add Lottie animations for additional skills
+        display_devicon('python', 'original', '60px')
+        st.caption('Python')
     with col2:
-        st_lottie(tensorflow_lottie, height=70, width=70, key="tensorflow", speed=2.5)  # TensorFlow
-
+        display_devicon('cplusplus', 'original', '60px')
+        st.caption('CPP')
     with col3:
-        st_lottie(my_sql_lottie, height=70, width=70, key="mysql", speed=2.5)
+        display_devicon('streamlit', 'original', '60px')
+        st.caption('streamlit')
 
-    with col4:
-        st_lottie(aws_lottie, height=70, width=70, key="aws", speed=2.5)  # AWS
-
-    # Continue adding columns and Lottie animations for more skills
+    # Data Visualization Skills
+    st.markdown("- 📊 **Data Visualization:**")
+    col1, col2 = st.columns(2)
     with col1:
-        st_lottie(streamlit_lottie, height=50, width=50, key="streamlit", speed=2.5)  # Streamlit
-
+        display_devicon('plotly', 'original', '60px')
+        st.caption('plotly')
     with col2:
-        st_lottie(scikit_learn_lottie, height=70, width=70, key="scikit-learn", speed=2.5)  # scikit-learn
+        display_devicon('grafana', 'original', '60px')
+        st.markdown("grafana")
 
+    # ML / AI Skills
+    st.markdown("- 🤖 **ML / AI:**")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        display_devicon('pytorch', 'original', '60px')
+        st.caption('PyTorch')
+    with col2:
+        display_devicon('tensorflow', 'original', '60px')
+        st.caption('TensorFlow')
     with col3:
-        st_lottie(linux_lottie, height=70, width=70, key="linux", speed=2.5)  # Linux
+        display_devicon('scikitlearn', 'original', '60px')
+        st.caption('Scikit-learn')
 
-    # Add additional columns and animations as needed
+    # Databases Skills
+    st.markdown("- 🗄️ **Databases:**")
+    col1, col2 = st.columns(2)
+    with col1:
+        display_devicon('postgresql', 'original', '60px')
+        st.caption('postgresql')
+    with col2:
+        display_devicon('mysql', 'original', '60px')
+        st.markdown("mysql")
 
+    # Cloud Services Skills
+    st.markdown("- ☁️ **Cloud Services:**")
+    col1, col2 = st.columns(2)
+    with col1:
+        display_devicon('amazonwebservices', 'original', '60px')
+        st.caption('AWS')
+    with col2:
+        display_devicon('googlecloud', 'original', '60px')
+        st.markdown("Google Cloud")
 
 st.subheader('🤖 Chat With Me Now')
 user_input = get_text()
@@ -186,3 +191,6 @@ if user_input:
         st.warning('⚠️Please enter your OpenAI API key on the sidebar.', icon='⚠')
     if openai_api_key.startswith('sk-'):
         st.info(ask_bot(user_input))
+
+# -----------------  footer  ----------------- #
+st_lottie(lottie_gif, height=280, key="data")

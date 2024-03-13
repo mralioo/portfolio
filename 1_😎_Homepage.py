@@ -1,16 +1,39 @@
-import streamlit as st
+import openai
 import requests
-from streamlit_lottie import st_lottie
-from streamlit_timeline import timeline
-import streamlit.components.v1 as components
+import streamlit as st
 from llama_index.core import GPTVectorStoreIndex, SimpleDirectoryReader, ServiceContext
 from llama_index.llms.openai import OpenAI
-from constant import *
-from PIL import Image
-import openai
-# from langchain.chat_models import ChatOpenAI
+from streamlit_lottie import st_lottie
 
-st.set_page_config(page_title='Template', layout="wide", page_icon='??‍??' , initial_sidebar_state='auto')
+from constant import *
+
+# Alternatively, directly embed CSS as a string
+def apply_custom_css():
+    st.markdown("""
+        <style>
+        /* Increase font size for titles and text */
+        h1, h2, h3, h4, h5, h6 {
+            font-size: 1.5em; /* Adjust the size as needed */
+        }
+
+        .stText, .stMarkdown {
+            font-size: 1.2em; /* Adjust text size as needed */
+        }
+
+        /* Customize specific Streamlit elements by class name */
+        .element-container {
+            font-size: 1.1em; /* Example: Increase font size for container elements */
+        }
+
+        /* Full-width containers */
+        .stBlock {
+            max-width: 100%;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+
+st.set_page_config(layout="wide", initial_sidebar_state='auto')
 
 # -----------------  chatbot  ----------------- #
 # Set up the OpenAI key
@@ -22,6 +45,7 @@ documents = SimpleDirectoryReader(input_files=["bio.txt"]).load_data()
 
 pronoun = info["Pronoun"]
 name = info["Name"]
+
 
 def ask_bot(input_text):
     # define LLM
@@ -36,12 +60,10 @@ def ask_bot(input_text):
     # load index
     index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
 
+
     # query LlamaIndex and GPT-3.5 for the AI's response
-    PROMPT_QUESTION = f"""You are Buddy, an AI assistant dedicated to assisting {name} in her job search by providing recruiters with relevant and concise information. 
-    If you do not know the answer, politely admit it and let recruiters know how to contact {name} to get more information directly from {pronoun}. 
-    Don't put "Buddy" or a breakline in the front of your answer.
-    Human: {input}
-    """
+    PROMPT_QUESTION = f"""🤖 Meet Buddy, your AI wingman extraordinaire, here to help {name} navigate the thrilling world of job hunting. With a knack for dishing out relevant and snappy info to recruiters, Buddy's your go-to for all things {name}. But hey, even AI pals hit a snag sometimes. 🤷‍♂️ If Buddy's stumped, he'll gracefully bow out, pointing recruiters directly to {name} for the inside scoop. Remember, Buddy's too cool for "Buddy" labels or unnecessary line breaks in his replies.
+    Human: {input}"""
 
     output = index.as_query_engine().query(PROMPT_QUESTION.format(input=input_text))
     print(f"output: {output}")
@@ -51,24 +73,15 @@ def ask_bot(input_text):
 # get the user's input by calling the get_text function
 def get_text():
     input_text = st.text_input(
-        "After providing OpenAI API Key on the sidebar, you can send your questions and hit Enter to know more about me from my AI agent, Buddy!",
+        "🤖 Meet MrAliOo, your AI BFF: A blend of genius and goofball, MrAliOo is here to guide you through my world with the wit of Jim Carrey and the smarts of Sherlock Holmes. \n\n"
+        "🚀 Ready for a fun chat? Here's how to start:\n\n"
+        "🔑 Step 1: Pop your OpenAI API Key into the sidebar. \n\n"
+        "🎉 Step 2: Type your question and hit Enter. Let the adventures with MrAliOo begin! ✨",
         key="input")
     return input_text
 
-
-# st.markdown("Chat With Me Now")
-user_input = get_text()
-
-if user_input:
-    # text = st.text_area('Enter your questions')
-    if not openai_api_key.startswith('sk-'):
-        st.warning('⚠️Please enter your OpenAI API key on the sidebar.', icon='⚠')
-    if openai_api_key.startswith('sk-'):
-        st.info(ask_bot(user_input))
-
 # -----------------  loading assets  ----------------- #
 st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
-
 
 def load_lottieurl(url: str):
     r = requests.get(url)
@@ -76,16 +89,16 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
-
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
 
-
-local_css("style/style.css")
+# local_css("style/style.css")
+# Call the function at the start of your app to apply the styles
+apply_custom_css()
 
 # loading assets
-lottie_gif = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_x17ybolp.json")
+lottie_gif = load_lottieurl("https://lottie.host/37c60167-ebe6-4b9c-af2d-a86ecd0cf363/LsxpluDtba.json")
 python_lottie = load_lottieurl("https://assets6.lottiefiles.com/packages/lf20_2znxgjyt.json")
 java_lottie = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_zh6xtlj9.json")
 my_sql_lottie = load_lottieurl("https://assets4.lottiefiles.com/private_files/lf30_w11f2rwn.json")
@@ -94,6 +107,19 @@ github_lottie = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_6H
 docker_lottie = load_lottieurl("https://assets4.lottiefiles.com/private_files/lf30_35uv2spq.json")
 figma_lottie = load_lottieurl("https://lottie.host/5b6292ef-a82f-4367-a66a-2f130beb5ee8/03Xm3bsVnM.json")
 js_lottie = load_lottieurl("https://lottie.host/fc1ad1cd-012a-4da2-8a11-0f00da670fb9/GqPujskDlr.json")
+
+# Load Lottie animations for your skills
+pytorch_lottie = load_lottieurl(
+    "https://assets9.lottiefiles.com/packages/lf20_m54a654a.json")  # Creative brain animation
+tensorflow_lottie = load_lottieurl(
+    "https://assets4.lottiefiles.com/private_files/lf30_7s5wz54i.json")  # TensorFlow logo animation
+aws_lottie = load_lottieurl(
+    "https://lottie.host/6eae8bdc-74d1-4b5d-9eb7-37662274cd19/Nduizk8IOf.json")  # You already had this one
+streamlit_lottie = load_lottieurl(
+    "https://assets5.lottiefiles.com/packages/lf20_4a15i54u.json")  # Rocket launch animation
+scikit_learn_lottie = load_lottieurl(
+    "https://assets8.lottiefiles.com/packages/lf20_a054a854.json")  # Data analysis animation
+linux_lottie = load_lottieurl("https://assets8.lottiefiles.com/private_files/lf30_45vtmwz5.json")  # Penguin animation
 
 
 # ----------------- info ----------------- #
@@ -104,14 +130,14 @@ def gradient(color1, color2, color3, content1, content2):
         f'<span style="color:white;font-size:17px;">{content2}</span></h1>',
         unsafe_allow_html=True)
 
+full_name = info['Full_Name']
+with st.container():
+    gradient('#0077B6', '#00B4D8', '#FFFFFF', f"Hi, I'm {full_name}👋", info["Intro"])
 
 with st.container():
     col1, col2 = st.columns([8, 3])
 
-full_name = info['Full_Name']
 with col1:
-    gradient('#FFD4DD', '#000395', 'e0fbfc', f"Hi, I'm {full_name}👋", info["Intro"])
-    st.write("")
     st.write(info['About'])
 
 with col2:
@@ -121,200 +147,40 @@ with col2:
 with st.container():
     st.subheader('⚒️ Skills')
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+
+    # Replace placeholders with Lottie animations for your specific skills
     with col1:
-        st_lottie(python_lottie, height=70, width=70, key="python", speed=2.5)
+        st_lottie(python_lottie, height=70, width=70, key="python", speed=2.5)  # Replace with relevant animation
+
+    # Add Lottie animations for additional skills
+    with col2:
+        st_lottie(tensorflow_lottie, height=70, width=70, key="tensorflow", speed=2.5)  # TensorFlow
+
     with col3:
         st_lottie(my_sql_lottie, height=70, width=70, key="mysql", speed=2.5)
+
     with col4:
-        st_lottie(git_lottie, height=70, width=70, key="git", speed=2.5)
+        st_lottie(aws_lottie, height=70, width=70, key="aws", speed=2.5)  # AWS
+
+    # Continue adding columns and Lottie animations for more skills
     with col1:
-        st_lottie(github_lottie, height=50, width=50, key="github", speed=2.5)
+        st_lottie(streamlit_lottie, height=50, width=50, key="streamlit", speed=2.5)  # Streamlit
+
     with col2:
-        st_lottie(docker_lottie, height=70, width=70, key="docker", speed=2.5)
+        st_lottie(scikit_learn_lottie, height=70, width=70, key="scikit-learn", speed=2.5)  # scikit-learn
 
-# ----------------- timeline ----------------- #
-# with st.container():
-#     st.markdown("""""")
-#     st.subheader('📌 Career Snapshot')
-#
-#     # load data
-#     with open('example.json', "r") as f:
-#         data = f.read()
-#
-#     # render timeline
-#     timeline(data, height=400)
+    with col3:
+        st_lottie(linux_lottie, height=70, width=70, key="linux", speed=2.5)  # Linux
 
-# -----------------  tableau  -----------------  #
-# with st.container():
-#     st.markdown("""""")
-#     st.subheader("📊 Tableau")
-#     col1, col2 = st.columns([0.95, 0.05])
-#     with col1:
-#         with st.expander('See the work'):
-#             components.html(
-#                 """
-#                 <!DOCTYPE html>
-#                 <html>
-#                     <title>Basic HTML</title>
-#                     <body style="width:130%">
-#                         <div class='tableauPlaceholder' id='viz1684205791200' style='position: static'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Su&#47;SunnybrookTeam&#47;Overview&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='SunnybrookTeam&#47;Overview' /><param name='tabs' value='yes' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Su&#47;SunnybrookTeam&#47;Overview&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1684205791200');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='1350px';vizElement.style.maxWidth='100%';vizElement.style.minHeight='1550px';vizElement.style.maxHeight=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='1350px';vizElement.style.maxWidth='100%';vizElement.style.minHeight='1550px';vizElement.style.maxHeight=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.minHeight='5750px';vizElement.style.maxHeight=(divElement.offsetWidth*1.77)+'px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
-#                     </body>
-#                 </HTML>
-#                 """
-#                 , height=400, scrolling=True
-#             )
-#     st.markdown(""" <a href={}> <em>🔗 access to the link </a>""".format(info['Tableau']), unsafe_allow_html=True)
+    # Add additional columns and animations as needed
 
-# ----------------- medium ----------------- #
-# with st.container():
-#     st.markdown("""""")
-#     st.subheader('✍️ Medium')
-#     col1, col2 = st.columns([0.95, 0.05])
-#     with col1:
-#         with st.expander('Display my latest posts'):
-#             components.html(embed_rss['rss'], height=400)
-#
-#         st.markdown(""" <a href={}> <em>🔗 access to the link </a>""".format(info['Medium']), unsafe_allow_html=True)
 
-# -----------------  endorsement  ----------------- #
-# with st.container():
-#     # Divide the container into three columns
-#     col1, col2, col3 = st.columns([0.475, 0.475, 0.05])
-#     # In the first column (col1)
-#     with col1:
-#         # Add a subheader to introduce the coworker endorsement slideshow
-#         st.subheader("👄 Coworker Endorsements")
-#         # Embed an HTML component to display the slideshow
-#         components.html(
-#             f"""
-#         <!DOCTYPE html>
-#         <html>
-#         <head>
-#         <meta name="viewport" content="width=device-width, initial-scale=1">
-#         <!-- Styles for the slideshow -->
-#         <style>
-#             * {{box-sizing: border-box;}}
-#             .mySlides {{display: none;}}
-#             img {{vertical-align: middle;}}
-#
-#             /* Slideshow container */
-#             .slideshow-container {{
-#             position: relative;
-#             margin: auto;
-#             width: 100%;
-#             }}
-#
-#             /* The dots/bullets/indicators */
-#             .dot {{
-#             height: 15px;
-#             width: 15px;
-#             margin: 0 2px;
-#             background-color: #eaeaea;
-#             border-radius: 50%;
-#             display: inline-block;
-#             transition: background-color 0.6s ease;
-#             }}
-#
-#             .active {{
-#             background-color: #6F6F6F;
-#             }}
-#
-#             /* Fading animation */
-#             .fade {{
-#             animation-name: fade;
-#             animation-duration: 1s;
-#             }}
-#
-#             @keyframes fade {{
-#             from {{opacity: .4}}
-#             to {{opacity: 1}}
-#             }}
-#
-#             /* On smaller screens, decrease text size */
-#             @media only screen and (max-width: 300px) {{
-#             .text {{font-size: 11px}}
-#             }}
-#             </style>
-#         </head>
-#         <body>
-#             <!-- Slideshow container -->
-#             <div class="slideshow-container">
-#                 <div class="mySlides fade">
-#                 <img src={endorsements["img1"]} style="width:100%">
-#                 </div>
-#
-#                 <div class="mySlides fade">
-#                 <img src={endorsements["img2"]} style="width:100%">
-#                 </div>
-#
-#                 <div class="mySlides fade">
-#                 <img src={endorsements["img3"]} style="width:100%">
-#                 </div>
-#
-#             </div>
-#             <br>
-#             <!-- Navigation dots -->
-#             <div style="text-align:center">
-#                 <span class="dot"></span>
-#                 <span class="dot"></span>
-#                 <span class="dot"></span>
-#             </div>
-#
-#             <script>
-#             let slideIndex = 0;
-#             showSlides();
-#
-#             function showSlides() {{
-#             let i;
-#             let slides = document.getElementsByClassName("mySlides");
-#             let dots = document.getElementsByClassName("dot");
-#             for (i = 0; i < slides.length; i++) {{
-#                 slides[i].style.display = "none";
-#             }}
-#             slideIndex++;
-#             if (slideIndex > slides.length) {{slideIndex = 1}}
-#             for (i = 0; i < dots.length; i++) {{
-#                 dots[i].className = dots[i].className.replace("active", "");
-#             }}
-#             slides[slideIndex-1].style.display = "block";
-#             dots[slideIndex-1].className += " active";
-#             }}
-#
-#             var interval = setInterval(showSlides, 2500); // Change image every 2.5 seconds
-#
-#             function pauseSlides(event)
-#             {{
-#                 clearInterval(interval); // Clear the interval we set earlier
-#             }}
-#             function resumeSlides(event)
-#             {{
-#                 interval = setInterval(showSlides, 2500);
-#             }}
-#             // Set up event listeners for the mySlides
-#             var mySlides = document.getElementsByClassName("mySlides");
-#             for (i = 0; i < mySlides.length; i++) {{
-#             mySlides[i].onmouseover = pauseSlides;
-#             mySlides[i].onmouseout = resumeSlides;
-#             }}
-#             </script>
-#
-#             </body>
-#             </html>
-#
-#             """,
-#             height=270,
-#         )
-#
-#     # -----------------  contact  ----------------- #
-#     with col2:
-#         st.subheader("📨 Contact Me")
-#         contact_form = f"""
-#         <form action="https://formsubmit.co/{info["Email"]}" method="POST">
-#             <input type="hidden" name="_captcha value="false">
-#             <input type="text" name="name" placeholder="Your name" required>
-#             <input type="email" name="email" placeholder="Your email" required>
-#             <textarea name="message" placeholder="Your message here" required></textarea>
-#             <button type="submit">Send</button>
-#         </form>
-#         """
-#         st.markdown(contact_form, unsafe_allow_html=True)
+st.subheader('🤖 Chat With Me Now')
+user_input = get_text()
+
+if user_input:
+    # text = st.text_area('Enter your questions')
+    if not openai_api_key.startswith('sk-'):
+        st.warning('⚠️Please enter your OpenAI API key on the sidebar.', icon='⚠')
+    if openai_api_key.startswith('sk-'):
+        st.info(ask_bot(user_input))

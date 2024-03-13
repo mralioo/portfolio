@@ -4,8 +4,11 @@ import streamlit as st
 from llama_index.core import GPTVectorStoreIndex, SimpleDirectoryReader, ServiceContext
 from llama_index.llms.openai import OpenAI
 from streamlit_lottie import st_lottie
+from PIL import Image
 
 from constant import *
+
+
 
 # Alternatively, directly embed CSS as a string
 def apply_custom_css():
@@ -81,7 +84,7 @@ def get_text():
     return input_text
 
 # -----------------  loading assets  ----------------- #
-st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
+st.sidebar.image(Image.open('images/profile.jpg'))
 
 def load_lottieurl(url: str):
     r = requests.get(url)
@@ -176,7 +179,9 @@ with st.container():
     st.markdown("- ☁️ **Cloud Services:**")
     col1, col2 = st.columns(2)
     with col1:
-        display_devicon('amazonwebservices', 'original', '60px')
+        # display_devicon('amazonwebservices', 'original', '60px')
+        icon_url = "hhttps://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg"
+        st.markdown(f"<img src='{icon_url}' style='width: {'40px'};'>", unsafe_allow_html=True)
         st.caption('AWS')
     with col2:
         display_devicon('googlecloud', 'original', '60px')

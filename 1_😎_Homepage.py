@@ -33,7 +33,7 @@ def apply_custom_css():
         </style>
     """, unsafe_allow_html=True)
 
-st.set_page_config(layout="wide", initial_sidebar_state='auto')
+st.set_page_config(layout="wide", initial_sidebar_state='expanded')
 
 # -----------------  chatbot  ----------------- #
 # Set up the OpenAI key
@@ -133,9 +133,11 @@ def gradient(color1, color2, color3, content1, content2):
 full_name = info['Full_Name']
 with st.container():
     gradient('#0077B6', '#00B4D8', '#FFFFFF', f"Hi, I'm {full_name}👋", info["Intro"])
+    # Add some space after the gradient header
+    st.write('<br><br>', unsafe_allow_html=True)
 
 with st.container():
-    col1, col2 = st.columns([8, 3])
+    col1, col2 = st.columns([9, 3])
 
 with col1:
     st.write(info['About'])

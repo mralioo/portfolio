@@ -1,41 +1,47 @@
-About Vicky:
-Vicky is a seasoned professional with expertise in AI, Data Science, Blockchain, and Cloud technologies. Holding an undergraduate degree in Computer Science from the University of Techville (2010), Vicky is committed to delivering innovative solutions and offers valuable resources at cognitiveclass.ai.
+About Ali Alouane:
+
+Ali is a dynamic and innovative Machine Learning Engineer with a solid foundation in electrical engineering and a profound passion for artificial intelligence and robotics. Graduating with a Master's degree in Electrical Engineering from Technische Universität Berlin, Ali specializes in communication networks and signal processing. His career is marked by a commitment to leveraging deep learning, reinforcement learning, and MLOps to drive advancements in AI and machine learning technologies.
 
 Work Experience:
-Data Scientist at IBM (2015-2019); Software Developer at IBM (2010-2015)
 
+Freelancer, Machine Learning Engineer | truemetrics GmbH (04.2022 – 10.2023): Spearheaded projects involving data collection, analysis, and the development of machine learning models. Pioneered a production pipeline for ML deployment and managed AWS ecosystem components.
+Intern, Hardware Developer | Dashfactory GmbH (03.2021 – 07.2021): Enhanced embedded systems for hardware components using C (RTOS) and contributed to system design and specifications.
+Work Student, Transmission & Hybrid Systems Department | IAV GmbH (09.2018 – 10.2020): Developed a Reinforcement Learning framework for automotive applications and automated data preprocessing pipelines.
+Intern, Analytics Group | BridgingIT (02.2018 – 05.2018): Evaluated Microsoft Azure ML cloud services and managed deep learning models using TensorFlow.
+Work Student, Computational Imaging Group | Sony Deutschland GmbH (05.2017 – 10.2017): Engaged in spectral data acquisition and processing for R&D projects.
 Career Goal:
-Vicky's career goal is to leverage their expertise in AI and emerging technologies to drive meaningful innovation and create solutions that positively impact businesses and society.
+
+Ali aims to harness his expertise in AI, machine learning, and software development to create innovative solutions that address real-world challenges, pushing the boundaries of technology and contributing to the advancement of society.
 
 Skills:
-AI, Data Science, Blockchain, Cloud, Python
 
-Certification:
-IBM Applied AI Professional Certificate (2023)
+Programming Languages: Python, C++
+Frameworks & Technologies: TensorFlow, PyTorch, Scikit-learn, IoT, MLOps
+Cloud Services: AWS, familiar with Google Cloud
+Databases: PostgreSQL, MySQL
+Tools: Git, DVC
+Certifications:
 
+Deep Learning Specialization by deeplearning.ai (08/2018)
+Compliance and Integrity/Processes for Engineering by IAV GmbH (2018–2020)
 Achievements:
-Spearheaded AI projects at IBM, resulting in a 30% increase in user engagement.
-Utilized IBM's watsonx service to help over 1000 companies from various domains automate their HR processes, from hiring to onboarding, contributing to a 100% positive feedback rate from companies.
 
+Implemented a deep learning-based system for bearing fault diagnosis, significantly improving diagnostic accuracy.
+Developed a novel framework integrating GNU-Radio with OpenAI Gym for enhanced signal processing and communications.
 Contact:
-LinkedIn: https://www.linkedin.com/in/vicky-tck
-Phone: 123-456-789
-Location: Toronto, Ontario
 
-Strengths and Advantages:
-Vicky's strengths lie in a profound passion for technology, innovative problem-solving, and client-centric solutions.
-
-Weaknesses and Disadvantages:
-Vicky's unwavering pursuit of excellence may occasionally lead to in-depth analysis, but it ensures the delivery of high-quality services.
-
+LinkedIn: https://www.linkedin.com/in/ali-alouane/
+GitHub: https://github.com/mralioo
+Email: ali.alouane@outlook.de
+Location: Berlin, Germany
 Interests and Hobbies:
-Vicky's passion for technology extends into leisure hours, where they delve into the cutting-edge realm of GenAI, continuously pushing the boundaries of what can be achieved in various projects. In addition, Vicky finds joy in the simple pleasures of life, such as walking their dogs, swimming, and sharing coffee moments with friends and family.
 
-Portfolio:
-Explore Vicky's portfolio of innovative projects at cognitiveclass.ai, showcasing expertise and tailored solutions. This website also serves as a showcase for some of Vicky's remarkable projects. Constructed using generative AI and Python, the website aims to inspire visitors with innovative ideas on seamlessly integrating generative AI into their own portfolio websites. Feel free to explore and ignite your creativity!
+Ali is not only a tech enthusiast but also enjoys running, karate, and participating in hackathons. He is a member of the Tunisian Space Association and Deep Berlin Robocars, reflecting his commitment to community and continuous learning.
 
 Availability:
-Vicky is actively seeking new opportunities and is ready to start immediately.
+
+Ali is actively seeking new opportunities and is ready to contribute his skills and expertise to innovative projects.
 
 References:
-References are available upon request.
+
+Available upon request.

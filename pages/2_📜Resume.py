@@ -34,7 +34,8 @@ def display_image_with_link(file_path, url, caption='', width=100):
 
 
 local_css("style/style_home.css")
-st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
+# st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
+st.sidebar.image(Image.open('images/profile.jpg'))
 
 # --- TITLE ---
 
@@ -145,7 +146,7 @@ with col2:
 col1, col2, col3 = st.columns(3)
 with col1:
     st.write(
-        "[Click here if it's blocked by your browser](https://drive.google.com/file/d/1h3GiKflKZGyL7ZC2jp6k8Xo43bOtF6ee/view)")
+        "[Click here if it's blocked by your browser](https://drive.google.com/file/d/1JABDlAxeHfuSJV0IuyMJKZJ85IH6vJAR/view?usp=drive_link)")
 
     with open("images/cv_ali_alouane.pdf", "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')

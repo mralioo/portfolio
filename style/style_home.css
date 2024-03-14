@@ -74,3 +74,19 @@ a:hover, a:active {
   color: white;
   text-align: center;
 }
+
+
+/* Increase font size of normal text */
+body {
+  font-size: 18px; /* Adjust the size as needed */
+}
+
+/* Alternatively, if you want to target specific elements */
+p {
+  font-size: 18px; /* Adjust the size as needed */
+  color: #073b4c; /* Dark Slate */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 20px; /* Adjust the size as needed */
+}

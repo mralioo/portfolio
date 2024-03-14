@@ -80,7 +80,8 @@ def get_text():
         "🤖 Meet MrAliOo, your AI BFF: A blend of genius and goofball, MrAliOo is here to guide you through my world with the wit of Jim Carrey and the smarts of Sherlock Holmes. \n\n"
         "🚀 Ready for a fun chat? Here's how to start:\n\n"
         "🔑 Step 1: Pop your OpenAI API Key into the sidebar. \n\n"
-        "🎉 Step 2: Type your question and hit Enter. Let the adventures with MrAliOo begin! ✨",
+        "🎉 Step 2: Type your question and hit Enter. \n\n"
+        "✨ Let the adventures with MrAliOo begin! ✨",
         key="input")
     return input_text
 
@@ -125,10 +126,23 @@ with st.container():
     # Add some space after the gradient header
     st.write('<br><br>', unsafe_allow_html=True)
 
+# ----------------- about ----------------- #
+# Custom CSS to increase font size
+# css = """
+# <style>
+#     .big-font {
+#         font-size: 20px !important;
+#     }
+# </style>
+# """
+#
+# # Embed the style within the Streamlit app
+# st.markdown(css, unsafe_allow_html=True)
+#
+# # Use markdown to display the text with the custom class for increased font size
+# st.markdown(f'<div class="big-font">{description["About"]}</div>', unsafe_allow_html=True)
 
-
-st.write(info['About'])
-
+st.write(description['About'])
 
 # ----------------- skillset ----------------- #
 with st.container():
@@ -173,7 +187,7 @@ with st.container():
     st.markdown("- 🗄️ **Databases:**")
     col1, col2 = st.columns(2)
     with col1:
-        display_devicon('postgresql', 'original', '60px')
+        display_devicon('postgresql', 'original', '80px')
         st.caption('postgresql')
     with col2:
         display_devicon('mysql', 'original', '60px')

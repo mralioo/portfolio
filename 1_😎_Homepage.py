@@ -84,6 +84,18 @@ def get_text():
     return input_text
 
 # -----------------  loading assets  ----------------- #
+# # Replace 'YOUR_IMAGE_URL' with the direct URL to your LinkedIn badge image
+# # Replace 'YOUR_LINKEDIN_PROFILE_URL' with your actual LinkedIn public profile URL
+# linkedin_image_html = f"""
+# <a href="https://de.linkedin.com/in/ali-alouane?trk=profile-badge" target="_blank">
+#     <img src="https://www.linkedin.com/in/ali-alouane/" alt="LinkedIn" style="width: 100%; border-radius: 5px;">
+# </a>
+# """
+#
+# # Adding the clickable LinkedIn image to the sidebar
+# st.sidebar.markdown(linkedin_image_html, unsafe_allow_html=True)
+
+
 st.sidebar.image(Image.open('images/profile.jpg'))
 
 def load_lottieurl(url: str):
@@ -131,26 +143,26 @@ with st.container():
     st.subheader('⚒️ Skills')
     # Programming Skills
     st.markdown("- 👩‍💻 **Programming:**")
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     with col1:
         display_devicon('python', 'original', '60px')
         st.caption('Python')
     with col2:
         display_devicon('cplusplus', 'original', '60px')
         st.caption('CPP')
-    with col3:
-        display_devicon('streamlit', 'original', '60px')
-        st.caption('streamlit')
 
     # Data Visualization Skills
     st.markdown("- 📊 **Data Visualization:**")
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
         display_devicon('plotly', 'original', '60px')
         st.caption('plotly')
     with col2:
         display_devicon('grafana', 'original', '60px')
         st.markdown("grafana")
+    with col3:
+        display_devicon('streamlit', 'original', '60px')
+        st.caption('streamlit')
 
     # ML / AI Skills
     st.markdown("- 🤖 **ML / AI:**")
@@ -180,7 +192,7 @@ with st.container():
     col1, col2 = st.columns(2)
     with col1:
         # display_devicon('amazonwebservices', 'original', '60px')
-        icon_url = "hhttps://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg"
+        icon_url = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg"
         st.markdown(f"<img src='{icon_url}' style='width: {'40px'};'>", unsafe_allow_html=True)
         st.caption('AWS')
     with col2:

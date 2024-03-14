@@ -33,16 +33,52 @@ Remember, in this digital odyssey, every project is a story, every code snippet 
 
 st.subheader(content2)
 
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["Brain-Computer Interface 🎓", "Optiiway 🏆", " RL for clutch system💼", "Double Inverted Pendulum 🎓",])
-     # "EZCleanData 🏆"])
+# Custom CSS to increase tab font size
+st.markdown("""
+<style>
+/* Target the tab labels */
+.css-1e5imcs {
+    font-size: 100px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+tab1, tab2, tab3, tab4, tab5 = st.tabs(
+    ["Brain-Computer Interface 🎓",
+     "Optiiway 🏆",
+     "RL for clutch system💼",
+     "Double Inverted Pendulum 🎓",
+     "GnuGym 🎓"])
 
 with tab1:
     st.header("AutoML BCI")
     st.write(
         "AutoML BCI is a framework to train neural network dedicated for Brain-Computer Interface Problem. it supports hyperparameters tunning using Optuna framework, and enables live tracking and model monitoring via Tensorbaord.")
+
+    description = """
+    Motor imagery-based brain-computer interfaces (MI-BCIs) represent a significant
+    paradigm within the field of neurotechnology, particularly for individuals with
+    paralysis. By mentally rehearsing motor movements, MI-BCIs facilitate control
+    over prosthetic limbs or wheelchairs. The construction of a classifier for MI-BCI applications involves complex processing and feature extraction from brain signals
+    to distinguish between various mental states. BCI is inherently multidisciplinary,
+    demanding expertise not only in neuroscience, machine learning, and electrical
+    engineering but also in software development. The complexity of integrating
+    these disciplines necessitates a comprehensive toolbox that encompasses standard
+    methods and is regularly updated with new datasets and algorithms. Such a toolbox enables scientists and engineers to rapidly prototype and develop algorithms
+    efficiently. Given the increasing prominence of deep learning in numerous fields,
+    this thesis introduces a deep learning interface incorporated into an existing BCI
+    toolbox. This interface streamlines the development and training of neural networks, adhering to a more automated and standardized machine learning lifecycle.
+    Utilizing the Sensorimotor Rhythm (SMR) dataset, the largest open BCI dataset
+    available, this thesis integrates it into the BBCPy toolbox as a standard resource.
+    The dataset is employed as a benchmark for evaluating the performance of deep
+    learning models in the Motor imagery BCI classification task.
+    """
+
+    st.write(description)
+
     st.image("images/automl_bci.png", width=1000)
-    st.write("https://github.com/mralioo/AutoML_BCI")
+    st.write("[Source Code](https://github.com/mralioo/AutoML_BCI)")
+
     st.markdown("👩‍💻 **Technologies:**")
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -155,19 +191,29 @@ with tab4:
         st.markdown("🤖")
         st.caption('OpenAI Gym')
 
-# with tab5:
-#     st.header("")
-#     st.write(df["description"][4])
-#     st.image("images/5.png", width=500)
-#     st.write(f"[Source Code]({df['url'][4]})")
-#     st.markdown("👩‍💻 **Technologies:**")
-#     col1, col2, col3 = st.columns(3)
-#     with col1:
-#         display_devicon('python', 'original', '60px')
-#         st.caption('Python')
-#     with col2:
-#         display_devicon('cplusplus', 'original', '60px')
-#         st.caption('CPP')
-#     with col3:
-#         display_devicon('streamlit', 'original', '60px')
-#         st.caption('streamlit')
+with tab5:
+    st.header("GNU-Radio as OpenAI Gym Environment")
+    st.write("""
+    This is a generic tool-kit to use GNU-Radio as OpenAI Gym environment. You can setup your own GNU-Radio scenario and define your ML model in the tool-kit.
+    """)
+    st.image("images/gnugym.png", width=1000)
+    # Extended description
+    st.write("""
+    —Nowadays Reinforcement Learning (RL) shows promising advancement in fields like image recognition tasks by not relying on closed form solutions and finding solutions by applying e.g. inference techniques. Therefore, an agent tries out different actions on a given environment to find a nearly optimal solution. These approaches are used to solve more and more control problems. They are already used in the communication and networking domain. To evaluate transmission schemes/network stacks an environment to train an agent is necessary. Additionally, researchers are using GNU-Radio as Software Defined Radio (SDR) tool to do rapid and low-cost prototyping for new and existing wireless technologies. In this paper, we introduce gnugym, a framework to use GNU-Radio as OpenAI Gym environment. Thereby, we enable RL for GNU-Radio. gnugym includes a general part, caring about communication and management of GNU-Radio. Via two interfaces, a specific environment is loaded describing the specific Machine Learning (ML) model. This split allows rapid integration of new ML models within the framework. As proof of concept, we use an implementation of the IEEE 802.11p stack and run it in a loopback example. The Modulation and Coding Scheme (MCS) is set for given Received Signal Strength Indication (RSSI) values. During training, the distance between sender and receiver varies. With some Supervised Learning (SL) algorithms, there is successful training.
+    """)
+    st.write("[Source Code](https://github.com/mralioo/GnuGym)")
+
+    # Display technologies used in the project
+    st.markdown("👩‍💻 **Technologies:**")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        display_devicon('python', 'original', '60px')
+        st.caption('Python')
+    with col2:
+        display_devicon('pytorch', 'original', '60px')
+        st.caption('PyTorch')
+    with col3:
+        st.markdown("🤖")
+        st.caption('OpenAI Gym')
+
+

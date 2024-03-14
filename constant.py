@@ -9,3 +9,7 @@ info = {
     "Photo": """<a href=\"https://www.linkedin.com/in/ali-alouane/\"><img src=\"images/profile.jpg" width=\"200\"   alt=\"Profile\" title=\"Profile\"></a>""",
     "Email": "ali.alouane@outlook.de"
 }
+
+embed_component = {'linkedin': """<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
+<div class="badge-base LI-profile-badge" data-locale="de_DE" data-size="medium" data-theme="light" data-type="HORIZONTAL" data-vanity="ali-alouane" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://de.linkedin.com/in/ali-alouane?trk=profile-badge">Ali Alouane</a></div>
+              """}

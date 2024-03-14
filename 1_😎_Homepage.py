@@ -1,6 +1,7 @@
 import openai
 import requests
 import streamlit as st
+import streamlit.components.v1 as components
 from llama_index.core import GPTVectorStoreIndex, SimpleDirectoryReader, ServiceContext
 from llama_index.llms.openai import OpenAI
 from streamlit_lottie import st_lottie
@@ -83,20 +84,11 @@ def get_text():
         key="input")
     return input_text
 
-# -----------------  loading assets  ----------------- #
-# # Replace 'YOUR_IMAGE_URL' with the direct URL to your LinkedIn badge image
-# # Replace 'YOUR_LINKEDIN_PROFILE_URL' with your actual LinkedIn public profile URL
-# linkedin_image_html = f"""
-# <a href="https://de.linkedin.com/in/ali-alouane?trk=profile-badge" target="_blank">
-#     <img src="https://www.linkedin.com/in/ali-alouane/" alt="LinkedIn" style="width: 100%; border-radius: 5px;">
-# </a>
-# """
-#
-# # Adding the clickable LinkedIn image to the sidebar
-# st.sidebar.markdown(linkedin_image_html, unsafe_allow_html=True)
 
+with st.sidebar:
+    components.html(embed_component['linkedin'], height=400)
 
-st.sidebar.image(Image.open('images/profile.jpg'))
+# st.sidebar.image(Image.open('images/profile.jpg'))
 
 def load_lottieurl(url: str):
     r = requests.get(url)

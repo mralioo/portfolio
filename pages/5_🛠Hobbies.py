@@ -24,7 +24,7 @@ st.image("images/under-construction-1bj.png", width=700)
 
 local_css("style/style_home.css")
 
-st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
+# st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
 
 img_1 = Image.open("images/1.jpg")
 # img_2 = Image.open("images/2.png")

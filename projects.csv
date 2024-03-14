@@ -1,0 +1,6 @@
+title;description;url;image
+Todo App;A distraction-free web app to help you focus on creating and completing tasks.;https://github.com/badicev/todo-app;1.png
+Portfolio Website;A website built entirely in Python to showcase coding projects and apps.;https://github.com/badicev/my_portfolio;2.png
+PDF Templates;A script that generates PDF templates of multiple pages given some predefined guidelines.;;3.png
+PDF Invoices;A script that reads invoice records from Excel files and automatically generates PDF invoices.;;4.png
+Positive News Site;A website that gets data from a news API and uses sentiment analysis to publish only positive news.;;5.png

@@ -35,7 +35,7 @@ def display_image_with_link(file_path, url, caption='', width=100):
 
 local_css("style/style_home.css")
 # st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
-st.sidebar.image(Image.open('images/profile.jpg'))
+# st.sidebar.image(Image.open('images/profile.jpg'))
 
 # --- TITLE ---
 

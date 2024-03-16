@@ -50,8 +50,7 @@ def display_image_with_link(file_path, url, caption='', width=100):
     # Display the HTML in Streamlit
     st.markdown(html_str, unsafe_allow_html=True)
 
-
-local_css("style/style_home.css")
+local_css("style/style_cv.css")
 # st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
 # st.sidebar.image(Image.open('images/profile.jpg'))
 

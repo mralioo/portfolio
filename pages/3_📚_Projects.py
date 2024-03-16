@@ -2,6 +2,7 @@ import base64
 
 import pandas as pd
 import streamlit as st
+from st_functions import local_css
 
 
 def display_devicon(icon_name, icon_color, width="50px"):
@@ -9,7 +10,9 @@ def display_devicon(icon_name, icon_color, width="50px"):
     st.markdown(f"<img src='{icon_url}' style='width: {width};'>", unsafe_allow_html=True)
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", initial_sidebar_state='expanded')
+
+local_css("style/style_projects.css")
 
 st.title("📚 Projects")
 
@@ -38,7 +41,7 @@ st.markdown("""
 <style>
 /* Target the tab labels */
 .css-1e5imcs {
-    font-size: 100px !important;
+    font-size: 300px !important;
 }
 </style>
 """, unsafe_allow_html=True)

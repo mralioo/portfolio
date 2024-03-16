@@ -1,12 +1,6 @@
-import base64
-from io import BytesIO
-
-import streamlit as st
-from PIL import Image
-
-from constant import *
-from st_functions import st_button, load_css
 import streamlit.components.v1 as components
+
+from st_functions import *
 
 
 def image_to_base64(image):
@@ -18,15 +12,12 @@ def image_to_base64(image):
 
 st.set_page_config(layout="centered", initial_sidebar_state='auto')
 
-load_css()
+# -----------------  contact  ----------------- #
+local_css("style/style_contact.css")
+st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns(3)
 col2.image(Image.open('images/profile.jpg'))
-
-# Display the image in the middle column with circular styling
-# with col2:
-#     image = Image.open('images/profile.jpg')
-#     st.markdown(f"<img class='circle-img' src='data:image/jpeg;base64,{image_to_base64(image)}'>", unsafe_allow_html=True)
 
 st.header('Ali Alouane')
 
@@ -47,23 +38,10 @@ email_address = "mr.ali.alouane@gmail.com"  # Replace with your email address
 email_subject = "Let's Connect!"  # You can pre-fill a subject for the email
 email_body = "Hi Ali, I'd like to connect with you about..."  # Pre-fill the body text
 
-# contact_form = f"""
-# <form action="https://formsubmit.co/{info["Email"]}" method="POST">
-#     <input type="hidden" name="_captcha value="false">
-#     <input type="text" name="name" placeholder="Your name" required>
-#     <input type="email" name="email" placeholder="Your email" required>
-#     <textarea name="message" placeholder="Your message here" required></textarea>
-#     <button type="submit">Send</button>
-# </form>
-# """
-# st.markdown(contact_form, unsafe_allow_html=True)
-# Email button
 # Funny introduction and call to action
 st.markdown("""
 Looking for a tech wizard who also happens to be a coffee aficionado? ☕🧙‍♂️ Look no further! Whether you want to chat about the latest in machine learning, exchange dad jokes, or simply argue about the best coffee beans, I'm your guy. 
-
 Why send a boring old email when you can hit the button below and make my inbox a happier place? 💌 """)
-
 
 col1, col2, col3 = st.columns(3)
 # Using st.markdown to create a mailto link for the "Contact Me" button

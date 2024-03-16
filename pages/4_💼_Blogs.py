@@ -1,5 +1,7 @@
 import streamlit as st
 
+from st_functions import local_css
+
 st.title("💼 Blogs")
 st.markdown("""
 ## This page is under construction! 🏗️👷
@@ -12,3 +14,4 @@ Remember, good things come to those who wait... or those who come back later. �
 
 # Optionally, include an under-construction image
 st.image("images/under-construction-1bj.png", width=700)
+local_css("style/style_home.css")

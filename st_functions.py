@@ -1,9 +1,10 @@
-import streamlit as st
+import base64
+from io import BytesIO
 
-def load_css():
-    with open("style/style_contact.css") as f:
-        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-    st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
+import streamlit
+import streamlit as st
+from PIL import Image
+
 
 def st_button(icon, url, label, iconsize):
     if icon == 'youtube':
@@ -77,3 +78,52 @@ def st_button(icon, url, label, iconsize):
                 </a>
             </p>'''
     return st.markdown(button_code, unsafe_allow_html=True)
+
+
+def display_icon_with_url(url, alt_text, width="40px"):  # Adjust width as needed
+    # Create an HTML string with the image
+    html_str = f'<img src="{url}" alt="{alt_text}" width="{width}" />'
+    # Display the HTML in Streamlit
+    st.markdown(html_str, unsafe_allow_html=True)
+
+
+def display_icon(icon_path, caption='', width=30):  # Adjust width as needed
+    st.image(icon_path, caption=caption, width=width, use_column_width=False)
+
+
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+
+
+def add_space(amount=1):
+    for _ in range(amount):
+        st.write("")
+
+
+def display_image_with_link(file_path, url, caption='', width=100):
+    # Open the image file
+    image = Image.open(file_path)
+
+    # Convert the image to base64 for embedding in HTML
+    buffered = BytesIO()
+    image.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+
+    # Create a custom HTML string with the base64 image and link
+    html_str = f"""
+    <a href="{url}" target="_blank">
+        <img src="data:image/jpeg;base64,{img_str}" width="{width}px" alt="{caption}">
+    </a>
+    """
+
+    # Display the HTML in Streamlit
+    st.markdown(html_str, unsafe_allow_html=True)
+
+
+def gradient(color1, color2, color3, content1, content2):
+    st.markdown(
+        f'<h1 style="text-align:center;background-image: linear-gradient(to right,{color1}, {color2});font-size:60px;border-radius:2%;">'
+        f'<span style="color:{color3};">{content1}</span><br>'
+        f'<span style="color:white;font-size:17px;">{content2}</span></h1>',
+        unsafe_allow_html=True)

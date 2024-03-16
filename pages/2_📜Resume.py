@@ -1,58 +1,8 @@
-import base64
-from io import BytesIO
-
-import streamlit as st
-from PIL import Image
+from st_functions import *
 
 st.set_page_config(layout="wide", initial_sidebar_state='auto')
 
-
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-
-
-# Helper function to add space
-def add_space(amount=1):
-    for _ in range(amount):
-        st.write("")
-
-
-def display_icon(icon_path, caption='', width=30):  # Adjust width as needed
-    st.image(icon_path, caption=caption, width=width, use_column_width=False)
-
-
-# Function to display an icon from an external URL
-def display_icon_with_url(url, alt_text, width="40px"):  # Adjust width as needed
-    # Create an HTML string with the image
-    html_str = f'<img src="{url}" alt="{alt_text}" width="{width}" />'
-    # Display the HTML in Streamlit
-    st.markdown(html_str, unsafe_allow_html=True)
-
-
-# Function to display an image by file path
-def display_image_with_link(file_path, url, caption='', width=100):
-    # Open the image file
-    image = Image.open(file_path)
-
-    # Convert the image to base64 for embedding in HTML
-    buffered = BytesIO()
-    image.save(buffered, format="JPEG")
-    img_str = base64.b64encode(buffered.getvalue()).decode()
-
-    # Create a custom HTML string with the base64 image and link
-    html_str = f"""
-    <a href="{url}" target="_blank">
-        <img src="data:image/jpeg;base64,{img_str}" width="{width}px" alt="{caption}">
-    </a>
-    """
-
-    # Display the HTML in Streamlit
-    st.markdown(html_str, unsafe_allow_html=True)
-
 local_css("style/style_cv.css")
-# st.sidebar.markdown(info['Photo'], unsafe_allow_html=True)
-# st.sidebar.image(Image.open('images/profile.jpg'))
 
 # --- TITLE ---
 

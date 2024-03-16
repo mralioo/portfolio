@@ -1,10 +1,7 @@
 import streamlit as st
 from PIL import Image
 from constant import *
-
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+from st_functions import local_css
 
 
 st.set_page_config(layout="wide", initial_sidebar_state='auto')

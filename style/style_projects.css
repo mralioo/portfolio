@@ -1,4 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+/*[data-testid="stAppViewContainer"] > .main {*/
+/*    background-image: url("https://images.unsplash.com/photo-1709923274819-2d1473b33d17?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");*/
+/*    background-size: 100%;*/
+/*    background-position: top left;*/
+/*    background-repeat: no-repeat;*/
+/*    background-attachment: local;*/
+/*}*/
+
+
 [data-testid=stSidebar] {
     background-image: linear-gradient(#ff7e5f, #feb47b); /* Watermelon to Peach */
     font-weight: bold;
@@ -23,25 +31,3 @@ p {
 .st-bh, .st-c2, .st-c3, .st-c4, .st-c5, .st-c6, .st-c7, .st-c8, .st-c9, .st-ca, .st-cb, .st-b8, .st-cc, .st-cd, .st-ce, .st-cf, .st-cg, .st-ch, .st-ci, .st-cj, .st-ae, .st-af, .st-ag, .st-ck, .st-ai, .st-aj, .st-c1, .st-cl, .st-cm, .st-cn {
     color: #073b4c; /* Dark Slate */
 }
-
-a {
-    text-decoration: none;
-    color: white !important;
-    font-weight: 500;
-}
-
-a:hover {
-    color: #d33682 !important;
-    text-decoration: none;
-}
-
-ul {list-style-type: none;}
-
-hr {
-    margin-top: 0px;
-    margin-bottom: 5%;
-}
-
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}

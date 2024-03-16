@@ -10,7 +10,6 @@ from st_functions import gradient
 
 st.set_page_config(layout="wide", initial_sidebar_state='expanded')
 
-
 @st.cache_data
 def get_img_as_base64(file):
     with open(file, "rb") as f:

@@ -1,7 +1,6 @@
 import base64
 from io import BytesIO
 
-import streamlit
 import streamlit as st
 from PIL import Image
 

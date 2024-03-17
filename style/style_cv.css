@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');*/
+
 [data-testid=stSidebar] {
     background-image: linear-gradient(#ff7e5f, #feb47b); /* Watermelon to Peach */
     font-weight: bold;
@@ -45,3 +46,18 @@ hr {
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
+
+
+[data-testid="stHeader"] {
+    background: rgba(0,0,0,0);
+}
+
+[data-testid="stToolbar"] {
+    right: 2rem;
+    font-weight: bold;
+}
+
+/* Full-width containers */
+.stBlock {
+    max-width: 100%;
+}

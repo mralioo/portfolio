@@ -126,3 +126,8 @@ def gradient(color1, color2, color3, content1, content2):
         f'<span style="color:{color3};">{content1}</span><br>'
         f'<span style="color:white;font-size:17px;">{content2}</span></h1>',
         unsafe_allow_html=True)
+
+
+def get_image_as_base64(url):
+    with open(url, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()

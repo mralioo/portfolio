@@ -33,30 +33,24 @@ p {
     color: #073b4c; /* Dark Slate */
 }
 
-[data-testid="stHeader"] {
-    background: rgba(0,0,0,0);
+a {
+    text-decoration: none;
+    color: white !important;
+    font-weight: 500;
 }
 
-[data-testid="stToolbar"] {
-    right: 2rem;
-    font-weight: bold;
+a:hover {
+    color: #d33682 !important;
+    text-decoration: none;
 }
 
-/* Increase font size for titles and text */
-h1, h2, h3, h4, h5, h6 {
-    font-size: 1.4em; /* Adjust the size as needed */
+ul {list-style-type: none;}
+
+hr {
+    margin-top: 0px;
+    margin-bottom: 5%;
 }
 
-.stText, .stMarkdown {
-    font-size: 1.3em; /* Adjust text size as needed */
-}
-
-/* Customize specific Streamlit elements by class name */
-.element-container {
-    font-size: 1.6em; /* Example: Increase font size for container elements */
-}
-
-/* Full-width containers */
-.stBlock {
-    max-width: 100%;
-}
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}

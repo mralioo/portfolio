@@ -6,6 +6,7 @@
 /*    background-attachment: local;*/
 /*}*/
 
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
 
 [data-testid=stSidebar] {
     background-image: linear-gradient(#ff7e5f, #feb47b); /* Watermelon to Peach */

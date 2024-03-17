@@ -4,9 +4,38 @@ st.set_page_config(layout="wide", initial_sidebar_state='auto')
 
 local_css("style/style_cv.css")
 
+# --- PROFILE IMAGE ---
+# Custom CSS to include in your app
+
+image_path = "images/profile.jpg"
+base64_image = get_image_as_base64(image_path)
+
+custom_html = f"""
+<style>
+.circular-image {{
+    position: absolute; /* Use 'fixed' if you want it to stay in place while scrolling */
+    top: 10px; /* Distance from the top */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust horizontal positioning */
+    width: 250px;  /* Adjust based on your image's size */
+    height: 250px;  /* Adjust based on your image's size */
+    border-radius: 50%;
+    border: 4px solid #ffffff;  /* Optional: border color */
+    z-index: 999;  /* Ensure the image is above other elements */
+}}
+</style>
+<img src="data:image/jpeg;base64,{base64_image}" alt="Profile Image" class="circular-image">
+"""
+# # Use st.markdown to render the custom HTML
+# st.markdown(custom_html, unsafe_allow_html=True)
+#
+#
+# add_space(10)
+
 # --- TITLE ---
 
 st.title("📝 Resume")
+
 
 # Education
 st.subheader("Education 🎓")
@@ -229,12 +258,13 @@ with col2:
 
 # Download PDF
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([4, 1, 1])
 with col1:
-    st.write(
-        "[Click here if it's blocked by your browser](https://drive.google.com/file/d/1JABDlAxeHfuSJV0IuyMJKZJ85IH6vJAR/view?usp=drive_link)")
-
     with open("images/cv_ali_alouane.pdf", "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
         pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1000mm" height="1000" type="application/pdf"></iframe>'
         st.markdown(pdf_display, unsafe_allow_html=True)
+
+with col3:
+    st.write("📥", "Download PDF")
+    st.markdown(f'<a href="data:application/pdf;base64,{base64_pdf}" download="cv_ali_alouane.pdf">Click here to download</a>', unsafe_allow_html=True)

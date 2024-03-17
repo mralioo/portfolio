@@ -1,7 +1,6 @@
-import base64
-
 import pandas as pd
 import streamlit as st
+
 from st_functions import local_css
 
 
@@ -29,6 +28,8 @@ Ahoy, fellow digital voyager! You've just docked at the space station of my imag
 
 💼 **Professional Odyssey:** Journey with me through the landscapes of my professional life, where ideas took flight, and challenges were vanquished. Each project here is a testament to what I've learned on the job, from the art of machine learning to the craft of seamless software deployment. These are not just tasks completed but milestones in my quest for continuous growth and learning.
 
+🎨 **Passionate Pursuits:** Explore my journey into new realms of creativity and excitement with hobby and fun projects that unlocked fresh passions. From experimental art installations to whimsical game prototypes, each endeavor in this category is a testament to the joy of exploration and the thrill of discovery. Join me in uncovering the unexpected and embracing the playful side of innovation.
+
 So, whether you're here to find a kindred spirit, seek inspiration, or just curious to see what a blend of curiosity, hard work, and a touch of madness can create, you're in the right place. Let's explore these digital realms together, and who knows? Maybe we'll discover the next big thing waiting just around the corner of our combined creativity.
 
 Remember, in this digital odyssey, every project is a story, every code snippet a verse, and every debug session a battle won. Let's turn the page to the next chapter of innovation together! ✨🚀
@@ -46,12 +47,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
     ["Brain-Computer Interface 🎓",
      "Optiiway 🏆",
      "RL for clutch system💼",
      "Double Inverted Pendulum 🎓",
-     "GnuGym 🎓"])
+     "GnuGym 🎓",
+     "Better call Saul 🎨"])
 
 with tab1:
     st.header("AutoML BCI")
@@ -92,8 +94,6 @@ with tab1:
         st.caption('pytorch')
 
 with tab2:
-    import streamlit as st
-
     # Project Header
     st.header("Optiiway: The LLM Companion for EV Owners 🚗⚡")
 
@@ -121,18 +121,18 @@ with tab2:
     with col2:
         display_devicon('googlecloud', 'original', '60px')
         st.caption('Google Cloud')
+
     with col3:
-        # Assuming you have an icon for Gemini LLM or use a placeholder
-        st.markdown("🧠")
-        st.caption('Gemini LLM')
+        # Define the SVG code for the Gemini icon
+        gemini_icon_svg = """
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 188">
+          <!-- SVG path code here -->
+        </svg>
+        """
 
-    # Link to Pitch PDF
-    # st.markdown("📄 Check out our pitch presentation for a deeper dive into Optiway:")
-
-    # with open("images/Optiiway_FinalPresentation.pdf", "rb") as f:
-    #     base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-    #     pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1000mm" height="1000" type="application/pdf"></iframe>'
-    #     st.markdown(pdf_display, unsafe_allow_html=True)
+        # Display the Gemini icon
+        st.markdown(gemini_icon_svg, unsafe_allow_html=True)
+        st.caption('Google Gemini')
 
 with tab3:
     st.header("Reinforcement Learning Framework for Automotive Application")
@@ -219,4 +219,52 @@ with tab5:
         st.markdown("🤖")
         st.caption('OpenAI Gym')
 
+with tab6:
+    st.header("Better Call Saul Chatbot")
+    st.write("""
+    Better Call Saul Chatbot is a hobby project aimed at creating a chatbot for legal counsel. It utilizes a combination of techniques including Rasa for chatbot implementation and a Large Language Model (LLM) trained on a corpus of legal documents. The chatbot is accessible through a web interface built with Streamlit.
 
+    Key Features:
+
+    - **Advanced NLP Capabilities:** The chatbot leverages LLM technology to understand legal queries and provide relevant responses.
+
+    - **Personalized Assistance:** It aims to offer personalized legal advice by analyzing user input and adapting its responses accordingly.
+
+    - **Seamless Communication:** Integration with Rasa ensures smooth interaction between users and the chatbot.
+
+    - **User-Friendly Interface:** The web interface, developed with Streamlit, provides an intuitive platform for users to engage with the chatbot.
+
+    - **Continuous Learning:** The chatbot's knowledge base is continuously updated to keep pace with the latest legal developments.
+
+    Better Call Saul Chatbot is a passion project focused on exploring the capabilities of AI in the legal domain. It serves as a platform for experimentation and learning in the fields of NLP and legal technology.
+    """)
+    st.image("images/rag.png", width=1000)
+    st.write("[Source Code](https://github.com/mralioo/better_call_saul_bot)")
+
+    # Display technologies used in the project
+    st.markdown("👩‍💻 **Technologies:**")
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        display_devicon('python', 'original', '60px')
+        st.caption('Python')
+    with col2:
+        display_devicon('pytorch', 'original', '60px')
+        st.caption('PyTorch')
+    with col3:
+        st.markdown("""
+            <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 48 48">
+                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="M18.38 27.94v-14.4l11.19-6.46c6.2-3.58 17.3 5.25 12.64 13.33"/>
+                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m18.38 20.94l12.47-7.2l11.19 6.46c6.2 3.58 4.1 17.61-5.23 17.61"/>
+                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m24.44 17.44l12.47 7.2v12.93c0 7.16-13.2 12.36-17.86 4.28"/>
+                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="M30.5 21.2v14.14L19.31 41.8c-6.2 3.58-17.3-5.25-12.64-13.33"/>
+                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m30.5 27.94l-12.47 7.2l-11.19-6.46c-6.21-3.59-4.11-17.61 5.22-17.61"/>
+                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m24.44 31.44l-12.47-7.2V11.31c0-7.16 13.2-12.36 17.86-4.28"/>
+            </svg>
+            """, unsafe_allow_html=True)
+        st.caption('ChatGPT')
+
+    with col4:
+        st.markdown(
+            "<svg xmlns='http://www.w3.org/2000/svg' width='60px' height='60px' viewBox='0 0 24 24'><path fill='currentColor' d='m20.848 15.852l-3.882-2.034H.97V7.515h22.06v6.303h-2.182zM0 6.545v8.243h16.727l5.091 2.667v-2.667H24V6.545zm1.94 1.94h4.12v2.18l-1.33.517l1.362 1.666H4.84l-1.06-1.296l-.87.339v.957h-.97zM8 12.848h-.97V8.485h4.364v4.363h-.97v-1.454H8zm4.364-1.696V8.485h4.363v.97h-3.394v.727h3.394v2.666h-4.363v-.97h3.394v-.726zm5.333-.243V8.485h4.364v4.363h-.97v-1.454h-2.424v1.454h-.97zm-14.788-.06l2.182-.848v-.546H2.909zM8 9.456v.97h2.424v-.97zm13.09.97v-.97h-2.423v.97h2.424Z'/></svg>",
+            unsafe_allow_html=True)
+        st.caption('RASA')

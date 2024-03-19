@@ -1,17 +1,25 @@
 import streamlit as st
-
+from pathlib import Path
 from st_functions import local_css
 
+st.set_page_config(layout="wide", initial_sidebar_state='expanded')
+
 st.title("💼 Blogs")
-st.markdown("""
-## This page is under construction! 🏗️👷
-Hey there! We're working hard to make this page as awesome as possible. 🛠️💥
 
-Stay tuned, and thanks for your patience! You're awesome! 🌟
+# Function to load and display a post
+def display_post(post_file):
+    with open(f"blogs/{post_file}", "r", encoding="utf-8") as file:
+        markdown_content = file.read()
+    st.markdown(markdown_content, unsafe_allow_html=True)
 
-Remember, good things come to those who wait... or those who come back later. 😉
-""")
+# Dictionary mapping titles to filenames
+blog_posts = {
+    " Brain-to-text communication via handwriting": "1_brain_text_cx.md",
+    "Brain-Computer Interface": "2_smr_bci.md"
+}
 
-# Optionally, include an under-construction image
-st.image("images/under-construction-1bj.png", width=700)
-local_css("style/style_home.css")
+# Post selection
+selected_post_title = st.selectbox("Select a Blog Post", list(blog_posts.keys()))
+
+# Display the selected post
+display_post(blog_posts[selected_post_title])

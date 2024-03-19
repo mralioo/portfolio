@@ -10,6 +10,17 @@ local_css("style/style_cv.css")
 image_path = "images/profile.jpg"
 base64_image = get_image_as_base64(image_path)
 
+custom_html_1 = f"""
+            <style>
+                [data-testid="stSidebar"] {{
+                    background-image: url(http://placekitten.com/120/120);
+                    background-repeat: no-repeat;
+                    padding-top: 80px;
+                    background-position: 20px 20px;
+                }}
+            </style>
+            """
+
 custom_html = f"""
 <style>
 .circular-image {{
@@ -17,25 +28,24 @@ custom_html = f"""
     top: 10px; /* Distance from the top */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Adjust horizontal positioning */
-    width: 250px;  /* Adjust based on your image's size */
-    height: 250px;  /* Adjust based on your image's size */
+    width: 320px;  /* Adjust based on your image's size */
+    height: 320px;  /* Adjust based on your image's size */
     border-radius: 50%;
-    border: 4px solid #ffffff;  /* Optional: border color */
+    border: 1px solid #ffffff;  /* Optional: border color */
     z-index: 999;  /* Ensure the image is above other elements */
 }}
 </style>
 <img src="data:image/jpeg;base64,{base64_image}" alt="Profile Image" class="circular-image">
 """
-# # Use st.markdown to render the custom HTML
-# st.markdown(custom_html, unsafe_allow_html=True)
-#
-#
+# Use st.markdown to render the custom HTML
+st.sidebar.markdown(custom_html, unsafe_allow_html=True)
+# add_logo("images/profile.jpg",height=250)
+
 # add_space(10)
 
 # --- TITLE ---
 
 st.title("📝 Resume")
-
 
 # Education
 st.subheader("Education 🎓")
@@ -267,4 +277,6 @@ with col1:
 
 with col3:
     st.write("📥", "Download PDF")
-    st.markdown(f'<a href="data:application/pdf;base64,{base64_pdf}" download="cv_ali_alouane.pdf">Click here to download</a>', unsafe_allow_html=True)
+    st.markdown(
+        f'<a href="data:application/pdf;base64,{base64_pdf}" download="cv_ali_alouane.pdf">Click here to download</a>',
+        unsafe_allow_html=True)

@@ -1,4 +1,3 @@
-# Neural Decoding for Handwriting: A Case Study
 
 ## Introduction
 
@@ -42,38 +41,59 @@ Data collection occurs in blocks lasting 5 to 10 minutes, comprising uninterrupt
 ## Neural Decoding Methods
 ![Alt text](https://github.com/mralioo/portfolio/blob/1_portfolio_streamlit/images/bcx_workflow.png?raw=true)
 
-### Data Analysis
-- **Principal Components Analysis (PCA):** Reduced neural activity to top 3 dimensions.
-- **Time-Aligned Analysis:** Removal of temporal variability for consistent neural patterns.
-- **t-Distributed Stochastic Neighbor Embedding (t-SNE):** Nonlinear dimensionality reduction for visualization.
+[//]: # (### Data Analysis)
 
-### Linear Decoder
-- **Training:** Linear decoding of pen tip velocity from neural activity.
-- **Decoder Structure:** Computed velocity based on threshold crossing rates and hand-made templates.
+[//]: # (- **Principal Components Analysis &#40;PCA&#41;:** Reduced neural activity to top 3 dimensions.)
 
-### Recurrent Neural Network (RNN) Decoder
-- **Architecture:** Two-layer gated recurrent unit (GRU) RNN trained with an output delay.
-- **Preprocessing:** Binning, z-scoring, smoothing, and concatenation of threshold crossing rates.
+[//]: # (- **Time-Aligned Analysis:** Removal of temporal variability for consistent neural patterns.)
 
-### Data Labeling
-- **Challenge:** Unknown character labeling addressed using forced-alignment or unsupervised inference techniques.
+[//]: # (- **t-Distributed Stochastic Neighbor Embedding &#40;t-SNE&#41;:** Nonlinear dimensionality reduction for visualization.)
 
-## Performance Evaluation
+[//]: # ()
+[//]: # (### Linear Decoder)
 
-### Metrics
-- **Character Error Rate:** Edit distance between decoded sentence and prompt.
+[//]: # (- **Training:** Linear decoding of pen tip velocity from neural activity.)
 
-### Real-Time Evaluation
-- **Continuous Training:** RNN retraining with new data on each session.
+[//]: # (- **Decoder Structure:** Computed velocity based on threshold crossing rates and hand-made templates.)
 
-## Language Model Integration
+[//]: # ()
+[//]: # (### Recurrent Neural Network &#40;RNN&#41; Decoder)
 
-### Retrospective Analysis
-- **Custom Language Model:** Autocorrection of decoding errors for improved accuracy.
+[//]: # (- **Architecture:** Two-layer gated recurrent unit &#40;GRU&#41; RNN trained with an output delay.)
 
-## Conclusion
+[//]: # (- **Preprocessing:** Binning, z-scoring, smoothing, and concatenation of threshold crossing rates.)
 
-This case study demonstrates the application of neural decoding techniques to handwriting tasks in a patient with a spinal cord injury. The results highlight the potential of neural interfaces for restoring communication and motor function in individuals with severe neurological impairments.
+[//]: # ()
+[//]: # (### Data Labeling)
+
+[//]: # (- **Challenge:** Unknown character labeling addressed using forced-alignment or unsupervised inference techniques.)
+
+[//]: # ()
+[//]: # (## Performance Evaluation)
+
+[//]: # ()
+[//]: # (### Metrics)
+
+[//]: # (- **Character Error Rate:** Edit distance between decoded sentence and prompt.)
+
+[//]: # ()
+[//]: # (### Real-Time Evaluation)
+
+[//]: # (- **Continuous Training:** RNN retraining with new data on each session.)
+
+[//]: # ()
+[//]: # (## Language Model Integration)
+
+[//]: # ()
+[//]: # (### Retrospective Analysis)
+
+[//]: # (- **Custom Language Model:** Autocorrection of decoding errors for improved accuracy.)
+
+[//]: # ()
+[//]: # (## Conclusion)
+
+[//]: # ()
+[//]: # (This case study demonstrates the application of neural decoding techniques to handwriting tasks in a patient with a spinal cord injury. The results highlight the potential of neural interfaces for restoring communication and motor function in individuals with severe neurological impairments.)
 
 
 ## References

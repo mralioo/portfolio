@@ -119,7 +119,9 @@ def display_image_with_link(file_path, url, caption='', width=100):
     # Display the HTML in Streamlit
     st.markdown(html_str, unsafe_allow_html=True)
 
-
+def load_svg(svg_file_path):
+    with open(svg_file_path, 'r') as file:
+        return file.read()
 def gradient(color1, color2, color3, content1, content2):
     st.markdown(
         f'<h1 style="text-align:center;background-image: linear-gradient(to right,{color1}, {color2});font-size:60px;border-radius:2%;">'

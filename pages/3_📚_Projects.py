@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 
-from st_functions import local_css
+from st_functions import *
 
 
 def display_devicon(icon_name, icon_color, width="50px"):
@@ -220,30 +220,31 @@ with tab5:
         st.caption('OpenAI Gym')
 
 with tab6:
-    st.header("Better Call Saul Chatbot")
+    st.header("Better Call Saul Chatbot: Your AI Legal Advisor")
     st.write("""
-    Better Call Saul Chatbot is a hobby project aimed at creating a chatbot for legal counsel. It utilizes a combination of techniques including Rasa for chatbot implementation and a Large Language Model (LLM) trained on a corpus of legal documents. The chatbot is accessible through a web interface built with Streamlit.
+    The "Better Call Saul Chatbot" is an innovative project designed to simulate a virtual legal advisor, providing users with accessible and personalized legal counsel. At the heart of this project lies a sophisticated integration of cutting-edge technologies, including the Llama 2 Large Language Model (LLM) and the Retrieval-Augmented Generation (RAG) for dynamic information retrieval from a comprehensive legal dataset. This chatbot is brought to life through a user-friendly web interface crafted with Gradio, ensuring an intuitive and engaging user experience.
 
-    Key Features:
+    #### Core Features:
 
-    - **Advanced NLP Capabilities:** The chatbot leverages LLM technology to understand legal queries and provide relevant responses.
+    - **Sophisticated Understanding:** Utilizing the advanced capabilities of Llama 2, our chatbot exhibits an exceptional understanding of complex legal queries, offering precise and contextually relevant advice.
 
-    - **Personalized Assistance:** It aims to offer personalized legal advice by analyzing user input and adapting its responses accordingly.
+    - **Dynamic Information Retrieval:** With RAG, the chatbot enhances its responses by accessing a vast legal dataset, ensuring that the advice provided is backed by up-to-date legal precedents and documents.
 
-    - **Seamless Communication:** Integration with Rasa ensures smooth interaction between users and the chatbot.
+    - **Personalized Legal Guidance:** The chatbot excels in delivering tailored advice, analyzing individual user inputs to generate customized responses that cater to specific legal needs.
 
-    - **User-Friendly Interface:** The web interface, developed with Streamlit, provides an intuitive platform for users to engage with the chatbot.
+    - **Streamlined User Interactions:** Powered by Gradio, the chatbot's web interface is designed for simplicity and ease of use, allowing users to effortlessly navigate through their legal inquiries.
 
-    - **Continuous Learning:** The chatbot's knowledge base is continuously updated to keep pace with the latest legal developments.
+    - **Evolving Expertise:** Our commitment to continuous improvement means the chatbot's knowledge base is regularly updated, incorporating the latest legal insights to remain a reliable source of information.
 
-    Better Call Saul Chatbot is a passion project focused on exploring the capabilities of AI in the legal domain. It serves as a platform for experimentation and learning in the fields of NLP and legal technology.
-    """)
-    st.image("images/rag.png", width=1000)
+    The "Better Call Saul Chatbot" represents a fusion of passion and technology, exploring the potential of AI to revolutionize legal consultation. It stands as a testament to the possibilities within the realms of Natural Language Processing (NLP) and legal tech, serving both as a practical tool for users and a platform for ongoing experimentation and discovery in AI-driven legal assistance.
+    """, unsafe_allow_html=True)
+
+    st.image("images/rag_2.png", width=1000)
     st.write("[Source Code](https://github.com/mralioo/better_call_saul_bot)")
 
     # Display technologies used in the project
     st.markdown("👩‍💻 **Technologies:**")
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         display_devicon('python', 'original', '60px')
         st.caption('Python')
@@ -251,20 +252,18 @@ with tab6:
         display_devicon('pytorch', 'original', '60px')
         st.caption('PyTorch')
     with col3:
-        st.markdown("""
-            <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="60px" viewBox="0 0 48 48">
-                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="M18.38 27.94v-14.4l11.19-6.46c6.2-3.58 17.3 5.25 12.64 13.33"/>
-                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m18.38 20.94l12.47-7.2l11.19 6.46c6.2 3.58 4.1 17.61-5.23 17.61"/>
-                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m24.44 17.44l12.47 7.2v12.93c0 7.16-13.2 12.36-17.86 4.28"/>
-                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="M30.5 21.2v14.14L19.31 41.8c-6.2 3.58-17.3-5.25-12.64-13.33"/>
-                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m30.5 27.94l-12.47 7.2l-11.19-6.46c-6.21-3.59-4.11-17.61 5.22-17.61"/>
-                <path fill="none" stroke="currentColor" stroke-linejoin="round" d="m24.44 31.44l-12.47-7.2V11.31c0-7.16 13.2-12.36 17.86-4.28"/>
-            </svg>
-            """, unsafe_allow_html=True)
-        st.caption('ChatGPT')
+        # icon for Llama 2
+        st.image('images/Llama_2.png', width=100)
+        st.caption('Llama 2')
 
     with col4:
         st.markdown(
             "<svg xmlns='http://www.w3.org/2000/svg' width='60px' height='60px' viewBox='0 0 24 24'><path fill='currentColor' d='m20.848 15.852l-3.882-2.034H.97V7.515h22.06v6.303h-2.182zM0 6.545v8.243h16.727l5.091 2.667v-2.667H24V6.545zm1.94 1.94h4.12v2.18l-1.33.517l1.362 1.666H4.84l-1.06-1.296l-.87.339v.957h-.97zM8 12.848h-.97V8.485h4.364v4.363h-.97v-1.454H8zm4.364-1.696V8.485h4.363v.97h-3.394v.727h3.394v2.666h-4.363v-.97h3.394v-.726zm5.333-.243V8.485h4.364v4.363h-.97v-1.454h-2.424v1.454h-.97zm-14.788-.06l2.182-.848v-.546H2.909zM8 9.456v.97h2.424v-.97zm13.09.97v-.97h-2.423v.97h2.424Z'/></svg>",
             unsafe_allow_html=True)
         st.caption('RASA')
+
+    with col5:
+        svg_content = load_svg("images/gradio.svg")
+        svg_content_resized = svg_content.replace('<svg', '<svg width="200" height="auto"', 1)
+        st.markdown(f'<div style="text-align: center;">{svg_content_resized}</div>', unsafe_allow_html=True)
+        st.caption('Gradio')

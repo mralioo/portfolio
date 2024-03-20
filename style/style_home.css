@@ -1,7 +1,7 @@
 /* style/style_home.css */
 
 [data-testid="stAppViewContainer"] > .main {
-    background-image: url("https://images.unsplash.com/photo-1501426026826-31c667bdf23d");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.12)), /* Dark overlay; adjust opacity as needed */ url("BG_IMAGE_PLACEHOLDER");
     background-size: 180%;
     background-position: top left;
     background-repeat: no-repeat;
@@ -44,13 +44,23 @@ a:hover {
     text-decoration: none;
 }
 
-ul {list-style-type: none;}
+ul {
+    list-style-type: none;
+}
 
 hr {
     margin-top: 0px;
     margin-bottom: 5%;
 }
 
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}

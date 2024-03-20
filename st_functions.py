@@ -133,3 +133,14 @@ def gradient(color1, color2, color3, content1, content2):
 def get_image_as_base64(url):
     with open(url, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode()
+
+def get_base64_encoded_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode('utf-8')
+
+def apply_custom_css_with_background(image_path, css_file_path):
+    encoded_image = get_base64_encoded_image(image_path)
+    with open(css_file_path, "r") as file:
+        css = file.read()
+        css = css.replace("BG_IMAGE_PLACEHOLDER", f"data:image/jpeg;base64,{encoded_image}")
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)

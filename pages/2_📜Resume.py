@@ -2,7 +2,8 @@ from st_functions import *
 
 st.set_page_config(layout="wide", initial_sidebar_state='auto')
 
-local_css("style/style_cv.css")
+# local_css("style/style_cv.css")
+apply_custom_css_with_background('images/irina-zhuravleva-22OIit878gU-unsplash.jpg', 'style/style_cv.css')
 
 # --- PROFILE IMAGE ---
 # Custom CSS to include in your app

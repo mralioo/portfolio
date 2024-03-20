@@ -10,16 +10,12 @@ from st_functions import gradient
 
 st.set_page_config(layout="wide", initial_sidebar_state='expanded')
 
+
 @st.cache_data
 def get_img_as_base64(file):
     with open(file, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
-
-
-# -----------------  background image  ----------------- #
-bg_img_main = get_img_as_base64("images/photo-1501426026826-31c667bdf23d.jpg")
-bg_img_side = get_img_as_base64("images/henry-co--odUkx8C2gg-unsplash.jpg")
 
 # -----------------  chatbot  ----------------- #
 # Set up the OpenAI key
@@ -74,7 +70,8 @@ def display_devicon(icon_name, icon_color, width="50px"):
 
 
 # Call the function at the start of your app to apply the styles
-local_css("style/style_home.css")
+# local_css("style/style_home.css")
+apply_custom_css_with_background('images/niklas-schoenberger-FkWJT0XiX2Y-unsplash.jpg', 'style/style_home.css')
 # ----------------- info ----------------- #
 full_name = info['Full_Name']
 with st.container():
@@ -147,40 +144,42 @@ with st.container():
         st.markdown("Google Cloud")
 
 # -----------------  Chat with MrAliOo  ----------------- #
-st.subheader('🤖 Chat With Me Now')
-
-
-# get the user's input by calling the get_text function
-
-# Custom CSS to increase font size of the text input prompt
-css = """
-<style>
-/* Target the description text of text_input widgets */
-[data-testid="stTextInput"] > div > div > div {
-    font-size: 40px !important;
-}
-</style>
+# Define the subheader with custom HTML and inline CSS for white font color
+chat_subheader_html = """
+<div style='font-size: 24px; color: white;'>Chat With Me Now 🤖</div>
 """
+
+# Display the custom-styled subheader
+st.markdown(chat_subheader_html, unsafe_allow_html=True)
 def get_text():
-    input_text = st.text_input(
-        "🤖 Meet MrAliOo, your AI BFF: A blend of genius and goofball, MrAliOo is here to guide you through my world. \n\n"
-        "🚀 Ready for a fun chat? Here's how to start:\n\n"
-        "🔑 Step 1: Pop your OpenAI API Key into the sidebar. \n\n"
-        "🎉 Step 2: Type your question and hit Enter. \n\n"
-        "✨ Let the adventures with MrAliOo begin! ✨",
-        key="input")
+    # Define the instruction text with varied font sizes, bullet points, and white font color
+    instruction_text = """
+    <div style='font-size: 20px; color: white;'>Meet MrAliOo, your AI BFF: A blend of genius and goofball, MrAliOo is here to guide you through my world.</div>
+
+    <div style='font-size: 16px; color: white;'>
+        🚀 <b>Ready for a fun chat? Here's how to start:</b>
+        <ul>
+            <li>🔑 <b>Step 1:</b> Pop your OpenAI API Key into the sidebar.</li>
+            <li>🎉 <b>Step 2:</b> Type your question and hit Enter.</li>
+        </ul>
+        ✨ Let the adventures with MrAliOo begin! ✨
+    </div>
+    """
+
+    # Display the instruction text with white font color
+    st.markdown(instruction_text, unsafe_allow_html=True)
+
+    # Input field for user's question
+    input_text = st.text_input("", key="input", placeholder="Type your question here...")
     return input_text
 
-
+# Example usage
 user_input = get_text()
-# Inject the custom CSS with st.markdown
-st.markdown(css, unsafe_allow_html=True)
 
 if user_input:
-    # text = st.text_area('Enter your questions')
     if not openai_api_key.startswith('sk-'):
-        st.warning('⚠️Please enter your OpenAI API key on the sidebar.', icon='⚠')
-    if openai_api_key.startswith('sk-'):
+        st.warning('⚠️ Please enter your OpenAI API key on the sidebar.', icon='⚠️')
+    elif openai_api_key.startswith('sk-'):
         st.info(ask_bot(user_input))
 
 # -----------------  footer  ----------------- #

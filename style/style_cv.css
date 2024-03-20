@@ -1,4 +1,15 @@
-/*@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');*/
+/* style/style_cv.css */
+
+/*[data-testid="stAppViewContainer"] > .main {*/
+/*    background-image:*/
+/*        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.75)), !* Dark overlay; adjust opacity as needed *!*/
+/*        url("BG_IMAGE_PLACEHOLDER");*/
+/*    background-size: 180%;*/
+/*    background-position: top left;*/
+/*    background-repeat: no-repeat;*/
+/*    background-attachment: local;*/
+/*}*/
+
 
 [data-testid=stSidebar] {
     background-image: linear-gradient(#ff7e5f, #feb47b); /* Watermelon to Peach */

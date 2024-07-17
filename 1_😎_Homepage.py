@@ -1,8 +1,7 @@
-import openai
+
 import requests
 import streamlit.components.v1 as components
-from llama_index.core import GPTVectorStoreIndex, SimpleDirectoryReader, ServiceContext
-from llama_index.llms.openai import OpenAI
+
 
 from constant import *
 from st_functions import *
@@ -17,38 +16,8 @@ def get_img_as_base64(file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-# -----------------  chatbot  ----------------- #
-# Set up the OpenAI key
-openai_api_key = st.sidebar.text_input('Enter your OpenAI API Key and hit Enter', type="password")
-openai.api_key = (openai_api_key)
-
-# load the file
-documents = SimpleDirectoryReader(input_files=["bio.txt"]).load_data()
-
 pronoun = info["Pronoun"]
 name = info["Name"]
-
-
-def ask_bot(input_text):
-    # define LLM
-    llm = OpenAI(
-        model_name="gpt-3.5-turbo",
-        temperature=0,
-        openai_api_key=openai.api_key,
-    )
-    # llm_predictor = LLMPredictor(llm=llm)
-    service_context = ServiceContext.from_defaults(llm=llm)
-
-    # load index
-    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
-
-    # query LlamaIndex and GPT-3.5 for the AI's response
-    PROMPT_QUESTION = f"""🤖 Meet Buddy, your AI wingman extraordinaire, here to help {name} navigate the thrilling world of job hunting. With a knack for dishing out relevant and snappy info to recruiters, Buddy's your go-to for all things {name}. But hey, even AI pals hit a snag sometimes. 🤷‍♂️ If Buddy's stumped, he'll gracefully bow out, pointing recruiters directly to {name} for the inside scoop. Remember, Buddy's too cool for "Buddy" labels or unnecessary line breaks in his replies.
-    Human: {input}"""
-
-    output = index.as_query_engine().query(PROMPT_QUESTION.format(input=input_text))
-    print(f"output: {output}")
-    return output.response
 
 
 with st.sidebar:
@@ -143,44 +112,7 @@ with st.container():
         display_devicon('googlecloud', 'original', '60px')
         st.markdown("Google Cloud")
 
-# -----------------  Chat with MrAliOo  ----------------- #
-# Define the subheader with custom HTML and inline CSS for white font color
-chat_subheader_html = """
-<div style='font-size: 24px; color: white;'>Chat With Me Now 🤖</div>
-"""
 
-# Display the custom-styled subheader
-st.markdown(chat_subheader_html, unsafe_allow_html=True)
-def get_text():
-    # Define the instruction text with varied font sizes, bullet points, and white font color
-    instruction_text = """
-    <div style='font-size: 20px; color: white;'>Meet MrAliOo, your AI BFF: A blend of genius and goofball, MrAliOo is here to guide you through my world.</div>
-
-    <div style='font-size: 16px; color: white;'>
-        🚀 <b>Ready for a fun chat? Here's how to start:</b>
-        <ul>
-            <li>🔑 <b>Step 1:</b> Pop your OpenAI API Key into the sidebar.</li>
-            <li>🎉 <b>Step 2:</b> Type your question and hit Enter.</li>
-        </ul>
-        ✨ Let the adventures with MrAliOo begin! ✨
-    </div>
-    """
-
-    # Display the instruction text with white font color
-    st.markdown(instruction_text, unsafe_allow_html=True)
-
-    # Input field for user's question
-    input_text = st.text_input("", key="input", placeholder="Type your question here...")
-    return input_text
-
-# Example usage
-user_input = get_text()
-
-if user_input:
-    if not openai_api_key.startswith('sk-'):
-        st.warning('⚠️ Please enter your OpenAI API key on the sidebar.', icon='⚠️')
-    elif openai_api_key.startswith('sk-'):
-        st.info(ask_bot(user_input))
 
 # -----------------  footer  ----------------- #
 # loading assets

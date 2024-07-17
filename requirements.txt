@@ -3,8 +3,5 @@ Requests
 streamlit
 streamlit_lottie
 streamlit_timeline
-llama-index
-llama-cpp-python
 nltk==3.8.1
 sentence_transformers
-langchain

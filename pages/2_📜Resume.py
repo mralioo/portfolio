@@ -25,18 +25,18 @@ custom_html_1 = f"""
 custom_html = f"""
 <style>
 .circular-image {{
-    position: absolute; /* Use 'fixed' if you want it to stay in place while scrolling */
-    top: 10px; /* Distance from the top */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust horizontal positioning */
-    width: 320px;  /* Adjust based on your image's size */
-    height: 320px;  /* Adjust based on your image's size */
-    border-radius: 50%;
-    border: 1px solid #ffffff;  /* Optional: border color */
-    z-index: 999;  /* Ensure the image is above other elements */
+    position: relative; /* Adjust if needed */
+    top: 0; /* Adjust if needed */
+    left: 0; /* Adjust if needed */
+    width: 350px; /* Adjust based on your image's size */
+    height: 350px; /* Adjust based on your image's size */
+    border-radius: 50%; /* Create a perfect circle */
+    border: 2px solid #ffffff; /* Border color and width */
+    z-index: 999; /* Ensure the image is above other elements */
 }}
 </style>
 <img src="data:image/jpeg;base64,{base64_image}" alt="Profile Image" class="circular-image">
+
 """
 # Use st.markdown to render the custom HTML
 st.sidebar.markdown(custom_html, unsafe_allow_html=True)
@@ -62,11 +62,11 @@ with col1:
     </style>
 
     <div class="big-font">
-    Master of Science | Technische Universität Berlin (2018–2024)
+    Master of Science | Technical University of Berlin (2018–2024)
     </div> 
 
     <div>
-    <strong>Electrical Engineering</strong> Specialising in communication networks and signal processing.
+    <strong>Electrical Engineering</strong> Specializing in communication networks and signal processing.
     </div>
 
     <div>
@@ -92,11 +92,11 @@ with col1:
     </style>
 
     <div class="big-font">
-    Bachelor of science | Universität Stuttgart (2013–2017)
+    Bachelor of science | Universiy of Stuttgart(2013–2017)
     </div> 
 
     <div>
-    <strong>Electrical Engineering</strong> Specialising in communication networks and signal processing.
+    <strong>Electrical Engineering</strong> Specializing in communication networks and signal processing.
     </div>
 
     <div>
@@ -120,6 +120,7 @@ with col1:
     st.write("04/2022 – 10/2023")
     st.write("""
     - ► Collected, labeled, and cleaned datasets for diverse projects.
+    - ► Investigate and visulaize .
     - ► Developed and fine-tuned machine learning models for optimized performance.
     - ► Managed AWS ecosystem components.
     """)

@@ -1,5 +1,4 @@
 import pandas as pd
-import streamlit as st
 
 from st_functions import *
 
@@ -47,42 +46,33 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
-    ["Brain-Computer Interface 🎓",
-     "Optiiway 🏆",
-     "RL for clutch system💼",
-     "Double Inverted Pendulum 🎓",
-     "GnuGym 🎓",
-     "Better call Saul 🎨"])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Brain-Computer Interface 🎓",
+                                                     "Optiiway 🏆",
+                                                     "RL for clutch system💼",
+                                                     "Double Inverted Pendulum 🎓",
+                                                     "GnuGym 🎓",
+                                                     "Better call Saul 🎨",
+                                                     "HireChat 🏆"])
 
 with tab1:
-    st.header("AutoML BCI")
-    st.write(
-        "AutoML BCI is a framework to train neural network dedicated for Brain-Computer Interface Problem. it supports hyperparameters tunning using Optuna framework, and enables live tracking and model monitoring via Tensorbaord.")
+    st.header("BBCPy_DNN")
+    st.write("""
+    The BBCPy_DNN is an integral component for the BBCPy toolbox designed to facilitate the development and exploration of Deep Neural Networks (DNNs) within the PyTorch framework. BBCPy_DNN supports a lifecycle that seeks to cultivate the best-performing models, delivering superior results through continuous improvement.
+    """)
 
     description = """
-    Motor imagery-based brain-computer interfaces (MI-BCIs) represent a significant
-    paradigm within the field of neurotechnology, particularly for individuals with
-    paralysis. By mentally rehearsing motor movements, MI-BCIs facilitate control
-    over prosthetic limbs or wheelchairs. The construction of a classifier for MI-BCI applications involves complex processing and feature extraction from brain signals
-    to distinguish between various mental states. BCI is inherently multidisciplinary,
-    demanding expertise not only in neuroscience, machine learning, and electrical
-    engineering but also in software development. The complexity of integrating
-    these disciplines necessitates a comprehensive toolbox that encompasses standard
-    methods and is regularly updated with new datasets and algorithms. Such a toolbox enables scientists and engineers to rapidly prototype and develop algorithms
-    efficiently. Given the increasing prominence of deep learning in numerous fields,
-    this thesis introduces a deep learning interface incorporated into an existing BCI
-    toolbox. This interface streamlines the development and training of neural networks, adhering to a more automated and standardized machine learning lifecycle.
-    Utilizing the Sensorimotor Rhythm (SMR) dataset, the largest open BCI dataset
-    available, this thesis integrates it into the BBCPy toolbox as a standard resource.
-    The dataset is employed as a benchmark for evaluating the performance of deep
-    learning models in the Motor imagery BCI classification task.
+    Motor imagery-based brain-computer interfaces (MI-BCIs) represent a significant paradigm within the field of neurotechnology, particularly for individuals with paralysis. By mentally rehearsing motor movements, MI-BCIs facilitate control over prosthetic limbs or wheelchairs. The construction of a classifier for MI-BCI applications involves complex processing and feature extraction from brain signals to distinguish between various mental states. BCI is inherently multidisciplinary, demanding expertise not only in neuroscience, machine learning, and electrical engineering but also in software development. The complexity of integrating these disciplines necessitates a comprehensive toolbox that encompasses standard methods and is regularly updated with new datasets and algorithms. Such a toolbox enables scientists and engineers to rapidly prototype and develop algorithms efficiently. Given the increasing prominence of deep learning in numerous fields, this thesis introduces a deep learning interface incorporated into an existing BCI toolbox. This interface streamlines the development and training of neural networks, adhering to a more automated and standardized machine learning lifecycle.
+
+    Utilizing the Sensorimotor Rhythm (SMR) dataset, the largest open BCI dataset available, this thesis integrates it into the BBCPy toolbox as a standard resource. The dataset is employed as a benchmark for evaluating the performance of deep learning models in the Motor imagery BCI classification task.
+     
+     
+     This toolbox was developed during my master thesis as part of The Berlin Brain-Computer Pynterface (BBCPy) project, developed by the neurotechnology group at TU Berlin. The BBCPy is engineered as a versatile system for BCI applications, suitable for both offline analysis and online experiments.
     """
 
     st.write(description)
 
-    st.image("images/automl_bci.png", width=1000)
-    st.write("[Source Code](https://github.com/mralioo/AutoML_BCI)")
+    st.image("images/BBCPy_DNN.png", width=1300)
+    st.write("[Source Code](https://github.com/mralioo/BBCPy_DNN)")
 
     st.markdown("👩‍💻 **Technologies:**")
     col1, col2, col3 = st.columns(3)
@@ -267,3 +257,32 @@ with tab6:
         svg_content_resized = svg_content.replace('<svg', '<svg width="200" height="auto"', 1)
         st.markdown(f'<div style="text-align: center;">{svg_content_resized}</div>', unsafe_allow_html=True)
         st.caption('Gradio')
+
+with tab7:
+    st.header("HireChat: AI Chatbot for Recruitment")
+    st.write("""
+    HireChat is developed to enhance recruitment processes by automating responses to frequently asked questions from candidates. By tailoring these responses to each company’s specific needs, HireChat ensures that communication is relevant and engaging. This rapid response capability lightens the workload for recruiters, enabling them to focus on more crucial aspects of the hiring process. Moreover, HireChat's prompt replies help maintain candidate interest and satisfaction.
+
+    Future enhancements will focus on improving HireChat's integration with HR systems and refining its algorithm to boost response accuracy and efficiency. The aim is to establish HireChat as an essential tool for efficient and effective recruitment across various industries.
+
+    #### My Experience:
+    During this project, my role was to evaluate the RAG system using Tonic AI. I utilized the Tonic AI dashboard to assess the metrics of the benchmark Q&A, ensuring the system's responses were accurate and relevant. The journey through the hackathon organized by LabLab.ai was incredibly engaging and rewarding. Our team won the best project award for utilizing Tonic AI as an evaluation system.
+    """)
+
+    st.write("[Presentation](https://lablab.ai/event/advanced-rag-hackathon/ai-powerhouse/hire-chat)")
+
+    # Display technologies used in the project
+    st.markdown("👩‍💻 **Technologies:**")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        display_devicon('python', 'original', '60px')  # Assuming using Python for OpenAI
+        st.caption('Python (OpenAI)')
+
+    with col2:
+        display_devicon('python', 'original', '60px')  # Assuming using Python for Tonic.ai
+        st.caption('Python (Tonic.ai)')
+
+    with col3:
+        display_devicon('python', 'original', '60px')  # Assuming using Python for Vectara
+        st.caption('Python (Vectara)')

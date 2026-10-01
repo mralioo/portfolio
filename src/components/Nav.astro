@@ -1,0 +1,19 @@
+---
+const links = [
+  { title: 'About', href: '/#about' },
+  { title: 'Experience', href: '/#experience' },
+  { title: 'Projects', href: '/#projects' },
+  { title: 'Blog', href: '/blog' },
+  { title: 'Contact', href: '/#contact' },
+];
+---
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="/">ali<span>.</span>alouane</a>
+    <ul>
+      {links.map((l) => (
+        <li><a href={l.href}>{l.title}</a></li>
+      ))}
+    </ul>
+  </div>
+</nav>

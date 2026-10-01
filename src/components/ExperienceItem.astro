@@ -1,0 +1,15 @@
+---
+import type { ExperienceItem } from '../data/experience';
+const { item } = Astro.props as { item: ExperienceItem };
+---
+<div class="timeline-item reveal">
+  <div class="timeline-date">{item.start} – {item.end}</div>
+  <h3>{item.role}</h3>
+  <div class="timeline-org">{item.org}</div>
+  <ul>
+    {item.bullets.map((b) => <li>{b}</li>)}
+  </ul>
+  <div class="tag-row">
+    {item.stack.map((s) => <span class="tag">{s}</span>)}
+  </div>
+</div>

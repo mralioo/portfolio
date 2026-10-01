@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  summary: string;
+  stack: string[];
+  repo?: string;
+  demo?: string;
+  href?: string;
+}
+const { title, summary, stack, repo, demo, href } = Astro.props as Props;
+---
+<div class="card reveal">
+  <h3>{href ? <a href={href}>{title}</a> : title}</h3>
+  <p>{summary}</p>
+  <div class="tag-row" style="margin-bottom:1rem;">
+    {stack.map((s) => <span class="tag">{s}</span>)}
+  </div>
+  <div class="links">
+    {repo && <a href={repo} target="_blank" rel="noreferrer">GitHub →</a>}
+    {demo && <a href={demo} target="_blank" rel="noreferrer">Live →</a>}
+  </div>
+</div>

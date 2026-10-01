@@ -1,0 +1,162 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ExperienceItemCmp from '../components/ExperienceItem.astro';
+import EducationItemCmp from '../components/EducationItem.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { profile } from '../data/profile';
+import { experience } from '../data/experience';
+import { education, certificates } from '../data/education';
+import { skillGroups, languages, softSkills } from '../data/skills';
+import { hobbies, hackathons, clubs } from '../data/extras';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+<BaseLayout>
+  <Hero />
+
+  <section id="about">
+    <div class="wrap">
+      <h2><span class="kicker">01</span> About</h2>
+      <p class="reveal">{profile.heroDescription}</p>
+      <p class="reveal text-dim">Based in {profile.location}.</p>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <h2><span class="kicker">02</span> Experience</h2>
+      <div class="timeline">
+        {experience.map((item) => <ExperienceItemCmp item={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="wrap">
+      <h2><span class="kicker">03</span> Education</h2>
+      <div class="timeline">
+        {education.map((item) => <EducationItemCmp item={item} />)}
+      </div>
+
+      <h3 class="reveal" style="margin-top:3rem; font-size:1.1rem;">Certificates</h3>
+      <div class="grid reveal">
+        {certificates.map((c) => (
+          <div class="card">
+            <h3>{c.title}</h3>
+            <p>{c.org} — {c.date}</p>
+            {c.detail && <p>{c.detail}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <h2><span class="kicker">04</span> Projects</h2>
+      <div class="grid">
+        {projects.map((p) => (
+          <ProjectCard
+            title={p.data.title}
+            summary={p.data.summary}
+            stack={p.data.stack}
+            repo={p.data.repo}
+            demo={p.data.demo}
+            href={`/projects/${p.slug}`}
+          />
+        ))}
+      </div>
+      <p class="reveal" style="margin-top:1.5rem;">
+        More on <a href="https://github.com/mralioo" target="_blank" rel="noreferrer">github.com/mralioo →</a>
+      </p>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <h2><span class="kicker">05</span> Skills</h2>
+      <div class="grid">
+        {skillGroups.map((g) => (
+          <div class="skill-group reveal">
+            <h3>{g.label}</h3>
+            <div class="tag-row">
+              {g.items.map((i) => <span class="tag">{i}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem;">
+        <div class="reveal">
+          <h3 class="skill-group-title" style="font-family:var(--mono); color:var(--text-dim); text-transform:uppercase; font-size:0.9rem; margin-bottom:0.75rem;">Languages</h3>
+          {languages.map((l) => (
+            <div class="lang-row">
+              <span style="width:80px;">{l.label}</span>
+              <span class="lang-dots">
+                {[1, 2, 3, 4, 5].map((i) => <span class={i <= l.level ? 'filled' : ''}></span>)}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div class="reveal">
+          <h3 style="font-family:var(--mono); color:var(--text-dim); text-transform:uppercase; font-size:0.9rem; margin-bottom:0.75rem;">Soft skills</h3>
+          <div class="tag-row">
+            {softSkills.map((s) => <span class="tag">{s}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="blog-teaser">
+    <div class="wrap">
+      <h2><span class="kicker">06</span> From the blog</h2>
+      <div class="post-list">
+        {posts.map((post) => (
+          <a class="post-item reveal" href={`/blog/${post.slug}`}>
+            <div>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+            </div>
+            <span class="post-date">{post.data.date.toISOString().slice(0, 10)}</span>
+          </a>
+        ))}
+      </div>
+      <p class="reveal" style="margin-top:1.5rem;"><a href="/blog">All posts →</a></p>
+    </div>
+  </section>
+
+  <section id="hobbies">
+    <div class="wrap">
+      <h2><span class="kicker">07</span> Outside of work</h2>
+      <div class="grid">
+        {hobbies.map((h) => (
+          <div class="card reveal">
+            <h3>{h.title}</h3>
+            <p>{h.description}</p>
+          </div>
+        ))}
+      </div>
+      <p class="reveal text-dim" style="margin-top:1.5rem;">
+        Hackathons: {hackathons.join(', ')} · Clubs: {clubs.join(', ')}
+      </p>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2><span class="kicker">08</span> Get in touch</h2>
+      <p class="reveal">Open to interesting roles and collaborations. Fastest way to reach me:</p>
+      <div class="hero-actions reveal">
+        <a class="btn primary" href={`mailto:${profile.email}`}>Email me</a>
+        <a class="btn" href={profile.calendlyUrl} target="_blank" rel="noreferrer">Schedule a call</a>
+        <a class="btn" href="https://www.linkedin.com/in/ali-alouane/" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+import { socials } from '../data/profile';
+---
+<footer>
+  <div class="wrap">
+    <div class="socials">
+      {socials.map((s) => (
+        <a href={s.url} aria-label={s.label} target={s.url.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
+          <Icon name={s.icon as any} />
+        </a>
+      ))}
+    </div>
+    <p>&copy; {new Date().getFullYear()} Ali Alouane. Built with Astro.</p>
+  </div>
+</footer>

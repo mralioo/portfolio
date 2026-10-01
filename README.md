@@ -1,142 +1,59 @@
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <h1 align="center">Developer's Portfolio ✨</h1>
+# Ali Alouane — Portfolio & Blog
 
-  <p align="center">
-    It is a personal static website/portfolio template hosted with GitHub Pages, built to showcase my recent projects.
-    <br />
-    <strong>Site URL / Demo » </strong>
-    <a href="https://hashirshoaeb.github.io/portfolio"> hashirshoaeb.github.io/portfolio</a>
-    <br />
-    <br />
-    <a href="https://hashirshoaeb.com">About Me</a>
-    ·
-    <a href="https://github.com/hashirshoaeb/portfolio/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/hashirshoaeb/portfolio/issues">Request Feature</a>
-  </p>
-</p>
+Personal site built with [Astro](https://astro.build): a dark, generative-motion
+portfolio plus a Markdown blog for writing about ML, robotics, and whatever else.
 
-[![GitHub forks](https://img.shields.io/github/forks/hashirshoaeb/portfolio?style=for-the-badge)](https://github.com/hashirshoaeb/portfolio/network)
-[![GitHub license](https://img.shields.io/github/license/hashirshoaeb/portfolio?style=for-the-badge)](https://github.com/hashirshoaeb/portfolio/blob/master/LICENSE)
-[![Twitter Follow](https://img.shields.io/twitter/follow/hashirshoaeb?color=ffcc66&logo=twitter&logoColor=ffffff&style=for-the-badge)](https://twitter.com/hashirshoaeb)
-[![Node Version](https://img.shields.io/static/v1?label=Node&message=16.16.0&color=026e00&style=for-the-badge)](https://nodejs.org)
-[![npm Version](https://img.shields.io/static/v1?label=npm&message=8.11.0&color=cb0000&style=for-the-badge)](https://nodejs.org)
+Live at `https://mralioo.github.io` once deployed (see **Deploying** below for the
+repo-naming caveat).
 
+## Stack
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#setup">Setup</a></li>
-      </ul>
-    </li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-  </ol>
-</details>
+- **Astro** — static site generation, zero JS by default.
+- **Markdown content collections** — `src/content/blog/` and `src/content/projects/`.
+- Plain CSS (custom properties, no framework) + a small amount of vanilla JS for
+  the hero canvas animation and scroll reveals.
 
+## Editing content
 
+See the [`how-this-site-works`](src/content/blog/how-this-site-works.md) post for
+the full map. Short version:
 
-<!-- ABOUT THE PROJECT -->
-# About The Project
+| What | Where |
+|---|---|
+| Name, tagline, email, resume link | `src/data/profile.ts` |
+| Work history | `src/data/experience.ts` |
+| Education / certificates | `src/data/education.ts` |
+| Skills / languages | `src/data/skills.ts` |
+| Hobbies / hackathons / clubs | `src/data/extras.ts` |
+| Projects | `src/content/projects/*.md` |
+| Blog posts | `src/content/blog/*.md` |
+| Resume PDF | `public/resume.pdf` |
+| Profile photo | `public/profile.jpg` (not yet wired into the UI — add an `<img>` where you want it) |
 
-[![Product Name Screen Shot](/READMEdocs/screenshot.gif)](https://example.com)
-
-There are many portfolio website templates available on Github, however, I didn't find one that really suit my needs so I created this one. A simple, easy to configure, lightweight, and responsive static portfolio website.
-
-I know one template doesn't fulfill everyone's needs. So I'll try adding more features in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
-
-**Features**
-
-- [x] Easy to configure
-- [x] SEO friendly
-- [x] Responsive
-- [x] Lightweight
-- [x] Linktree Page
-
-**Built with** [Nextjs](https://nextjs.org/) & [Bootstrap5](https://getbootstrap.com).
-
-
-
-<!-- GETTING STARTED -->
-# Getting Started
-
-Building your own personal website from this project can take as little as 30 minutes. Follow the setup instructions below. Please feel free to reach out to me by filing an [issue](https://github.com/hashirshoaeb/portfolio/issues) or emailing me at hashirshoaeb@gmail.com for help configuring your project.
-
-## Prerequisites
-
-You should have [Nodejs](https://nodejs.org/en/) and [Git](https://git-scm.com/downloads) installed on your PC. You should also own a GitHub account.
-
-## Setup
-
-1. Fork this repoistory and clone it to your local machine.
-    ```sh
-      git clone https://github.com/<your-username>/portfolio.git
-    ``` 
-
-2. Edit the [config/config.js](https://github.com/hashirshoaeb/portfolio/blob/main/config/config.js) file. Replace [config/profile.png](https://github.com/hashirshoaeb/portfolio/blob/main/config/profile.png) with your image. 
-    >Note: You need to rename your image file as `profile.png`.
-
-3. Run following scripts in terminal/command prompt to install dependencies.
-    ```sh
-      npm install
-      npm run build
-    ```
-## Testing
-
-1. To test on your local server, run the following command:
-    ```sh
-      npm run dev
-    ```
-
-2. Open the browser to http://localhost:3000/
-
-## Deployment
-
-If it works locally, you can deploy your project to GitHub Pages. GitHub Pages provides two types of free domains, `<username>.github.io` and `<username>.github.io/<repository>`. You can choose the one that suits your needs. You can learn more about domain types from [here](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#types-of-github-pages-sites).
-
-### Deploy to \<your-username>.github.io/portfolio
-
-Simply you just need to commit and push your changes to github. And [GitHub Actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#overview) will take care of the deployment. Your site will be available at `https://<your-username>.github.io/portfolio`
-
-### Deploy to \<your-username>.github.io
-
-Create a new repository with your username as `<your-username>.github.io`. And let the following command do the job for you.
+## Local development
 
 ```sh
-  npm run predeploy
-  node scripts/pages.js <your-username> master
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # outputs to dist/
+npm run preview   # serve the production build locally
 ```
 
-Your site will be available at `https://<your-username>.github.io`
+## Deploying to GitHub Pages
 
->Note: You need to replace `<your-username>` with your username. To add CNAME for custom domain, see [scripts/cname.js](https://github.com/hashirshoaeb/portfolio/blob/main/scripts/cname.js)
+Push to `main` — `.github/workflows/deploy.yml` builds with Astro and publishes via
+GitHub's native Pages Actions. One-time setup: in the repo's **Settings → Pages**,
+set **Source** to "GitHub Actions".
 
+**Repo naming matters for the URL:**
 
+- Repo named `mralioo.github.io` → site serves at the root domain,
+  `https://mralioo.github.io`. This is what `astro.config.mjs` currently assumes
+  (`base` is unset).
+- Repo named anything else (e.g. `portfolio`) → site serves at
+  `https://mralioo.github.io/<repo-name>/`. In that case uncomment the `base:`
+  line in `astro.config.mjs` and set it to `/<repo-name>`.
 
-<!-- CONTRIBUTING -->
-# Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contribution you make would be **appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-
-
-<!-- LICENSE -->
-# License
-
-Distributed under the `MIT` License. See [LICENSE](https://github.com/hashirshoaeb/portfolio/blob/main/LICENSE) for more information.
+The old version of this site deployed its build output to a separate
+`mralioo.github.io` repo via a `gh-pages`-publish script. This version deploys
+itself directly through GitHub Actions — no separate deploy repo or script needed.

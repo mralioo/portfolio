@@ -1,0 +1,17 @@
+---
+import { profile } from '../data/profile';
+---
+<section class="hero">
+  <canvas data-particles aria-hidden="true"></canvas>
+  <div class="wrap hero-content">
+    <p class="hero-eyebrow">// {profile.role}</p>
+    <h1>{profile.name}</h1>
+    <p class="tagline">{profile.heroDescription}</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#contact">Get in touch</a>
+      <a class="btn" href={profile.resumeUrl} target="_blank" rel="noreferrer">Resume (PDF)</a>
+      <a class="btn" href="#projects">See projects</a>
+    </div>
+  </div>
+</section>
+<script src="../scripts/particles.js"></script>

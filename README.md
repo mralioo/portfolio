@@ -3,8 +3,9 @@
 Personal site built with [Astro](https://astro.build): a dark, generative-motion
 portfolio plus a Markdown blog for writing about ML, robotics, and whatever else.
 
-Live at `https://mralioo.github.io` once deployed (see **Deploying** below for the
-repo-naming caveat).
+Live at `https://mralioo.github.io/portfolio/` (this repo is named `portfolio`,
+so it's a GitHub Pages *project* page, not the root domain — see **Deploying**
+below).
 
 ## Stack
 
@@ -15,8 +16,10 @@ repo-naming caveat).
 
 ## Editing content
 
-See the [`how-this-site-works`](src/content/blog/how-this-site-works.md) post for
-the full map. Short version:
+**See [CONTENT_GUIDE.md](CONTENT_GUIDE.md)** — step-by-step for adding blog
+posts, adding projects, and editing your info, plus *why an edit sometimes
+doesn't show up anywhere* (answer: you forgot to push). Short version of
+where things live:
 
 | What | Where |
 |---|---|
@@ -42,17 +45,23 @@ npm run preview   # serve the production build locally
 ## Deploying to GitHub Pages
 
 Push to `main` — `.github/workflows/deploy.yml` builds with Astro and publishes via
-GitHub's native Pages Actions. One-time setup: in the repo's **Settings → Pages**,
-set **Source** to "GitHub Actions".
+GitHub's native Pages Actions. Already set up: repo **Settings → Pages → Source**
+is set to "GitHub Actions" (not the default "legacy branch" mode, which would
+conflict with this workflow).
 
-**Repo naming matters for the URL:**
+**Repo naming and the URL:**
 
-- Repo named `mralioo.github.io` → site serves at the root domain,
-  `https://mralioo.github.io`. This is what `astro.config.mjs` currently assumes
-  (`base` is unset).
-- Repo named anything else (e.g. `portfolio`) → site serves at
-  `https://mralioo.github.io/<repo-name>/`. In that case uncomment the `base:`
-  line in `astro.config.mjs` and set it to `/<repo-name>`.
+This repo is named `portfolio`, so GitHub Pages serves it at
+`https://mralioo.github.io/portfolio/` — a project page, not the root domain.
+`astro.config.mjs` has `base: '/portfolio'` set to match; every internal link
+in the codebase goes through a `withBase()` helper (`src/lib/url.ts`) so it
+stays correct automatically — **don't hardcode absolute paths like
+`href="/blog"` directly**, use `withBase('/blog')` instead, or things will
+404 in production exactly like they briefly did here.
+
+If you ever rename the repo to `mralioo.github.io` for the cleaner root-domain
+URL, update `BASE` in `astro.config.mjs` to `''` and drop `/portfolio` from
+`site`.
 
 The old version of this site deployed its build output to a separate
 `mralioo.github.io` repo via a `gh-pages`-publish script. This version deploys

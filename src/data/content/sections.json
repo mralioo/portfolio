@@ -7,7 +7,7 @@
       "lead": "",
       "persona": "original",
       "title": "The short version",
-      "headingStyle": "serif"
+      "headingStyle": "serif-italic"
     },
     {
       "id": "skills",
@@ -16,7 +16,7 @@
       "lead": "The full GenAI lifecycle, owned end to end: **from POC to production**.",
       "persona": "engineer",
       "title": "What I bring to the table",
-      "headingStyle": "grotesk"
+      "headingStyle": "serif-italic"
     },
     {
       "id": "experience",
@@ -25,7 +25,7 @@
       "lead": "Scroll to follow the path. ★ marks milestones and achievements; hover a card for the full story.",
       "persona": "engineer",
       "title": "Where I've shipped",
-      "headingStyle": "display"
+      "headingStyle": "serif-italic"
     },
     {
       "id": "projects",
@@ -43,7 +43,7 @@
       "lead": "",
       "persona": "illustrated",
       "title": "Robots that learn",
-      "headingStyle": "mono"
+      "headingStyle": "serif-italic"
     },
     {
       "id": "learning",
@@ -52,7 +52,7 @@
       "lead": "Degrees, certificates and courses on one timeline. I'm **always building new skills**; scroll to follow the path, hover a card for details.",
       "persona": "researcher",
       "title": "Always learning",
-      "headingStyle": "display-italic"
+      "headingStyle": "serif-italic"
     },
     {
       "id": "writing",
@@ -61,7 +61,7 @@
       "lead": "",
       "persona": "minimalist",
       "title": "Notes & writing",
-      "headingStyle": "grotesk"
+      "headingStyle": "serif-italic"
     }
   ],
   "blocks": {

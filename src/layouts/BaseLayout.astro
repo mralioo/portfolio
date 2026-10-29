@@ -46,10 +46,6 @@ const {
           t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'day' : 'night';
         }
         document.documentElement.dataset.theme = t;
-        // TEMPORARY design review: which sidebar option to show (a–d)
-        var v;
-        try { v = localStorage.getItem('sidebar-variant'); } catch (e) {}
-        document.documentElement.dataset.variant = /^[a-d]$/.test(v || '') ? v : 'a';
       })();
     </script>
     <meta property="og:image" content={new URL(withBase('/avatar.png'), Astro.site)} />

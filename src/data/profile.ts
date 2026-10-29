@@ -7,7 +7,9 @@ export type Profile = {
   name: string;
   role: string;
   location: string;
-  tagline: string;
+  // sidebar intro paragraphs + pull quote; inline **bold**, *italic*, [links](url)
+  intro: string[];
+  quote: string;
   status: string;
   motto: string;
   // About section paragraphs; inline **bold**, *italic*, `code`, [links](url)

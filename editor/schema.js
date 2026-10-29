@@ -84,13 +84,14 @@ export const contentFiles = [
   {
     name: 'profile',
     label: 'Profile & About',
-    description: 'Sidebar (name, role, tagline, buttons), About paragraphs and social links.',
+    description: 'Sidebar (name, role, intro, quote, buttons), About paragraphs and social links.',
     fields: {
       profile: obj('Profile', {
         name: t('Name'),
         role: t('Role / title'),
-        tagline: ta('Tagline'),
-        status: t('Status line', 'Green-dot line under the tagline. Empty = hidden.'),
+        intro: arr('Sidebar intro', md('Paragraph'), { help: 'Short paragraphs under your role in the left panel.' }),
+        quote: ta('Sidebar quote', 'Pull quote under the intro. Empty = hidden.'),
+        status: t('Status line', 'Green-dot line under the intro. Empty = hidden.'),
         location: t('Location'),
         about: arr('About paragraphs', md('Paragraph'), { help: 'Each card is one paragraph.' }),
         motto: t('Motto quote'),

@@ -4,6 +4,7 @@ description: "I used to believe accelerating AI was the fastest path to a better
 date: 2026-10-02
 tags: ["ai", "philosophy", "ai-safety", "effective-altruism", "policy"]
 draft: false
+cover: "/blog/eacc-to-effective-altruism/cover.jpg"
 ---
 
 ## My starting point: hope

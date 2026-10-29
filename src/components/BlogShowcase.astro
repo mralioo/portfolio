@@ -1,0 +1,236 @@
+---
+// Homepage "Writing" section: the newest post as a large cover story, the
+// rest as image cards. Reading time is estimated from the Markdown body.
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+const { posts } = Astro.props as Props;
+const [lead, ...rest] = posts;
+
+const minutes = (p: CollectionEntry<'blog'>) => Math.max(1, Math.round(p.body.split(/\s+/).length / 220));
+const date = (p: CollectionEntry<'blog'>) =>
+  p.data.date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+const url = (p: CollectionEntry<'blog'>) => withBase(`/blog/${p.slug}`);
+---
+{lead && (
+  <div class="bs">
+    <a class="bs-lead reveal" href={url(lead)}>
+      <div class="bs-media">
+        {lead.data.cover ? <img src={withBase(lead.data.cover)} alt="" loading="lazy" /> : <span class="bs-fallback" aria-hidden="true">✎</span>}
+      </div>
+      <div class="bs-lead-body">
+        <p class="bs-meta"><span class="bs-badge">Latest</span>{date(lead)} · {minutes(lead)} min read</p>
+        <h3>{lead.data.title}</h3>
+        <p class="bs-excerpt">{lead.data.description}</p>
+        <ul class="tag-row">{lead.data.tags.slice(0, 4).map((t) => <li class="tag">{t}</li>)}</ul>
+        <span class="bs-cta">Read the post <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
+
+    {rest.length > 0 && (
+      <ul class="bs-grid">
+        {rest.map((p, i) => (
+          <li class="reveal" style={`transition-delay:${i * 80}ms`}>
+            <a class="bs-card" href={url(p)}>
+              <div class="bs-media">
+                {p.data.cover ? <img src={withBase(p.data.cover)} alt="" loading="lazy" /> : <span class="bs-fallback" aria-hidden="true">✎</span>}
+              </div>
+              <div class="bs-card-body">
+                <p class="bs-meta">{date(p)} · {minutes(p)} min read</p>
+                <h3>{p.data.title}</h3>
+                <p class="bs-excerpt">{p.data.description}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+)}
+
+<style>
+  .bs {
+    display: grid;
+    gap: 1.25rem;
+    container-type: inline-size;
+  }
+
+  .bs a {
+    color: inherit;
+  }
+
+  .bs-media {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-sunk);
+    aspect-ratio: 16 / 9;
+  }
+
+  .bs-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bs-fallback {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    font-size: 2rem;
+    color: var(--accent);
+  }
+
+  a:hover .bs-media img,
+  a:focus-visible .bs-media img {
+    transform: scale(1.05);
+  }
+
+  .bs-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .bs-badge {
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: var(--accent);
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bg);
+  }
+
+  .bs h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    transition: color 0.25s;
+  }
+
+  .bs a:hover h3 {
+    color: var(--accent);
+  }
+
+  .bs-excerpt {
+    margin: 0.6rem 0 0;
+    font-size: 0.92rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ---- cover story ---- */
+  .bs-lead {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    background: var(--surface);
+    transition: border-color 0.3s, box-shadow 0.4s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bs-lead:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: 0 24px 60px -30px var(--shadow);
+    transform: translateY(-3px);
+  }
+
+  .bs-lead-body {
+    padding: 1.5rem 1.6rem 1.6rem;
+  }
+
+  .bs-lead h3 {
+    margin-top: 0.7rem;
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    line-height: 1.15;
+  }
+
+  .bs-lead .bs-excerpt {
+    font-size: 1rem;
+    -webkit-line-clamp: 4;
+  }
+
+  .bs-cta {
+    display: inline-flex;
+    gap: 0.4rem;
+    margin-top: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .bs-cta span {
+    transition: transform 0.25s;
+  }
+
+  .bs-lead:hover .bs-cta span {
+    transform: translateX(4px);
+  }
+
+  @container (min-width: 900px) {
+    .bs-lead {
+      grid-template-columns: 1.15fr 1fr;
+    }
+
+    .bs-lead .bs-media {
+      aspect-ratio: auto;
+      min-height: 100%;
+    }
+
+    .bs-lead-body {
+      align-self: center;
+      padding: 2rem;
+    }
+  }
+
+  /* ---- other posts ---- */
+  .bs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .bs-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    background: var(--surface);
+    transition: border-color 0.3s, box-shadow 0.4s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bs-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: 0 20px 44px -26px var(--shadow);
+    transform: translateY(-4px);
+  }
+
+  .bs-card-body {
+    padding: 1.1rem 1.2rem 1.3rem;
+  }
+
+  .bs-card h3 {
+    margin-top: 0.5rem;
+    font-size: 1.15rem;
+    line-height: 1.25;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bs * {
+      transition: none !important;
+    }
+  }
+</style>

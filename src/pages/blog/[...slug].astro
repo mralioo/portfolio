@@ -21,6 +21,7 @@ const { Content } = await post.render();
     <ul class="tag-row">
       {post.data.tags.map((t: string) => <li class="tag">{t}</li>)}
     </ul>
+    {post.data.cover && <img class="post-cover" src={withBase(post.data.cover)} alt="" />}
     <Content />
     <p class="page-actions"><a class="btn" href={withBase('/blog')}>← All posts</a></p>
   </article>

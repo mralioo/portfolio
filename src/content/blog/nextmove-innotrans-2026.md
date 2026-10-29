@@ -9,8 +9,6 @@ cover: "/blog/nextmove-innotrans-2026/trophy-team.jpg"
 
 Last week, our team won **1st place in the AI Track** at the **InnoTrans 2026 Hackathon**, hosted by FACTORY-C and Alstom, with **NextMove** — an agentic AI system for the railway control room.
 
-![Team NextMove accepting the InnoTrans Hackathon AI Track 2026 trophy](/blog/nextmove-innotrans-2026/trophy-team.jpg)
-
 Repo: **[github.com/mralioo/NextMove](https://github.com/mralioo/NextMove)** · Animated system design: **[open the walkthrough](https://htmlpreview.github.io/?https://github.com/mralioo/NextMove/blob/main/docs/presentation/nextmove_agentic_system.html)**
 
 ## The problem

@@ -6,17 +6,25 @@ interface Props {
   repo?: string;
   demo?: string;
   href?: string;
+  badge?: string;
+  featured?: boolean;
+  index?: number;
 }
-const { title, summary, stack, repo, demo, href } = Astro.props as Props;
+const { title, summary, stack, repo, demo, href, badge, featured = false, index } = Astro.props as Props;
 ---
-<div class="card reveal">
+<article class:list={['card', 'project-card', 'reveal', { featured }]} data-spotlight>
+  <div class="project-head">
+    {index !== undefined && <span class="project-index">{String(index + 1).padStart(2, '0')}</span>}
+    {badge && <span class="badge">{badge}</span>}
+  </div>
   <h3>{href ? <a href={href}>{title}</a> : title}</h3>
   <p>{summary}</p>
   <div class="tag-row" style="margin-bottom:1rem;">
     {stack.map((s) => <span class="tag">{s}</span>)}
   </div>
   <div class="links">
-    {repo && <a href={repo} target="_blank" rel="noreferrer">GitHub →</a>}
-    {demo && <a href={demo} target="_blank" rel="noreferrer">Live →</a>}
+    {href && <a href={href}>Case study →</a>}
+    {repo && <a href={repo} target="_blank" rel="noreferrer">GitHub ↗</a>}
+    {demo && <a href={demo} target="_blank" rel="noreferrer">Live ↗</a>}
   </div>
-</div>
+</article>

@@ -42,7 +42,8 @@ summary: "One or two sentences — shows on the project card."
 stack: ["Python", "PyTorch"]
 repo: "https://github.com/mralioo/my-project"
 demo: "https://my-project-demo.com"   # optional
-featured: true                          # optional, unused by the layout today but there if you want it
+featured: true                          # true = large card in "Selected work"; false = smaller grid below
+badge: "1st place · Some Hackathon"     # optional highlight chip on the card
 order: 4                                # lower numbers show first
 ---
 
@@ -50,8 +51,7 @@ Longer write-up in Markdown — shows on the project's own detail page
 (`/projects/my-project`), not on the card.
 ```
 
-It appears automatically on the homepage's Projects section and in the
-Projects bubble, sorted by `order`.
+It appears automatically on the homepage's Projects section, sorted by `order`.
 
 ## Edit your profile, tagline, motto, contact info
 
@@ -70,15 +70,21 @@ at the top of the array to add a new role.
 
 ## Edit skills, languages
 
-`src/data/skills.ts`.
+`src/data/skills.ts` — `lifecycle` is the horizontal "POC → Production"
+scroll (one card per stage), `skillGroups` the grid below it, `marquee` the
+scrolling stack strip under the hero.
 
-## Edit hobbies, hackathons, clubs
+## Update course progress
 
-`src/data/extras.ts` — this is where the hackathon date issue actually was:
-there's no hackathon *date* field here at all. The InnoTrans mention lives
-in `src/content/blog/nextmove-innotrans-2026.md` as the post's `date:`
-front-matter field, and as plain text ("Last week...") in the post body —
-edit whichever one you meant.
+`src/data/learning.ts` — bump `progress` (0–100) as you go. At 100 the card
+shows "✓ Done"; add `completed: "MM/YYYY"` too.
+
+## Edit Physical AI lab, hackathons, hobbies, clubs
+
+`src/data/extras.ts` — `physicalAI` is the Lab section, `hackathons` the
+recent-builds list (each with its own `date`), `pastHackathons` the
+one-line "Earlier:" list. The InnoTrans blog post's date lives separately
+in `src/content/blog/nextmove-innotrans-2026.md` front matter.
 
 ## Replace your resume or profile photo
 

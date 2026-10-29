@@ -39,6 +39,7 @@ export type Certificate = {
   detail?: string;
 };
 
+// Courses (DeepLearning.AI, NVIDIA DLI, …) live in learning.ts.
 export const certificates: Certificate[] = [
   {
     title: '10-Week Startup Bootcamp',
@@ -47,21 +48,9 @@ export const certificates: Certificate[] = [
     detail: 'Validated a healthcare business idea via structured customer discovery; MVP and business-model fundamentals.',
   },
   {
-    title: 'Deep Learning Institute',
-    org: 'NVIDIA',
-    date: '08/2024',
-    detail: 'Fundamentals of Deep Learning and Accelerated Computing with CUDA Python.',
-  },
-  {
     title: 'Design Thinking Intensive Training',
     org: '.msg',
     date: '05/2024',
     detail: 'User research, problem definition, prototyping, and user testing.',
-  },
-  {
-    title: 'Deep Learning Specialization',
-    org: 'deeplearning.ai',
-    date: '08/2018',
-    detail: 'Coursera specialization in neural networks, ML, and AI applications.',
   },
 ];

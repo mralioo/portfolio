@@ -1,21 +1,40 @@
 ---
 import { withBase } from '../lib/url';
+import { profile } from '../data/profile';
 
+// `section` must match an id on the homepage — site.js highlights the link
+// whose section is currently in view.
 const links = [
-  { title: 'About', href: withBase('/#about') },
-  { title: 'Experience', href: withBase('/#experience') },
-  { title: 'Projects', href: withBase('/#projects') },
-  { title: 'Blog', href: withBase('/blog') },
-  { title: 'Contact', href: withBase('/#contact') },
-];
+  { title: 'About', section: 'about' },
+  { title: 'Skills', section: 'skills' },
+  { title: 'Projects', section: 'projects' },
+  { title: 'Experience', section: 'experience' },
+  { title: 'Lab', section: 'lab' },
+  { title: 'Learning', section: 'learning' },
+  { title: 'Blog', section: 'blog', href: withBase('/blog') },
+].map((l) => ({ ...l, href: l.href ?? withBase(`/#${l.section}`) }));
 ---
-<nav class="site-nav">
+<div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+<nav class="site-nav" data-nav>
   <div class="wrap">
-    <a class="brand" href={withBase('/')}>ali<span>.</span>alouane</a>
-    <ul>
+    <a class="brand" href={withBase('/')} data-magnetic>ali<span>.</span>alouane</a>
+    <ul class="nav-links">
       {links.map((l) => (
-        <li><a href={l.href}>{l.title}</a></li>
+        <li><a href={l.href} data-nav-link={l.section}>{l.title}</a></li>
       ))}
     </ul>
+    <a class="btn primary nav-cta" href={withBase('/#contact')} data-magnetic>Let's talk</a>
+    <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+      <span></span><span></span>
+    </button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+  <ul>
+    {links.map((l, i) => (
+      <li><a href={l.href} data-mobile-link><span class="kicker">{String(i + 1).padStart(2, '0')}</span>{l.title}</a></li>
+    ))}
+    <li><a href={withBase('/#contact')} data-mobile-link><span class="kicker">→</span>Contact</a></li>
+  </ul>
+  <p class="text-dim mono">{profile.email}</p>
+</div>

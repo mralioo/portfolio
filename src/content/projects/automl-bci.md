@@ -3,8 +3,8 @@ title: "AutoML_BCI"
 summary: "An AutoML pipeline for Brain-Computer Interface (BCI) applications — automated model search for decoding sensorimotor rhythms, grown out of my master's thesis work."
 stack: ["Python", "AutoML", "Deep Learning", "BCI"]
 repo: "https://github.com/mralioo/AutoML_BCI"
-featured: true
-order: 1
+featured: false
+order: 4
 ---
 
 Automated machine learning pipeline for BCI signal decoding. Built during my master's

@@ -23,6 +23,8 @@ const projects = defineCollection({
     repo: z.string().url().optional(),
     demo: z.string().url().optional(),
     featured: z.boolean().default(false),
+    // short highlight chip, e.g. "1st place · InnoTrans 2026"
+    badge: z.string().optional(),
     // lower = earlier in the list
     order: z.number().default(100),
   }),

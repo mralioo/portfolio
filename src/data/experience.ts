@@ -10,18 +10,18 @@ export type ExperienceItem = {
 
 export const experience: ExperienceItem[] = [
   {
-    role: 'Machine Learning Engineer',
+    role: 'AI / Machine Learning Engineer',
     org: 'ITUC GmbH',
     start: '11.2024',
     end: 'Today',
     bullets: [
-      'Design and implement scalable ML pipelines for LLMs across business applications.',
-      'Rapid-prototype AI-driven solutions for fast iteration and proof-of-concepts.',
-      'Build deployment workflows with CI/CD integration for production readiness.',
-      'Run systematic model evaluation, benchmarking, and optimization.',
-      'Collaborate cross-functionally to translate business concepts into production systems.',
+      'Architect and ship LLM-powered products end to end — from rapid GenAI proof-of-concepts to production deployments.',
+      'Build retrieval-augmented generation (RAG) and agentic workflows with tool calling, grounding, and guardrails.',
+      'Own LLMOps: CI/CD, containerized deployment, experiment tracking, and monitoring for production readiness.',
+      'Run systematic LLM evaluation, benchmarking, and cost/latency optimization.',
+      'Translate business problems into AI solutions with cross-functional and client stakeholders.',
     ],
-    stack: ['LangChain', 'GitHub Actions', 'Airflow', 'MLflow', 'FastAPI'],
+    stack: ['LLMs', 'RAG', 'LangChain', 'LangGraph', 'FastAPI', 'Docker', 'GitHub Actions', 'MLflow', 'Airflow'],
   },
   {
     role: 'Technical Co-Founder & Lead ML Engineer',

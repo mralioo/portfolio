@@ -11,8 +11,12 @@ below).
 
 - **Astro** — static site generation, zero JS by default.
 - **Markdown content collections** — `src/content/blog/` and `src/content/projects/`.
-- Plain CSS (custom properties, no framework) + a small amount of vanilla JS for
-  the hero canvas animation and scroll reveals.
+- Plain CSS (custom properties, no framework).
+- **Motion:** [GSAP](https://gsap.com) + ScrollTrigger and [Lenis](https://lenis.darkroom.engineering)
+  smooth scroll — split-text reveals, a pinned horizontal "POC → Production"
+  scroll, active-section nav + side index, magnetic buttons, cursor spotlight.
+  Site-wide code in `src/scripts/site.js`, homepage-only in `src/scripts/home.js`.
+  Everything falls back to static content under `prefers-reduced-motion`.
 
 ## Editing content
 
@@ -26,8 +30,9 @@ where things live:
 | Name, tagline, email, resume link | `src/data/profile.ts` |
 | Work history | `src/data/experience.ts` |
 | Education / certificates | `src/data/education.ts` |
-| Skills / languages | `src/data/skills.ts` |
-| Hobbies / hackathons / clubs | `src/data/extras.ts` |
+| Courses + progress bars ("Always learning") | `src/data/learning.ts` |
+| POC→Production lifecycle, skills, marquee, languages | `src/data/skills.ts` |
+| Physical AI lab, hackathons, hobbies, clubs | `src/data/extras.ts` |
 | Projects | `src/content/projects/*.md` |
 | Blog posts | `src/content/blog/*.md` |
 | Resume PDF | `public/resume.pdf` |

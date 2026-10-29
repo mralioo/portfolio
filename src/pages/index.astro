@@ -1,94 +1,104 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BubbleHero from '../components/BubbleHero.astro';
+import Hero from '../components/Hero.astro';
 import ExperienceItemCmp from '../components/ExperienceItem.astro';
 import EducationItemCmp from '../components/EducationItem.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { profile } from '../data/profile';
+import { profile, stats } from '../data/profile';
 import { experience } from '../data/experience';
 import { education, certificates } from '../data/education';
-import { skillGroups, languages, softSkills } from '../data/skills';
-import { hobbies, hackathons, clubs } from '../data/extras';
+import { lifecycle, skillGroups, languages, softSkills } from '../data/skills';
+import { physicalAI, hackathons, pastHackathons, hobbies, clubs } from '../data/extras';
+import { courses } from '../data/learning';
 import { withBase } from '../lib/url';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const featured = projects.filter((p) => p.data.featured);
+const more = projects.filter((p) => !p.data.featured);
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
+
+// Right-hand section index (desktop). Ids must match the <section> ids below.
+const sections = [
+  { id: 'about', label: 'About' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'lab', label: 'Physical AI' },
+  { id: 'hackathons', label: 'Hackathons' },
+  { id: 'learning', label: 'Learning' },
+  { id: 'blog', label: 'Blog' },
+  { id: 'beyond', label: 'Beyond work' },
+  { id: 'contact', label: 'Contact' },
+];
+const kicker = (id: string) => String(sections.findIndex((s) => s.id === id) + 1).padStart(2, '0');
 ---
 <BaseLayout>
-  <BubbleHero
-    profile={profile}
-    experiencePreview={experience.slice(0, 2)}
-    projects={projects}
-    skillGroups={skillGroups}
-    postsPreview={posts}
-  />
+  <Hero profile={profile} />
 
-  <section id="about">
-    <div class="wrap">
-      <h2><span class="kicker">01</span> About</h2>
-      <p class="motto reveal">&ldquo;{profile.motto}&rdquo;</p>
-      <p class="reveal">{profile.heroDescription}</p>
-      <p class="reveal text-dim">Based in {profile.location}.</p>
-    </div>
-  </section>
+  <nav class="section-index" aria-label="Sections" data-section-index>
+    <ol>
+      {sections.map((s, i) => (
+        <li>
+          <a href={`#${s.id}`} data-index-link={s.id}>
+            <span class="si-num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="si-label">{s.label}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
 
-  <section id="experience">
+  <section id="about" data-section>
     <div class="wrap">
-      <h2><span class="kicker">02</span> Experience</h2>
-      <div class="timeline">
-        {experience.map((item) => <ExperienceItemCmp item={item} />)}
+      <h2 data-split><span class="kicker">{kicker('about')}</span> About</h2>
+      <div class="about-grid">
+        <div>
+          <p class="motto reveal">&ldquo;{profile.motto}&rdquo;</p>
+          <p class="lead reveal">{profile.heroDescription}</p>
+          <p class="reveal text-dim">Based in {profile.location}.</p>
+        </div>
+        <div class="stats">
+          {stats.map((s) => (
+            <div class="stat reveal">
+              <span class="stat-value"><span data-count={s.value}>{s.value}</span>{s.suffix}</span>
+              <span class="stat-label">{s.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="education">
-    <div class="wrap">
-      <h2><span class="kicker">03</span> Education</h2>
-      <div class="timeline">
-        {education.map((item) => <EducationItemCmp item={item} />)}
+  <section id="skills" data-section>
+    <div class="lifecycle" data-hscroll>
+      <div class="wrap">
+        <h2 data-split><span class="kicker">{kicker('skills')}</span> From POC to Production</h2>
+        <p class="section-intro reveal">The full GenAI lifecycle, owned end to end — scroll through how an idea becomes a deployed, evaluated, agentic system.</p>
       </div>
-
-      <h3 class="reveal" style="margin-top:3rem; font-size:1.1rem;">Certificates</h3>
-      <div class="grid reveal">
-        {certificates.map((c) => (
-          <div class="card">
-            <h3>{c.title}</h3>
-            <p>{c.org} — {c.date}</p>
-            {c.detail && <p>{c.detail}</p>}
-          </div>
-        ))}
+      <div class="lifecycle-viewport">
+        <div class="lifecycle-track" data-hscroll-track>
+          {lifecycle.map((stage) => (
+            <article class="stage-card" data-spotlight>
+              <span class="stage-step">{stage.step}</span>
+              <h3>{stage.title}</h3>
+              <p>{stage.pitch}</p>
+              <div class="tag-row">
+                {stage.tools.map((t) => <span class="tag">{t}</span>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+      <div class="wrap">
+        <div class="lifecycle-progress" aria-hidden="true"><span data-hscroll-progress></span></div>
       </div>
     </div>
-  </section>
 
-  <section id="projects">
     <div class="wrap">
-      <h2><span class="kicker">04</span> Projects</h2>
-      <div class="grid">
-        {projects.map((p) => (
-          <ProjectCard
-            title={p.data.title}
-            summary={p.data.summary}
-            stack={p.data.stack}
-            repo={p.data.repo}
-            demo={p.data.demo}
-            href={withBase(`/projects/${p.slug}`)}
-          />
-        ))}
-      </div>
-      <p class="reveal" style="margin-top:1.5rem;">
-        More on <a href="https://github.com/mralioo" target="_blank" rel="noreferrer">github.com/mralioo →</a>
-      </p>
-    </div>
-  </section>
-
-  <section id="skills">
-    <div class="wrap">
-      <h2><span class="kicker">05</span> Skills</h2>
-      <div class="grid">
+      <div class="skill-grid">
         {skillGroups.map((g) => (
           <div class="skill-group reveal">
             <h3>{g.label}</h3>
@@ -99,9 +109,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         ))}
       </div>
 
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem;">
+      <div class="two-col">
         <div class="reveal">
-          <h3 class="skill-group-title" style="font-family:var(--mono); color:var(--text-dim); text-transform:uppercase; font-size:0.9rem; margin-bottom:0.75rem;">Languages</h3>
+          <h3 class="mini-title">Languages</h3>
           {languages.map((l) => (
             <div class="lang-row">
               <span style="width:80px;">{l.label}</span>
@@ -112,7 +122,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           ))}
         </div>
         <div class="reveal">
-          <h3 style="font-family:var(--mono); color:var(--text-dim); text-transform:uppercase; font-size:0.9rem; margin-bottom:0.75rem;">Soft skills</h3>
+          <h3 class="mini-title">How I work</h3>
           <div class="tag-row">
             {softSkills.map((s) => <span class="tag">{s}</span>)}
           </div>
@@ -121,9 +131,164 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-  <section id="blog-teaser">
+  <section id="projects" data-section>
     <div class="wrap">
-      <h2><span class="kicker">06</span> From the blog</h2>
+      <h2 data-split><span class="kicker">{kicker('projects')}</span> Selected work</h2>
+      <div class="featured-grid">
+        {featured.map((p, i) => (
+          <ProjectCard
+            title={p.data.title}
+            summary={p.data.summary}
+            stack={p.data.stack}
+            repo={p.data.repo}
+            demo={p.data.demo}
+            badge={p.data.badge}
+            featured
+            index={i}
+            href={withBase(`/projects/${p.slug}`)}
+          />
+        ))}
+      </div>
+      <h3 class="mini-title reveal" style="margin-top:3rem;">Earlier research & open source</h3>
+      <div class="grid">
+        {more.map((p) => (
+          <ProjectCard
+            title={p.data.title}
+            summary={p.data.summary}
+            stack={p.data.stack}
+            repo={p.data.repo}
+            demo={p.data.demo}
+            badge={p.data.badge}
+            href={withBase(`/projects/${p.slug}`)}
+          />
+        ))}
+      </div>
+      <p class="reveal" style="margin-top:1.5rem;">
+        More on <a href={profile.github} target="_blank" rel="noreferrer">github.com/mralioo ↗</a>
+      </p>
+    </div>
+  </section>
+
+  <section id="experience" data-section>
+    <div class="wrap">
+      <h2 data-split><span class="kicker">{kicker('experience')}</span> Experience</h2>
+      <div class="timeline" data-timeline>
+        <span class="timeline-fill" data-timeline-fill aria-hidden="true"></span>
+        {experience.map((item) => <ExperienceItemCmp item={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <section id="lab" data-section>
+    <div class="wrap">
+      <h2 data-split><span class="kicker">{kicker('lab')}</span> Physical AI lab</h2>
+      <div class="lab-card reveal" data-spotlight>
+        <div class="lab-head">
+          <span class="badge live"><span class="pulse-dot"></span>{physicalAI.status}</span>
+          <h3>{physicalAI.title}</h3>
+          <p>{physicalAI.summary}</p>
+        </div>
+        <div class="lab-tracks">
+          {physicalAI.tracks.map((t) => (
+            <div class="lab-track">
+              <h4>{t.title}</h4>
+              <ul>{t.items.map((i) => <li>{i}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+        <svg class="arm-sketch" viewBox="0 0 220 160" aria-hidden="true" data-arm>
+          <line class="arm-base" x1="40" y1="150" x2="120" y2="150" />
+          <g class="arm-seg1">
+            <line x1="80" y1="150" x2="80" y2="90" />
+            <circle cx="80" cy="150" r="6" />
+            <g class="arm-seg2">
+              <line x1="80" y1="90" x2="140" y2="70" />
+              <circle cx="80" cy="90" r="5" />
+              <g class="arm-seg3">
+                <line x1="140" y1="70" x2="170" y2="95" />
+                <circle cx="140" cy="70" r="4.5" />
+                <path class="arm-grip" d="M170 95 l10 -4 M170 95 l6 9" />
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="hackathons" data-section>
+    <div class="wrap">
+      <h2 data-split><span class="kicker">{kicker('hackathons')}</span> Hackathons</h2>
+      <p class="section-intro reveal">Shipping under pressure is a skill. Recent builds — idea to deployed demo in a single day.</p>
+      <div class="hack-list">
+        {hackathons.map((h) => (
+          <a class="hack-item reveal" href={h.link} target="_blank" rel="noreferrer" data-spotlight>
+            <div class="hack-meta">
+              <span class="mono text-dim">{h.date}</span>
+              {h.result && <span class="badge">{h.result}</span>}
+            </div>
+            <div>
+              <h3>{h.project} <span class="text-dim">— {h.name}</span></h3>
+              <p>{h.summary}</p>
+            </div>
+            <span class="hack-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+      <p class="reveal text-dim" style="margin-top:1.5rem;">Earlier: {pastHackathons.join(' · ')}</p>
+    </div>
+  </section>
+
+  <section id="learning" data-section>
+    <div class="wrap">
+      <h2 data-split><span class="kicker">{kicker('learning')}</span> Always learning</h2>
+      <p class="section-intro reveal">Courses in progress and completed — the skill stack keeps compounding.</p>
+      <div class="course-list">
+        {courses.map((c) => (
+          <div class="course reveal">
+            <div class="course-head">
+              <div>
+                <h3>{c.url ? <a href={c.url} target="_blank" rel="noreferrer">{c.title}</a> : c.title}</h3>
+                <p class="text-dim">{c.provider}{c.completed && ` · completed ${c.completed}`}</p>
+              </div>
+              <span class:list={['course-pct', { done: c.progress >= 100 }]}>
+                {c.progress >= 100 ? '✓ Done' : `${c.progress}%`}
+              </span>
+            </div>
+            <div class="course-bar" role="progressbar" aria-valuenow={c.progress} aria-valuemin="0" aria-valuemax="100" aria-label={`${c.title} progress`}>
+              <span data-progress={c.progress} style={`--p:${c.progress}%`}></span>
+            </div>
+            <div class="tag-row">{c.focus.map((f) => <span class="tag">{f}</span>)}</div>
+          </div>
+        ))}
+      </div>
+
+      <div class="two-col" style="margin-top:4rem;">
+        <div>
+          <h3 class="mini-title reveal">Education</h3>
+          <div class="timeline">
+            {education.map((item) => <EducationItemCmp item={item} />)}
+          </div>
+        </div>
+        <div>
+          <h3 class="mini-title reveal">Certificates</h3>
+          <div class="cert-list">
+            {certificates.map((c) => (
+              <div class="card reveal">
+                <h3>{c.title}</h3>
+                <p>{c.org} — {c.date}</p>
+                {c.detail && <p>{c.detail}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="blog" data-section>
+    <div class="wrap">
+      <h2 data-split><span class="kicker">{kicker('blog')}</span> From the blog</h2>
       <div class="post-list">
         {posts.map((post) => (
           <a class="post-item reveal" href={withBase(`/blog/${post.slug}`)}>
@@ -139,32 +304,35 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-  <section id="hobbies">
+  <section id="beyond" data-section>
     <div class="wrap">
-      <h2><span class="kicker">07</span> Outside of work</h2>
+      <h2 data-split><span class="kicker">{kicker('beyond')}</span> Beyond work</h2>
       <div class="grid">
         {hobbies.map((h) => (
-          <div class="card reveal">
+          <div class="card reveal" data-spotlight>
             <h3>{h.title}</h3>
             <p>{h.description}</p>
           </div>
         ))}
       </div>
-      <p class="reveal text-dim" style="margin-top:1.5rem;">
-        Hackathons: {hackathons.join(', ')} · Clubs: {clubs.join(', ')}
-      </p>
+      <p class="reveal text-dim" style="margin-top:1.5rem;">Clubs: {clubs.join(' · ')}</p>
     </div>
   </section>
 
-  <section id="contact">
+  <section id="contact" data-section class="contact">
     <div class="wrap">
-      <h2><span class="kicker">08</span> Get in touch</h2>
-      <p class="reveal">Open to interesting roles and collaborations. Fastest way to reach me:</p>
+      <h2 data-split><span class="kicker">{kicker('contact')}</span> Let's build something</h2>
+      <p class="contact-big reveal">
+        Hiring for <em>LLM</em>, <em>RAG</em>, <em>agentic</em> or <em>Physical AI</em> work?
+      </p>
+      <p class="reveal text-dim">Open to AI Engineering roles and collaborations. Fastest way to reach me:</p>
       <div class="hero-actions reveal">
-        <a class="btn primary" href={`mailto:${profile.email}`}>Email me</a>
-        <a class="btn" href={profile.calendlyUrl} target="_blank" rel="noreferrer">Schedule a call</a>
-        <a class="btn" href="https://www.linkedin.com/in/ali-alouane/" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a class="btn primary" href={`mailto:${profile.email}`} data-magnetic>Email me</a>
+        <a class="btn" href={profile.calendlyUrl} target="_blank" rel="noreferrer" data-magnetic>Book a call ↗</a>
+        <a class="btn" href={profile.linkedin} target="_blank" rel="noreferrer" data-magnetic>LinkedIn ↗</a>
+        <a class="btn" href={withBase(profile.resumeUrl)} target="_blank" rel="noreferrer" data-magnetic>Resume ↗</a>
       </div>
     </div>
   </section>
 </BaseLayout>
+<script src="../scripts/home.js"></script>

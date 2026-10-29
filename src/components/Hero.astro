@@ -1,0 +1,79 @@
+---
+import { withBase } from '../lib/url';
+import { marquee } from '../data/skills';
+
+interface Props {
+  profile: {
+    name: string;
+    role: string;
+    location: string;
+    tagline: string;
+    rotatingWords: string[];
+    resumeUrl: string;
+  };
+}
+const { profile } = Astro.props as Props;
+
+// Orchestration diagram: supervisor in the middle, specialists around it.
+// Coordinates are in the SVG's 400×400 viewBox.
+const hub = { x: 200, y: 200 };
+const nodes = [
+  { label: 'RAG', x: 200, y: 48 },
+  { label: 'MCP tools', x: 345, y: 140 },
+  { label: 'Evals', x: 300, y: 330 },
+  { label: 'Deploy', x: 100, y: 330 },
+  { label: 'VLA · robot', x: 55, y: 140 },
+];
+---
+<section class="hero" id="top">
+  <div class="hero-glow" data-hero-glow aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow" data-hero-fade><span class="pulse-dot"></span>{profile.role} · {profile.location}</p>
+      <h1 class="hero-title" data-hero-title>{profile.name}</h1>
+      <p class="hero-sub" data-hero-fade>
+        I build
+        <span class="rotator" data-rotator>
+          {profile.rotatingWords.map((w, i) => <span class={i === 0 ? 'is-active' : ''}>{w}</span>)}
+        </span>
+      </p>
+      <p class="hero-tagline" data-hero-fade>{profile.tagline}</p>
+      <div class="hero-actions" data-hero-fade>
+        <a class="btn primary" href="#projects" data-magnetic>See the work</a>
+        <a class="btn" href={withBase(profile.resumeUrl)} target="_blank" rel="noreferrer" data-magnetic>Resume ↗</a>
+      </div>
+    </div>
+
+    <svg class="agent-graph" viewBox="0 0 400 400" role="img" aria-label="Diagram: a supervisor agent orchestrating RAG, MCP tools, evals, deployment and a robot policy" data-hero-graph>
+      {nodes.map((n, i) => (
+        <g>
+          <path id={`edge-${i}`} class="edge" d={`M${hub.x},${hub.y} L${n.x},${n.y}`} />
+          <circle class="packet" r="3.2">
+            <animateMotion dur={`${2.4 + i * 0.35}s`} begin={`${i * 0.4}s`} repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;0.5;1" calcMode="linear">
+              <mpath href={`#edge-${i}`} />
+            </animateMotion>
+          </circle>
+        </g>
+      ))}
+      <circle class="hub-ring" cx={hub.x} cy={hub.y} r="54" />
+      <circle class="hub" cx={hub.x} cy={hub.y} r="40" />
+      <text class="hub-label" x={hub.x} y={hub.y + 4} text-anchor="middle">supervisor</text>
+      {nodes.map((n) => (
+        <g class="node">
+          <circle cx={n.x} cy={n.y} r="26" />
+          <text x={n.x} y={n.y + 44} text-anchor="middle">{n.label}</text>
+        </g>
+      ))}
+    </svg>
+  </div>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {[...marquee, ...marquee].map((m) => <span>{m}</span>)}
+    </div>
+  </div>
+
+  <a class="scroll-cue" href="#about" aria-label="Scroll to content"><span></span></a>
+</section>

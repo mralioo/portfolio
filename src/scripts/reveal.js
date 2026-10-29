@@ -8,7 +8,9 @@ const observer = new IntersectionObserver(
       }
     }
   },
-  { threshold: 0.15 }
+  // threshold 0 + a bottom inset: a ratio threshold never fires for elements
+  // much taller than the viewport (e.g. a whole blog article).
+  { threshold: 0, rootMargin: '0px 0px -12% 0px' }
 );
 
 document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));

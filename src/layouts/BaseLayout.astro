@@ -10,8 +10,8 @@ interface Props {
 }
 
 const {
-  title = 'Ali Alouane — Machine Learning Engineer',
-  description = 'ML engineer building LLM pipelines, MLOps, and edge-AI sensor fusion. Portfolio, projects, and writing on tech & philosophy.',
+  title = 'Ali Alouane — AI Engineer · LLMs, RAG & Agentic Systems',
+  description = 'AI Engineer shipping LLM, RAG, and multi-agent systems from proof-of-concept to production. Building Physical AI on the side: robotic arms driven by VLA models.',
 } = Astro.props as Props;
 ---
 <!doctype html>
@@ -30,9 +30,17 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
       rel="stylesheet"
     />
+    <!-- Flag motion support before first paint so CSS can hide elements
+         that JS is about to animate in (no flash, no hidden content when
+         the visitor prefers reduced motion). -->
+    <script is:inline>
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion');
+      }
+    </script>
   </head>
   <body>
     <Nav />
@@ -40,6 +48,6 @@ const {
       <slot />
     </main>
     <Footer />
-    <script src="../scripts/reveal.js"></script>
+    <script src="../scripts/site.js"></script>
   </body>
 </html>

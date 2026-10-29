@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
+import BubbleHero from '../components/BubbleHero.astro';
 import ExperienceItemCmp from '../components/ExperienceItem.astro';
 import EducationItemCmp from '../components/EducationItem.astro';
 import ProjectCard from '../components/ProjectCard.astro';
@@ -10,6 +10,7 @@ import { experience } from '../data/experience';
 import { education, certificates } from '../data/education';
 import { skillGroups, languages, softSkills } from '../data/skills';
 import { hobbies, hackathons, clubs } from '../data/extras';
+import { withBase } from '../lib/url';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -17,11 +18,18 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice(0, 3);
 ---
 <BaseLayout>
-  <Hero />
+  <BubbleHero
+    profile={profile}
+    experiencePreview={experience.slice(0, 2)}
+    projects={projects}
+    skillGroups={skillGroups}
+    postsPreview={posts}
+  />
 
   <section id="about">
     <div class="wrap">
       <h2><span class="kicker">01</span> About</h2>
+      <p class="motto reveal">&ldquo;{profile.motto}&rdquo;</p>
       <p class="reveal">{profile.heroDescription}</p>
       <p class="reveal text-dim">Based in {profile.location}.</p>
     </div>
@@ -67,7 +75,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             stack={p.data.stack}
             repo={p.data.repo}
             demo={p.data.demo}
-            href={`/projects/${p.slug}`}
+            href={withBase(`/projects/${p.slug}`)}
           />
         ))}
       </div>
@@ -118,7 +126,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <h2><span class="kicker">06</span> From the blog</h2>
       <div class="post-list">
         {posts.map((post) => (
-          <a class="post-item reveal" href={`/blog/${post.slug}`}>
+          <a class="post-item reveal" href={withBase(`/blog/${post.slug}`)}>
             <div>
               <h3>{post.data.title}</h3>
               <p>{post.data.description}</p>
@@ -127,7 +135,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           </a>
         ))}
       </div>
-      <p class="reveal" style="margin-top:1.5rem;"><a href="/blog">All posts →</a></p>
+      <p class="reveal" style="margin-top:1.5rem;"><a href={withBase('/blog')}>All posts →</a></p>
     </div>
   </section>
 

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../lib/url';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
@@ -12,7 +13,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
       <h2><span class="kicker">~/blog</span> Posts</h2>
       <div class="post-list">
         {posts.map((post) => (
-          <a class="post-item reveal" href={`/blog/${post.slug}`}>
+          <a class="post-item reveal" href={withBase(`/blog/${post.slug}`)}>
             <div>
               <h3>{post.data.title}</h3>
               <p>{post.data.description}</p>

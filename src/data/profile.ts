@@ -6,6 +6,8 @@ export const profile = {
   role: 'Machine Learning Engineer',
   location: 'Berlin, Germany',
   tagline: 'I design and ship ML systems — from LLM pipelines to edge-AI sensor fusion.',
+  // Personal philosophy / north star — shown as a pull-quote in the About section.
+  motto: 'Move fast on evidence. Move carefully on power.',
   heroDescription:
     "3+ years building production machine learning: LLM pipelines, MLOps, sensor fusion, and the occasional autonomous robot. Currently at ITUC GmbH; previously co-founded an edge-AI startup and shipped time-series ML at truemetrics (YC S23).",
   email: 'mr.ali.alouane@gmail.com',

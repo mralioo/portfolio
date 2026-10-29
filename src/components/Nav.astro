@@ -1,15 +1,17 @@
 ---
+import { withBase } from '../lib/url';
+
 const links = [
-  { title: 'About', href: '/#about' },
-  { title: 'Experience', href: '/#experience' },
-  { title: 'Projects', href: '/#projects' },
-  { title: 'Blog', href: '/blog' },
-  { title: 'Contact', href: '/#contact' },
+  { title: 'About', href: withBase('/#about') },
+  { title: 'Experience', href: withBase('/#experience') },
+  { title: 'Projects', href: withBase('/#projects') },
+  { title: 'Blog', href: withBase('/blog') },
+  { title: 'Contact', href: withBase('/#contact') },
 ];
 ---
 <nav class="site-nav">
   <div class="wrap">
-    <a class="brand" href="/">ali<span>.</span>alouane</a>
+    <a class="brand" href={withBase('/')}>ali<span>.</span>alouane</a>
     <ul>
       {links.map((l) => (
         <li><a href={l.href}>{l.title}</a></li>

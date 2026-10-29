@@ -12,6 +12,7 @@
   --sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   --max-width: 980px;
   --radius: 14px;
+  --nav-height: 64px;
 }
 
 * {
@@ -84,6 +85,22 @@ h2 .kicker {
   color: var(--text-dim);
 }
 
+.motto {
+  font-family: var(--sans);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--accent);
+  margin: 0 0 1.5rem;
+}
+
+/* Bordered pull-quote treatment only where the surrounding text is
+   left-aligned (the full About section) — would look lopsided against the
+   centered text used inside the bubble overlay's About panel. */
+#about .motto {
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+}
+
 code, .mono {
   font-family: var(--mono);
 }
@@ -102,7 +119,7 @@ code, .mono {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: var(--nav-height);
 }
 
 .site-nav .brand {
@@ -135,24 +152,65 @@ code, .mono {
   text-decoration: none;
 }
 
-/* ---------- Hero ---------- */
-.hero {
+/* ---------- Bubble hero ---------- */
+/* Full-screen landing: this is the first thing visitors see, nothing else
+   is visible until they scroll (or click a bubble for a quick preview). */
+.bubble-hero {
   position: relative;
-  padding: 0;
+  min-height: calc(100vh - var(--nav-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 0;
   border-bottom: 1px solid var(--border);
   overflow: hidden;
 }
 
-.hero canvas {
+.bubble-hero canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.hero-content {
+.bubble-hero-head {
   position: relative;
-  padding: 7rem 0 6rem;
+  padding: 0 0 1rem;
+  text-align: center;
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  animation: scroll-cue-bounce 2.2s ease-in-out infinite;
+}
+
+.scroll-cue:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+@keyframes scroll-cue-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue {
+    animation: none;
+  }
 }
 
 .hero-eyebrow {
@@ -162,15 +220,195 @@ code, .mono {
   margin-bottom: 1rem;
 }
 
-.hero h1 {
+.bubble-hero h1 {
   font-size: clamp(2.2rem, 6vw, 4rem);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.hero p.tagline {
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
+.bubble-hint {
+  font-size: 0.95rem;
+}
+
+.bubble-hint a {
+  color: var(--accent);
+}
+
+/* The physics playground. Bubbles are absolutely positioned buttons inside;
+   bubbles.js drives their transform every frame. Flexes to fill the
+   remaining space in the full-screen hero, within sane bounds. */
+.bubble-field {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 280px;
+  max-height: 560px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  border-radius: 50%;
+  border: 1.5px solid #3c4257;
+  background: radial-gradient(circle at 32% 28%, #ffffff26, transparent 55%),
+    radial-gradient(circle at 70% 75%, #7df9ff33, transparent 65%),
+    #181b28f5;
+  box-shadow: 0 10px 30px #000000b3, 0 0 22px #7df9ff26;
+  backdrop-filter: blur(6px);
+  color: var(--text);
+  cursor: pointer;
+  will-change: transform;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bubble:hover,
+.bubble:focus-visible,
+.bubble.is-hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px #000000b3, 0 0 40px var(--accent-soft);
+  outline: none;
+}
+
+.bubble-kicker {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+
+.bubble-label {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Reduced-motion / no-JS-feel fallback: static centered row instead of
+   physics. bubbles.js adds this class and skips the rAF loop entirely. */
+.bubble-field.static-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  height: auto;
+  padding: 1rem 0 3rem;
+}
+
+.bubble-field.static-layout .bubble {
+  position: relative;
+}
+
+.bubble-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #05060acc;
+  z-index: 90;
+}
+
+.bubble-overlay {
+  position: fixed;
+  z-index: 91;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 80px #000a;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Set by bubbles.js only while the circle↔panel shape tween is running —
+   clips the box so it morphs as a clean rounded rect instead of showing
+   scrollbars or overflow mid-animation. Removed once the tween settles. */
+.bubble-overlay.is-morphing {
+  overflow: hidden;
+}
+
+.bubble-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
   color: var(--text-dim);
-  max-width: 640px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.bubble-close:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.bubble-panel-content {
+  /* clears the close button with room to spare, regardless of panel content */
+  padding: 3.5rem 2rem 2.5rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* Content only fades in once the box has finished resizing (toggled by
+   bubbles.js) — avoids ever showing text clipped mid-morph. */
+.bubble-panel-content.is-visible {
+  opacity: 1;
+}
+
+.bubble-panel {
+  display: none;
+}
+
+.bubble-panel.is-active {
+  display: block;
+}
+
+.bubble-panel h3:first-child {
+  text-align: center;
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+}
+
+.bubble-panel[data-panel="about"] > p,
+.bubble-panel[data-panel="contact"] > p {
+  text-align: center;
+}
+
+.bubble-panel .hero-actions {
+  justify-content: center;
+}
+
+/* Content inside the overlay is revealed immediately — the IntersectionObserver
+   driving .reveal never fires for elements that start display:none, so
+   components reused here (ProjectCard, ExperienceItem) would stay invisible
+   without this override. */
+.bubble-panel .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.bubble-jump {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .bubble-overlay {
+    left: 1rem !important;
+    right: 1rem;
+    width: auto !important;
+  }
+
+  .bubble-panel-content {
+    padding: 3.5rem 1.25rem 2rem;
+  }
 }
 
 .hero-actions {

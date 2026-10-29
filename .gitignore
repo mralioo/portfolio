@@ -22,3 +22,6 @@ yarn-error.log*
 # source resume PDF left at repo root while editing — the published copy
 # lives in public/resume.pdf
 /main.pdf
+
+# private context notes used to write project pages (not published)
+/artifacts/

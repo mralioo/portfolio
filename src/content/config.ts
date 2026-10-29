@@ -23,8 +23,14 @@ const projects = defineCollection({
     repo: z.string().url().optional(),
     demo: z.string().url().optional(),
     featured: z.boolean().default(false),
+    // true = hidden from the site (keeps the file)
+    draft: z.boolean().default(false),
     // short highlight chip, e.g. "1st place · InnoTrans 2026"
     badge: z.string().optional(),
+    // thumbnail shown beside the project on the homepage, e.g. "/projects/foo.png"
+    image: z.string().optional(),
+    // wide hero image on the project's own page; defaults to `image`
+    cover: z.string().optional(),
     // lower = earlier in the list
     order: z.number().default(100),
   }),

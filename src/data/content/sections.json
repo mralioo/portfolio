@@ -1,0 +1,102 @@
+{
+  "sections": [
+    {
+      "id": "about",
+      "label": "About",
+      "visible": true,
+      "lead": "",
+      "persona": "original",
+      "title": "The short version",
+      "headingStyle": "serif"
+    },
+    {
+      "id": "skills",
+      "label": "Skills",
+      "visible": true,
+      "lead": "The full GenAI lifecycle, owned end to end: **from POC to production**.",
+      "persona": "engineer",
+      "title": "What I bring to the table",
+      "headingStyle": "grotesk"
+    },
+    {
+      "id": "experience",
+      "label": "Experience",
+      "visible": true,
+      "lead": "Scroll to follow the path. ★ marks milestones and achievements; hover a card for the full story.",
+      "persona": "engineer",
+      "title": "Where I've shipped",
+      "headingStyle": "display"
+    },
+    {
+      "id": "projects",
+      "label": "Projects",
+      "visible": true,
+      "lead": "",
+      "persona": "builder",
+      "title": "Things I've built",
+      "headingStyle": "serif-italic"
+    },
+    {
+      "id": "lab",
+      "label": "Physical AI",
+      "visible": true,
+      "lead": "",
+      "persona": "illustrated",
+      "title": "Robots that learn",
+      "headingStyle": "mono"
+    },
+    {
+      "id": "learning",
+      "label": "Learning",
+      "visible": true,
+      "lead": "Degrees, certificates and courses on one timeline. I'm **always building new skills**; scroll to follow the path, hover a card for details.",
+      "persona": "researcher",
+      "title": "Always learning",
+      "headingStyle": "display-italic"
+    },
+    {
+      "id": "writing",
+      "label": "Writing",
+      "visible": true,
+      "lead": "",
+      "persona": "minimalist",
+      "title": "Notes & writing",
+      "headingStyle": "grotesk"
+    }
+  ],
+  "blocks": {
+    "motto": {
+      "title": "",
+      "visible": true
+    },
+    "stack": {
+      "title": "Tech stack",
+      "visible": true,
+      "kicker": "Tools I ship with. Hover a category or a tool."
+    },
+    "resumeLink": {
+      "title": "View full résumé",
+      "visible": true
+    },
+    "githubLink": {
+      "title": "More on GitHub",
+      "visible": true
+    },
+    "courses": {
+      "title": "",
+      "visible": true
+    },
+    "education": {
+      "title": "Education",
+      "visible": true
+    },
+    "certificates": {
+      "title": "Certificates",
+      "visible": true
+    },
+    "allPosts": {
+      "title": "All posts",
+      "visible": true
+    }
+  }
+}

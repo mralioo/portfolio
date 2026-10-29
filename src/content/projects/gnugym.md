@@ -4,7 +4,8 @@ summary: "A generic toolkit that exposes GNU Radio as an OpenAI Gym environment,
 stack: ["Python", "GNU Radio", "Reinforcement Learning", "OpenAI Gym"]
 repo: "https://github.com/mralioo/GnuGym"
 featured: false
-order: 5
+image: "/projects/gh-GnuGym.png"
+order: 7
 ---
 
 Originally built at the Institute for Telecommunications Systems as "GNU-Radio Meets

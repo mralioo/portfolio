@@ -1,0 +1,674 @@
+---
+// Scroll-drawn timeline ("journey") used for Experience and Learning.
+//
+// Entries alternate left/right of a centre line on wide layouts; an SVG path
+// snakes through every node in S-curves and draws itself as the visitor
+// scrolls, with a glowing head at its tip. Narrow layouts put the line on the
+// left and keep it straight. Each entry lights up when the line reaches it.
+// Milestones are always visible; hovering (or tapping) a card reveals the rest.
+// Without JS everything renders as a plain readable list.
+import type { JourneyItem } from '../lib/journey';
+
+interface Props {
+  items: JourneyItem[];
+  label: string;
+}
+const { items, label } = Astro.props as Props;
+
+// year marker before the first entry of each new year
+type Row = { type: 'year'; year: number } | { type: 'item'; item: JourneyItem; side: 'left' | 'right' };
+const rows: Row[] = [];
+let lastYear: number | null = null;
+let n = 0;
+for (const item of items) {
+  if (item.year && item.year !== lastYear) {
+    rows.push({ type: 'year', year: item.year });
+    lastYear = item.year;
+  }
+  rows.push({ type: 'item', item, side: n++ % 2 === 0 ? 'right' : 'left' });
+}
+const hasDetails = (i: JourneyItem) => i.bullets.length > 0 || i.tags.length > 0 || Boolean(i.thesis);
+---
+<div class="jr" data-journey>
+  <svg class="jr-svg" aria-hidden="true" data-jr-svg>
+    <path class="jr-track" data-jr-track />
+    <path class="jr-path" data-jr-path />
+    <circle class="jr-head" r="6" data-jr-head />
+  </svg>
+
+  <ol class="jr-list" aria-label={label}>
+    {rows.map((row) =>
+      row.type === 'year' ? (
+        <li class="jr-year" data-jr-point aria-hidden="true"><span>{row.year}</span></li>
+      ) : (
+        <li class:list={['jr-item', `is-${row.side}`, `kind-${row.item.kind}`]} data-jr-item>
+          <span class:list={['jr-node', { 'has-ms': row.item.milestones.length > 0 }]} data-jr-point aria-hidden="true"></span>
+          <p class="jr-when">{row.item.when}</p>
+          <article class="jr-card" tabindex={hasDetails(row.item) ? 0 : undefined} data-jr-card>
+            <p class="jr-kicker">{row.item.kicker}</p>
+            <h3 class="jr-title">
+              {row.item.href ? (
+                <a href={row.item.href} target="_blank" rel="noreferrer">{row.item.title} <span aria-hidden="true">↗</span></a>
+              ) : row.item.title}
+            </h3>
+            <p class="jr-org">{row.item.org}<span class="jr-when-inline"> · {row.item.when}</span></p>
+            {row.item.summary && <p class="jr-summary">{row.item.summary}</p>}
+
+            {row.item.progress !== undefined && row.item.progress < 100 && (
+              <div class="jr-progress" role="progressbar" aria-valuenow={row.item.progress} aria-valuemin="0" aria-valuemax="100" aria-label={`${row.item.title} progress`}>
+                <span style={`--p:${row.item.progress / 100}`}></span>
+                <em>{row.item.progress}%</em>
+              </div>
+            )}
+
+            {row.item.milestones.length > 0 && (
+              <ul class="jr-ms" aria-label="Milestones and achievements">
+                {row.item.milestones.map((m, k) => (
+                  <li style={`--k:${k}`}>
+                    <span class="jr-star" aria-hidden="true">★</span>
+                    <span>
+                      {m.href ? <a href={m.href}>{m.title}</a> : m.title}
+                      {m.when && <small>{m.when}</small>}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {hasDetails(row.item) && (
+              <div class="jr-more">
+                <div class="jr-more-inner">
+                  {row.item.thesis && (
+                    <p class="jr-thesis"><span>Thesis · {row.item.thesis.group}</span>{row.item.thesis.title}</p>
+                  )}
+                  {row.item.bullets.length > 0 && <ul class="jr-bullets">{row.item.bullets.map((b) => <li>{b}</li>)}</ul>}
+                  {row.item.tags.length > 0 && <ul class="tag-row">{row.item.tags.map((t) => <li class="tag">{t}</li>)}</ul>}
+                </div>
+              </div>
+            )}
+            {hasDetails(row.item) && <p class="jr-hint" aria-hidden="true">Hover for details</p>}
+          </article>
+        </li>
+      )
+    )}
+  </ol>
+</div>
+
+<style>
+  .jr {
+    --gap: 1.75rem;
+    --mid: 132px;
+    position: relative;
+    container-type: inline-size;
+    margin-top: 0.5rem;
+  }
+
+  .jr-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .jr-track,
+  .jr-path {
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .jr-track {
+    stroke: color-mix(in srgb, var(--line-strong) 40%, transparent);
+    stroke-width: 2;
+    stroke-dasharray: 3 7;
+  }
+
+  .jr-path {
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 45%, transparent));
+  }
+
+  .jr-head {
+    fill: var(--accent);
+    filter: drop-shadow(0 0 10px var(--accent));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .jr.is-drawing .jr-head {
+    opacity: 1;
+  }
+
+  /* ---------- rows: narrow = line on the left ---------- */
+  .jr-list {
+    position: relative;
+    display: grid;
+    gap: var(--gap);
+    padding-left: 2.75rem;
+  }
+
+  .jr-year,
+  .jr-item {
+    position: relative;
+  }
+
+  .jr-year span {
+    display: inline-block;
+    position: relative;
+    left: -2.75rem;
+    transform: translateX(calc(-50% + 0.6rem));
+    padding: 0.2rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: 999px;
+    background: var(--bg);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .jr-node {
+    position: absolute;
+    top: 1.6rem;
+    left: calc(-2.75rem + 0.6rem - 8px);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--line-strong);
+    background: var(--bg);
+    transition: border-color 0.4s, background 0.4s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+  }
+
+  .jr-node.has-ms::after {
+    content: '★';
+    position: absolute;
+    top: -15px;
+    right: -11px;
+    font-size: 10px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.4s 0.2s;
+  }
+
+  .jr-when {
+    display: none;
+  }
+
+  /* ---------- card ---------- */
+  .jr-card {
+    position: relative;
+    padding: 1.25rem 1.35rem 1.1rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 8%, transparent);
+    outline: none;
+    transition: border-color 0.35s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s, opacity 0.6s, translate 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .jr-card:hover,
+  .jr-card:focus-visible,
+  .jr-item.is-open .jr-card {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: 0 18px 40px -22px var(--shadow), inset 0 1px 0 color-mix(in srgb, var(--text) 8%, transparent);
+  }
+
+  .jr-kicker {
+    margin: 0 0 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+
+  .jr-title {
+    font-size: 1.12rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .jr-title a {
+    color: inherit;
+  }
+
+  .jr-title a:hover {
+    color: var(--accent);
+  }
+
+  .jr-org {
+    margin: 0.25rem 0 0;
+    font-size: 0.92rem;
+  }
+
+  .jr-when-inline {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .jr-summary {
+    margin: 0.6rem 0 0;
+    font-size: 0.92rem;
+  }
+
+  /* academic entries get more presence */
+  .kind-degree .jr-card {
+    padding: 1.6rem 1.6rem 1.35rem;
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--line-soft));
+    background:
+      radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--accent-deep) 35%, transparent), transparent 60%),
+      var(--surface);
+  }
+
+  .kind-degree .jr-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(1.35rem, 2vw, 1.7rem);
+    font-weight: 650;
+    letter-spacing: -0.015em;
+  }
+
+  .kind-degree .jr-org {
+    font-size: 1rem;
+    color: var(--text-strong);
+  }
+
+  .kind-degree .jr-summary {
+    font-size: 1rem;
+  }
+
+  .kind-degree .jr-node {
+    width: 22px;
+    height: 22px;
+    margin: -3px 0 0 -3px;
+  }
+
+  .jr-thesis {
+    margin: 0 0 0.8rem;
+    padding: 0.75rem 0.9rem;
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    background: color-mix(in srgb, var(--bg-sunk) 70%, transparent);
+    font-size: 0.98rem;
+    color: var(--text-strong);
+  }
+
+  .jr-thesis span {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  /* milestones: always visible */
+  .jr-ms {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+  }
+
+  .jr-ms li {
+    display: flex;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--text-strong);
+  }
+
+  .jr-ms a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    text-underline-offset: 3px;
+  }
+
+  .jr-ms a:hover {
+    color: var(--accent);
+  }
+
+  .jr-ms small {
+    margin-left: 0.45rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .jr-star {
+    flex: none;
+    color: var(--accent);
+  }
+
+  .jr-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 0.8rem;
+  }
+
+  .jr-progress span {
+    position: relative;
+    flex: 1;
+    height: 6px;
+    border-radius: 6px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .jr-progress span::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent-strong), var(--secondary));
+    transform-origin: left;
+    transform: scaleX(var(--p));
+  }
+
+  .jr-progress em {
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  /* details: collapsed until hover / focus / tap */
+  .jr-more {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .jr-more-inner {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .jr-more-inner > :first-child {
+    margin-top: 0.9rem;
+  }
+
+  .jr-card:hover .jr-more,
+  .jr-card:focus-within .jr-more,
+  .jr-item.is-open .jr-more {
+    grid-template-rows: 1fr;
+  }
+
+  .jr-card:hover .jr-more-inner,
+  .jr-card:focus-within .jr-more-inner,
+  .jr-item.is-open .jr-more-inner {
+    opacity: 1;
+    transition-delay: 0.1s;
+  }
+
+  .jr-bullets {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+  }
+
+  .jr-bullets li {
+    position: relative;
+    padding-left: 1rem;
+  }
+
+  .jr-bullets li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .jr-hint {
+    margin: 0.7rem 0 0;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    transition: opacity 0.25s;
+  }
+
+  .jr-hint::after {
+    content: ' ↓';
+  }
+
+  .jr-card:hover .jr-hint,
+  .jr-card:focus-within .jr-hint,
+  .jr-item.is-open .jr-hint {
+    opacity: 0;
+  }
+
+  /* ---------- wide: alternate around a centre line ---------- */
+  @container (min-width: 720px) {
+    .jr-list {
+      padding-left: 0;
+    }
+
+    .jr-item {
+      display: grid;
+      grid-template-columns: 1fr var(--mid) 1fr;
+      align-items: start;
+    }
+
+    .jr-year {
+      text-align: center;
+    }
+
+    .jr-year span {
+      left: 0;
+      transform: none;
+    }
+
+    .jr-node {
+      left: calc(50% - 8px);
+    }
+
+    .kind-degree .jr-node {
+      left: calc(50% - 8px);
+    }
+
+    .jr-when {
+      display: block;
+      margin: 1.35rem 0 0;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .jr-when-inline {
+      display: none;
+    }
+
+    .is-right .jr-when {
+      grid-column: 1;
+      grid-row: 1;
+      text-align: right;
+    }
+
+    .is-right .jr-card {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .is-left .jr-when {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .is-left .jr-card {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+
+  /* ---------- scroll-driven reveal (enabled by the script) ---------- */
+  .jr.is-armed .jr-card {
+    opacity: 0.12;
+    translate: 0 24px;
+  }
+
+  @container (min-width: 720px) {
+    .jr.is-armed .is-right .jr-card {
+      translate: 36px 0;
+    }
+
+    .jr.is-armed .is-left .jr-card {
+      translate: -36px 0;
+    }
+  }
+
+  .jr.is-armed .jr-when,
+  .jr.is-armed .jr-year span {
+    opacity: 0.25;
+    transition: opacity 0.6s;
+  }
+
+  .jr.is-armed .is-reached .jr-card {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .jr.is-armed .is-reached .jr-when,
+  .jr.is-armed .is-reached span {
+    opacity: 1;
+  }
+
+  .jr .is-reached .jr-node,
+  .jr .is-reached.jr-node {
+    border-color: var(--accent);
+    background: var(--accent-deep);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 15%, transparent);
+    transform: scale(1.1);
+  }
+
+  .jr .is-reached .jr-node.has-ms::after {
+    opacity: 1;
+  }
+
+  .jr-item:hover .jr-node {
+    transform: scale(1.35);
+  }
+
+  /* milestones pop in as the entry is reached */
+  .jr.is-armed .jr-ms li {
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.4s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .jr.is-armed .is-reached .jr-ms li {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.35s + var(--k) * 0.12s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jr *,
+    .jr *::after {
+      transition-duration: 0.01ms !important;
+      transition-delay: 0s !important;
+    }
+  }
+</style>
+
+<script>
+  // Draws the path through every node and grows it with scroll.
+  document.querySelectorAll<HTMLElement>('[data-journey]').forEach((root) => {
+    const svg = root.querySelector<SVGSVGElement>('[data-jr-svg]')!;
+    const track = root.querySelector<SVGPathElement>('[data-jr-track]')!;
+    const path = root.querySelector<SVGPathElement>('[data-jr-path]')!;
+    const head = root.querySelector<SVGCircleElement>('[data-jr-head]')!;
+    const points = Array.from(root.querySelectorAll<HTMLElement>('[data-jr-point]'));
+    const rows = points.map((p) => p.closest('li') as HTMLElement);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let length = 0;
+    let ys: number[] = [];
+
+    const centre = (el: HTMLElement) => {
+      const base = root.getBoundingClientRect();
+      const r = (el.querySelector('span') && el.classList.contains('jr-year') ? el.querySelector('span')! : el).getBoundingClientRect();
+      return { x: r.left + r.width / 2 - base.left, y: r.top + r.height / 2 - base.top };
+    };
+
+    function build() {
+      const w = root.clientWidth;
+      const h = root.scrollHeight;
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      const pts = points.map(centre);
+      ys = pts.map((p) => p.y);
+      if (pts.length < 2) return;
+      // wide layout: S-curves swinging left/right between nodes; narrow: straight
+      const wide = w >= 720;
+      // keep the swing inside the centre lane so it never crosses a card
+      const lane = parseFloat(getComputedStyle(root).getPropertyValue('--mid')) || 132;
+      const amp = wide ? lane / 2 - 14 : 0;
+      let d = `M ${pts[0].x} ${pts[0].y - 30}`;
+      d += ` L ${pts[0].x} ${pts[0].y}`;
+      for (let i = 1; i < pts.length; i++) {
+        const a = pts[i - 1];
+        const b = pts[i];
+        const dy = b.y - a.y;
+        const s = (i % 2 ? 1 : -1) * amp;
+        d += ` C ${a.x + s} ${a.y + dy * 0.45}, ${b.x + s} ${b.y - dy * 0.45}, ${b.x} ${b.y}`;
+      }
+      const last = pts[pts.length - 1];
+      d += ` L ${last.x} ${last.y + 40}`;
+      track.setAttribute('d', d);
+      path.setAttribute('d', d);
+      length = path.getTotalLength();
+      path.style.strokeDasharray = `${length}`;
+      update();
+    }
+
+    function update() {
+      if (!length) return;
+      const r = root.getBoundingClientRect();
+      // the line's tip follows a reading line 60% down the viewport
+      const tipY = reduceMotion ? Infinity : window.innerHeight * 0.6 - r.top;
+      const end = r.height;
+      const p = Math.max(0, Math.min(1, tipY / end));
+      path.style.strokeDashoffset = `${length * (1 - p)}`;
+      if (p > 0 && p < 1) {
+        const pt = path.getPointAtLength(length * p);
+        head.setAttribute('cx', String(pt.x));
+        head.setAttribute('cy', String(pt.y));
+        root.classList.add('is-drawing');
+      } else {
+        root.classList.remove('is-drawing');
+      }
+      rows.forEach((row, i) => row.classList.toggle('is-reached', ys[i] <= tipY + 4));
+    }
+
+    root.classList.add('is-armed');
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        update();
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // card heights change on hover/expand and on font load: re-route the path
+    new ResizeObserver(() => requestAnimationFrame(build)).observe(root.querySelector('.jr-list')!);
+    document.fonts?.ready.then(build);
+    build();
+
+    // touch: tap a card to open / close its details
+    if (!window.matchMedia('(hover: hover)').matches) {
+      root.querySelectorAll('.jr-hint').forEach((h) => (h.textContent = 'Tap for details'));
+      root.querySelectorAll<HTMLElement>('[data-jr-card]').forEach((card) =>
+        card.addEventListener('click', (e) => {
+          if ((e.target as HTMLElement).closest('a')) return;
+          card.closest('.jr-item')?.classList.toggle('is-open');
+        })
+      );
+    }
+  });
+</script>

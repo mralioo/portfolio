@@ -1,4 +1,9 @@
-// Work history, newest first. Pulled from resume.pdf (Oct 2026 version).
+// Work history, newest first. Content: content/experience.json.
+import data from './content/experience.json';
+
+// `date` free-form ("10.2026", "2024" or empty); `link` optional, site-relative or URL
+export type Milestone = { date: string; title: string; link?: string };
+
 export type ExperienceItem = {
   role: string;
   org: string;
@@ -6,58 +11,7 @@ export type ExperienceItem = {
   end: string; // "Today" for current role
   bullets: string[];
   stack: string[];
+  milestones?: Milestone[];
 };
 
-export const experience: ExperienceItem[] = [
-  {
-    role: 'AI / Machine Learning Engineer',
-    org: 'ITUC GmbH',
-    start: '11.2024',
-    end: 'Today',
-    bullets: [
-      'Architect and ship LLM-powered products end to end — from rapid GenAI proof-of-concepts to production deployments.',
-      'Build retrieval-augmented generation (RAG) and agentic workflows with tool calling, grounding, and guardrails.',
-      'Own LLMOps: CI/CD, containerized deployment, experiment tracking, and monitoring for production readiness.',
-      'Run systematic LLM evaluation, benchmarking, and cost/latency optimization.',
-      'Translate business problems into AI solutions with cross-functional and client stakeholders.',
-    ],
-    stack: ['LLMs', 'RAG', 'LangChain', 'LangGraph', 'FastAPI', 'Docker', 'GitHub Actions', 'MLflow', 'Airflow'],
-  },
-  {
-    role: 'Technical Co-Founder & Lead ML Engineer',
-    org: 'ROVEONE',
-    start: '10.2023',
-    end: '08.2024',
-    bullets: [
-      'Co-founded an edge-AI civilian protection startup; served on the board, led the privacy-first iOS threat detection engine.',
-      'Designed a Bayesian sensor-fusion engine combining audio, motion, and contextual signals; deployed optimized YAMNet/CoreML models on the Apple Neural Engine.',
-      'Built a GDPR-compliant GCP data and active-learning pipeline for ingestion, labeling, model improvement, and analytics.',
-    ],
-    stack: ['TensorFlow', 'CoreML', 'Python', 'Swift', 'GCP', 'Docker'],
-  },
-  {
-    role: 'ML Engineer — Intern & Freelancer',
-    org: 'truemetrics GmbH (YC S23)',
-    start: '04.2022',
-    end: '10.2023',
-    bullets: [
-      "Progressed from intern to the startup's first ML Engineer; continued as freelancer with end-to-end ownership.",
-      'Analyzed and visualized large-scale mobility/sensor data for logistics insights.',
-      'Developed, fine-tuned, and evaluated time-series ML models for real-world predictions.',
-      'Built and deployed a production ML pipeline on AWS — processing, feature extraction, experiment tracking, inference.',
-    ],
-    stack: ['Python', 'TensorFlow', 'tsfresh', 'AWS', 'MLflow', 'Scrum'],
-  },
-  {
-    role: 'Working Student — Transmission & Hybrid Systems',
-    org: 'IAV GmbH',
-    start: '09.2018',
-    end: '10.2020',
-    bullets: [
-      'Developed a reinforcement learning framework for automotive applications.',
-      'Automated data preprocessing pipelines for efficiency.',
-      'Implemented and evaluated RL and supervised learning algorithms.',
-    ],
-    stack: ['Python', 'Matlab', 'PyTorch', 'Jenkins'],
-  },
-];
+export const experience: ExperienceItem[] = data.experience;

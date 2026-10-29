@@ -1,0 +1,707 @@
+---
+// Interactive tech stack: category tabs with a sliding indicator, a grid of
+// tiles with brand logos (simple-icons, inlined at build time) or line
+// icons, and a "where I used it" drawer when a tile is clicked. Usage is
+// worked out at build time from experience, projects and lifecycle data.
+import type { SkillGroup } from '../data/skills';
+import { techIcon, findUsage, glyph, type UsageSource, type GlyphName } from '../lib/tech';
+
+interface Props {
+  groups: SkillGroup[];
+  languages: { label: string; level: number }[];
+  languagesPersona?: string;
+  sources: UsageSource[];
+}
+const { groups, languages, languagesPersona, sources } = Astro.props as Props;
+
+const LEVELS = ['', 'Basic', 'Conversational', 'Professional', 'Fluent', 'Native'];
+const LANG_CODES: Record<string, string> = { german: 'DE', english: 'EN', french: 'FR', arabic: 'ع', spanish: 'ES', italian: 'IT' };
+
+type Tile = { id: string; name: string; icon: ReturnType<typeof techIcon>; usage: ReturnType<typeof findUsage>; level?: number };
+type Tab = { id: string; label: string; icon: GlyphName; blurb: string; tiles: Tile[]; lang?: boolean; persona?: string };
+
+const tabs: Tab[] = groups.map((g, gi) => ({
+  id: `sx-${gi}`,
+  label: g.label,
+  icon: (g.icon as GlyphName) ?? 'spark',
+  blurb: g.blurb,
+  persona: g.persona,
+  tiles: g.items.map((name, ti) => ({ id: `sx-${gi}-${ti}`, name, icon: techIcon(name), usage: findUsage(name, sources) })),
+}));
+if (languages.length) {
+  tabs.push({
+    id: 'sx-lang',
+    label: 'Languages',
+    icon: 'language',
+    blurb: 'I work comfortably across teams and clients in four languages.',
+    lang: true,
+    persona: languagesPersona,
+    tiles: languages.map((l, i) => ({
+      id: `sx-lang-${i}`,
+      name: l.label,
+      icon: { kind: 'mono', text: LANG_CODES[l.label.toLowerCase()] ?? l.label.slice(0, 2).toUpperCase() },
+      usage: [],
+      level: l.level,
+    })),
+  });
+}
+
+// drawer content, read by the client script (no HTML, just data)
+const details = Object.fromEntries(
+  tabs.flatMap((t) =>
+    t.tiles.map((tile) => [
+      tile.id,
+      {
+        name: tile.name,
+        group: t.label,
+        level: tile.level ? LEVELS[tile.level] ?? '' : '',
+        usage: tile.usage,
+      },
+    ])
+  )
+);
+const detailsJson = JSON.stringify(details).replace(/</g, '\\u003c');
+---
+<div class="sx" data-sx data-persona-source data-persona={tabs[0]?.persona}>
+  <div class="sx-tabs" role="tablist" aria-label="Tech stack categories" data-sx-tabs>
+    <span class="sx-indicator" aria-hidden="true" data-sx-indicator></span>
+    {tabs.map((t, i) => (
+      <button
+        type="button"
+        role="tab"
+        class:list={['sx-tab', { 'is-active': i === 0 }]}
+        id={`${t.id}-tab`}
+        aria-controls={`${t.id}-panel`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        tabindex={i === 0 ? 0 : -1}
+        data-sx-tab={i}
+        data-persona={t.persona}
+      >
+        <svg class="sx-tab-icon" viewBox="0 0 24 24" aria-hidden="true" set:html={glyph(t.icon) ?? glyph('spark')} />
+        <span>{t.label}</span>
+        <span class="sx-count">{t.tiles.length}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="sx-panels">
+    {tabs.map((t, i) => (
+      <div
+        class:list={['sx-panel', { 'is-active': i === 0 }]}
+        role="tabpanel"
+        id={`${t.id}-panel`}
+        aria-labelledby={`${t.id}-tab`}
+        data-sx-panel={i}
+      >
+        {t.blurb && <p class="sx-blurb">{t.blurb}</p>}
+        <ul class="sx-grid">
+          {t.tiles.map((tile, k) => (
+            <li style={`--k:${k}`}>
+              <button
+                type="button"
+                class:list={['sx-tile', { 'is-lang': t.lang }]}
+                data-sx-tile={tile.id}
+                aria-expanded="false"
+                aria-controls="sx-drawer"
+                style={tile.icon.kind === 'brand' ? `--c:${tile.icon.color}` : undefined}
+              >
+                <span class="sx-logo" aria-hidden="true">
+                  {tile.icon.kind === 'brand' && (
+                    <svg viewBox="0 0 24 24" class="is-brand"><path d={tile.icon.path} /></svg>
+                  )}
+                  {tile.icon.kind === 'glyph' && <svg viewBox="0 0 24 24" class="is-glyph" set:html={tile.icon.svg} />}
+                  {tile.icon.kind === 'mono' && <span class="sx-mono">{tile.icon.text}</span>}
+                </span>
+                <span class="sx-name">{tile.name}</span>
+                {tile.level ? (
+                  <span class="sx-dots" aria-label={`${LEVELS[tile.level]}`}>
+                    {[1, 2, 3, 4, 5].map((d) => <i class={d <= tile.level! ? 'on' : ''}></i>)}
+                  </span>
+                ) : tile.usage.length > 0 && (
+                  <span class="sx-uses" title={`Used in ${tile.usage.length} places on this site`}>{tile.usage.length}</span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="sx-drawer" id="sx-drawer" data-sx-drawer aria-live="polite">
+    <div class="sx-drawer-inner">
+      <div class="sx-drawer-card" data-sx-drawer-card>
+        <p class="sx-hint" data-sx-hint>Hover or tap any technology to see where I've used it.</p>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" data-sx-details set:html={detailsJson} />
+</div>
+
+<style>
+  .sx {
+    margin-top: 0;
+  }
+
+  /* ---------- tabs ---------- */
+  .sx-tabs {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    background: var(--bg-sunk);
+  }
+
+  .sx-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-radius: 9px;
+    background: linear-gradient(135deg, var(--accent-deep), color-mix(in srgb, var(--secondary) 30%, transparent));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--accent) 20%, transparent), 0 4px 18px color-mix(in srgb, var(--accent-strong) 15%, transparent);
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1), width 0.5s cubic-bezier(0.65, 0, 0.35, 1), height 0.3s;
+    pointer-events: none;
+  }
+
+  .sx-tab {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.8rem;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .sx-tab:hover {
+    color: var(--text-strong);
+  }
+
+  .sx-tab.is-active {
+    color: var(--accent-ink);
+  }
+
+  .sx-tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .sx-tab-icon,
+  .sx-logo svg.is-glyph {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .sx-tab-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sx-count {
+    min-width: 1.3rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--line-soft);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    line-height: 1.3rem;
+    text-align: center;
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .sx-tab.is-active .sx-count {
+    background: color-mix(in srgb, var(--accent-strong) 20%, transparent);
+    color: var(--accent);
+  }
+
+  /* ---------- panels ---------- */
+  .sx-panels {
+    margin-top: 1.25rem;
+  }
+
+  .sx.is-ready .sx-panel:not(.is-active) {
+    display: none;
+  }
+
+  .sx:not(.is-ready) .sx-panel + .sx-panel {
+    margin-top: 1.5rem;
+  }
+
+  .sx-blurb {
+    margin: 0 0 1rem;
+    font-size: 0.92rem;
+  }
+
+  .sx-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.6rem;
+  }
+
+  /* each time a panel opens, its blurb and tiles cascade in */
+  .sx.is-ready .sx-panel.is-active .sx-blurb {
+    animation: sx-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  .sx.is-ready .sx-panel.is-active .sx-grid li {
+    animation: sx-in 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+    animation-delay: calc(60ms + var(--k) * 40ms);
+  }
+
+  @keyframes sx-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  }
+
+  /* ---------- tiles ---------- */
+  .sx-tile {
+    --c: var(--accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+    width: 100%;
+    height: 100%;
+    min-height: 104px;
+    padding: 0.95rem 0.9rem 0.85rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--surface-base) 30%, transparent);
+    color: var(--text-strong);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    transition: border-color 0.3s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s;
+  }
+
+  /* brand-colored glow that follows the pointer (site.js-free: set below) */
+  .sx-tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(160px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--c) 22%, transparent), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .sx-tile:hover,
+  .sx-tile:focus-visible {
+    border-color: color-mix(in srgb, var(--c) 45%, var(--line));
+    transform: translateY(-3px);
+    outline: none;
+  }
+
+  .sx-tile:hover::before,
+  .sx-tile:focus-visible::before,
+  .sx-tile[aria-expanded='true']::before {
+    opacity: 1;
+  }
+
+  .sx-tile[aria-expanded='true'] {
+    border-color: var(--c);
+    background: color-mix(in srgb, var(--surface-base) 60%, transparent);
+    box-shadow: 0 0 0 1px var(--c), 0 10px 30px -10px color-mix(in srgb, var(--c) 50%, transparent);
+  }
+
+  .sx-logo {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: var(--bg);
+    border: 1px solid color-mix(in srgb, var(--text-strong) 5%, transparent);
+    color: var(--c);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .sx-tile:hover .sx-logo {
+    transform: rotate(-8deg) scale(1.1);
+  }
+
+  .sx-logo svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sx-logo svg.is-brand {
+    fill: currentColor;
+  }
+
+  .sx-mono {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .sx-name {
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .sx-uses {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    padding: 0 0.3rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent-strong) 12%, transparent);
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    line-height: 1.15rem;
+    text-align: center;
+    color: var(--accent);
+  }
+
+  .sx-dots {
+    display: flex;
+    gap: 3px;
+  }
+
+  .sx-dots i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+
+  .sx-dots i.on {
+    background: var(--accent);
+  }
+
+  .is-lang .sx-mono {
+    font-size: 0.95rem;
+  }
+
+  /* ---------- drawer ---------- */
+  .sx-drawer {
+    display: grid;
+    grid-template-rows: 1fr;
+    margin-top: 0.9rem;
+    transition: grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sx-drawer-inner {
+    overflow: hidden;
+  }
+
+  .sx-drawer-card {
+    padding: 1rem 1.1rem;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    min-height: 3.2rem;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .sx-drawer-card.has-item {
+    border-style: solid;
+    border-color: var(--line-soft);
+    background: linear-gradient(120deg, color-mix(in srgb, var(--c, var(--accent)) 10%, transparent), transparent 60%), color-mix(in srgb, var(--surface-base) 30%, transparent);
+    animation: sx-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes sx-pop {
+    from { opacity: 0; transform: translateY(8px); }
+  }
+
+  .sx-hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .sx-drawer-card :global(.sx-d-head) {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+  }
+
+  .sx-drawer-card :global(.sx-d-name) {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .sx-drawer-card :global(.sx-d-group) {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .sx-drawer-card :global(.sx-d-label) {
+    margin: 0.6rem 0 0.4rem;
+    font-size: 0.78rem;
+    color: var(--text);
+  }
+
+  .sx-drawer-card :global(.sx-d-list) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .sx-drawer-card :global(.sx-d-chip) {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--text-strong);
+    opacity: 0;
+    animation: sx-chip 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: calc(var(--k) * 50ms);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .sx-drawer-card :global(a.sx-d-chip:hover) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .sx-drawer-card :global(.sx-d-chip small) {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  @keyframes sx-chip {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 560px) {
+    /* one swipeable row of tabs instead of five wrapped rows */
+    .sx-tabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .sx-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sx-tab {
+      flex: none;
+    }
+
+    /* compact tiles: logo beside the name */
+    .sx-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    .sx-tile {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.6rem;
+      min-height: 0;
+      padding: 0.6rem 0.65rem;
+    }
+
+    .sx-logo {
+      flex: none;
+      width: 32px;
+      height: 32px;
+    }
+
+    .sx-logo svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .sx-uses {
+      top: 0.35rem;
+      right: 0.35rem;
+    }
+
+    .sx-dots {
+      position: absolute;
+      right: 0.6rem;
+      bottom: 0.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sx *,
+    .sx *::before {
+      transition-duration: 0.01ms !important;
+      transition-delay: 0s !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<script>
+  type Detail = { name: string; group: string; level: string; usage: { label: string; detail: string; href?: string }[] };
+
+  document.querySelectorAll<HTMLElement>('[data-sx]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-sx-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-sx-panel]'));
+    const indicator = root.querySelector<HTMLElement>('[data-sx-indicator]');
+    const card = root.querySelector<HTMLElement>('[data-sx-drawer-card]')!;
+    const details: Record<string, Detail> = JSON.parse(root.querySelector('[data-sx-details]')?.textContent || '{}');
+    let active = 0;
+    let selected: HTMLButtonElement | null = null;
+
+    root.classList.add('is-ready');
+
+    function moveIndicator() {
+      const t = tabs[active];
+      if (!indicator || !t) return;
+      indicator.style.width = `${t.offsetWidth}px`;
+      indicator.style.height = `${t.offsetHeight}px`;
+      indicator.style.transform = `translate(${t.offsetLeft}px, ${t.offsetTop}px)`;
+    }
+
+    function showTab(i: number, focus = false) {
+      active = (i + tabs.length) % tabs.length;
+      tabs.forEach((t, k) => {
+        const on = k === active;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach((p, k) => p.classList.toggle('is-active', k === active));
+      const persona = tabs[active].dataset.persona;
+      if (persona && root.dataset.persona !== persona) {
+        root.dataset.persona = persona;
+        document.dispatchEvent(new CustomEvent('persona:hint'));
+      }
+      if (focus) tabs[active].focus();
+      tabs[active].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+      moveIndicator();
+      select(null);
+    }
+
+    function el(tag: string, cls: string, text?: string) {
+      const n = document.createElement(tag);
+      n.className = cls;
+      if (text) n.textContent = text;
+      return n;
+    }
+
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const hint = canHover ? 'Hover any technology to see where I’ve used it.' : 'Tap any technology to see where I’ve used it.';
+    root.querySelector('[data-sx-hint]')?.replaceChildren(hint);
+
+    // `toggle` = a click on the selected tile closes it; hover never closes
+    function select(tile: HTMLButtonElement | null, toggle = true) {
+      if (tile && tile === selected && !toggle) return;
+      if (selected) selected.setAttribute('aria-expanded', 'false');
+      if (!tile || tile === selected) {
+        selected = null;
+        card.classList.remove('has-item');
+        card.replaceChildren(el('p', 'sx-hint', hint));
+        return;
+      }
+      selected = tile;
+      tile.setAttribute('aria-expanded', 'true');
+      const d = details[tile.dataset.sxTile!];
+      if (!d) return;
+      card.style.setProperty('--c', getComputedStyle(tile).getPropertyValue('--c'));
+      const head = el('div', 'sx-d-head');
+      head.append(el('span', 'sx-d-name', d.name), el('span', 'sx-d-group', d.group));
+      const nodes: Node[] = [head];
+      if (d.level) {
+        nodes.push(el('p', 'sx-d-label', `${d.level} speaker`));
+      } else if (d.usage.length) {
+        nodes.push(el('p', 'sx-d-label', `Used in ${d.usage.length} ${d.usage.length === 1 ? 'place' : 'places'} on this site:`));
+        const list = el('div', 'sx-d-list');
+        d.usage.forEach((u, k) => {
+          const chip = el(u.href ? 'a' : 'span', 'sx-d-chip') as HTMLElement;
+          if (u.href) {
+            (chip as HTMLAnchorElement).href = u.href;
+            if (/^https?:/.test(u.href)) {
+              (chip as HTMLAnchorElement).target = '_blank';
+              (chip as HTMLAnchorElement).rel = 'noreferrer';
+            }
+          }
+          chip.style.setProperty('--k', String(k));
+          chip.append(document.createTextNode(u.label), el('small', '', u.detail));
+          list.append(chip);
+        });
+        nodes.push(list);
+      } else {
+        nodes.push(el('p', 'sx-d-label', 'Part of my core toolkit.'));
+      }
+      card.classList.remove('has-item');
+      void card.offsetWidth; // restart the pop animation
+      card.classList.add('has-item');
+      card.replaceChildren(...nodes);
+    }
+
+    tabs.forEach((t, i) => t.addEventListener('click', () => showTab(i)));
+
+    // Mouse/trackpad: hover a tab to switch category, hover a tile to open
+    // its "where I used it" drawer. Intent delays stop flicker while the
+    // pointer travels across the row toward something else.
+    let tabTimer: number | undefined;
+    let tileTimer: number | undefined;
+    if (canHover) {
+      tabs.forEach((t, i) => {
+        t.addEventListener('pointerenter', () => {
+          clearTimeout(tabTimer);
+          tabTimer = window.setTimeout(() => i !== active && showTab(i), 140);
+        });
+        t.addEventListener('pointerleave', () => clearTimeout(tabTimer));
+      });
+    }
+    root.querySelector('[data-sx-tabs]')?.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      const map: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: tabs.length - 1 };
+      if (key in map) {
+        e.preventDefault();
+        showTab(map[key], true);
+      }
+    });
+
+    root.querySelectorAll<HTMLButtonElement>('[data-sx-tile]').forEach((tile) => {
+      tile.addEventListener('click', () => select(tile));
+      if (canHover) {
+        tile.addEventListener('pointerenter', () => {
+          clearTimeout(tileTimer);
+          tileTimer = window.setTimeout(() => select(tile, false), 90);
+        });
+        tile.addEventListener('pointerleave', () => clearTimeout(tileTimer));
+      }
+      tile.addEventListener('pointermove', (e) => {
+        const r = tile.getBoundingClientRect();
+        tile.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        tile.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+
+    window.addEventListener('resize', moveIndicator);
+    document.fonts?.ready.then(moveIndicator);
+    moveIndicator();
+  });
+</script>

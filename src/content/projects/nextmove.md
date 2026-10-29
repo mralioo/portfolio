@@ -4,11 +4,12 @@ summary: "1st place, InnoTrans 2026 AI Track. A four-agent system — Dispatcher
 stack: ["Google ADK", "FastMCP", "TabPFN", "Neo4j", "LiteLLM", "FastAPI"]
 repo: "https://github.com/mralioo/NextMove"
 featured: true
-badge: "🏆 1st place · InnoTrans 2026"
+badge: "1st place · InnoTrans 2026"
+image: "/blog/nextmove-innotrans-2026/trophy-team.jpg"
 order: 2
 ---
 
-Winner of the **AI Track at the InnoTrans 2026 Hackathon** (FACTORY-C × Alstom).
+Winner of the **AI Track at the InnoTrans 2026 Hackathon** (InnoTrans × ALSTOM).
 
 - **Dispatcher** routes and guards input, **Analyst** pulls data through 57 MCP tools and
   forecasts demand with TabPFN, **Inspector** independently recomputes ground truth and can

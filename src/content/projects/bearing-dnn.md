@@ -4,7 +4,8 @@ summary: "A deep neural network framework for anomaly classification of faulty b
 stack: ["Python", "Deep Learning", "Signal Processing"]
 repo: "https://github.com/mralioo/Bearing_DNN"
 featured: false
-order: 6
+image: "/projects/gh-Bearing_DNN.png"
+order: 8
 ---
 
 Developed at the Measurement and Diagnostic Institute as "Bearing Fault Diagnosis

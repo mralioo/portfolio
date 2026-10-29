@@ -1,0 +1,37 @@
+{
+  "profile": {
+    "name": "Ali Alouane",
+    "role": "ML/AI Engineer · LLMs, RAG & Agentic Systems",
+    "location": "Berlin, Germany",
+    "tagline": "From proof-of-concept to production: I ship GenAI that survives real users.",
+    "status": "Open to AI Engineering roles · Berlin, Germany",
+    "motto": "Move fast on evidence. Move carefully on power.",
+    "email": "mr.ali.alouane@gmail.com",
+    "resumeUrl": "/resume.pdf",
+    "calendlyUrl": "https://calendly.com/mr_ali-alouane",
+    "github": "https://github.com/mralioo",
+    "linkedin": "https://www.linkedin.com/in/ali-alouane/",
+    "about": [
+      "I'm an **ML/AI Engineer** who takes generative AI from a whiteboard idea to a system real users depend on. My focus is **LLM applications**, **retrieval-augmented generation (RAG)**, and **agentic, multi-agent systems**, plus the evaluation, guardrails, and LLMOps that make them trustworthy in production.",
+      "Currently I'm building LLM platforms at [ITUC GmbH](https://www.ituc.de). Before that I co-founded the edge-AI startup **ROVEONE**, and I was the first ML engineer at **truemetrics (YC S23)**, shipping time-series ML on AWS. This year our agentic systems won [1st place at the InnoTrans 2026 Hackathon](#projects). ",
+      "Outside my day job, I'm building a robotic arm from scratch, from the motors and electronics up, and teaching it to handle objects on its own with **vision-language-action (VLA) models**: it learns first by copying demonstrations (imitation learning), then improves by trial and error (reinforcement learning). More in [Physical AI](#lab). When I'm not coding, you'll find me racing FPV drones, tinkering with autonomous RC cars, running, or at karate."
+    ]
+  },
+  "socials": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/mralioo",
+      "icon": "github"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/ali-alouane/",
+      "icon": "linkedin"
+    },
+    {
+      "label": "Email",
+      "url": "mailto:mr.ali.alouane@gmail.com",
+      "icon": "mail"
+    }
+  ]
+}

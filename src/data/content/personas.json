@@ -1,0 +1,35 @@
+{
+  "personas": [
+    {
+      "id": "original",
+      "label": "Just me",
+      "image": "/personas/original.webp"
+    },
+    {
+      "id": "researcher",
+      "label": "ML researcher mode",
+      "image": "/personas/researcher.webp"
+    },
+    {
+      "id": "engineer",
+      "label": "AI engineer mode",
+      "image": "/personas/engineer.webp"
+    },
+    {
+      "id": "minimalist",
+      "label": "Product thinker mode",
+      "image": "/personas/minimalist.webp"
+    },
+    {
+      "id": "builder",
+      "label": "Late-night builder mode",
+      "image": "/personas/builder.webp"
+    },
+    {
+      "id": "illustrated",
+      "label": "Robotics nerd mode",
+      "image": "/personas/illustrated.webp"
+    }
+  ],
+  "enabled": true
+}

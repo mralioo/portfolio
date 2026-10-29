@@ -7,6 +7,30 @@ any of this. For how the site is built/deployed mechanically, see
 **Read "Why your edits sometimes don't show up" at the bottom first** —
 it's almost certainly why the hackathon date change didn't appear anywhere.
 
+## Easiest: the visual editor
+
+`npm run edit` → **http://localhost:4321/portfolio/__editor**. Everything below can be done
+there with forms instead of editing files: save with **Ctrl S**, check the
+**Preview** pane, then hit **Build site**. To publish, commit and push.
+
+Homepage text now lives in `src/data/content/*.json` (the `src/data/*.ts`
+files just add types). To make a new field editable, add it to the JSON,
+the matching `.ts` type, and `editor/schema.js`.
+
+## Avatar looks ("changing hats")
+
+The sidebar avatar swaps between alternate photos as visitors read: each homepage
+section, each POC → Production stage and each tech-stack tab picks a look. The caption
+under your name follows along ("› AI engineer mode"). On phones a small floating avatar
+takes over once the sidebar has scrolled away.
+
+- Looks: `src/data/content/personas.json` (id, caption, image in `public/personas/`).
+  The editor's **Avatar looks** page edits these, and has a switch to turn the effect off.
+- Which look shows where: the `persona` field on sections (`sections.json`), lifecycle
+  stages and tech-stack categories (`skills.json`), plus `languagesPersona`.
+- Source images (full-size AI generations) live in `src/assets/profile_image_types/`,
+  outside `public/`, so they aren't shipped; `public/personas/*.webp` are 320 px crops.
+
 ## Add a new blog post
 
 Create a new file in `src/content/blog/`, e.g. `src/content/blog/my-new-post.md`:
@@ -42,8 +66,9 @@ summary: "One or two sentences — shows on the project card."
 stack: ["Python", "PyTorch"]
 repo: "https://github.com/mralioo/my-project"
 demo: "https://my-project-demo.com"   # optional
-featured: true                          # true = large card in "Selected work"; false = smaller grid below
+featured: true                          # optional, unused by the layout today
 badge: "1st place · Some Hackathon"     # optional highlight chip on the card
+image: "/projects/my-project.png"       # optional thumbnail; put the file in public/projects/
 order: 4                                # lower numbers show first
 ---
 
@@ -55,33 +80,38 @@ It appears automatically on the homepage's Projects section, sorted by `order`.
 
 ## Edit your profile, tagline, motto, contact info
 
-`src/data/profile.ts` — name, role, location, motto, hero description, email,
+`src/data/content/profile.json` — name, role, tagline, About paragraphs, location, motto, email,
 resume link, Calendly link, social links. Plain object, edit the string
 values directly.
 
 ## Edit work history
 
-`src/data/experience.ts` — one object per job, newest first. Add a new entry
+`src/data/content/experience.json` — one object per job, newest first. Add a new entry
 at the top of the array to add a new role.
 
 ## Edit education, certificates
 
-`src/data/education.ts`.
+`src/data/content/education.json`.
 
 ## Edit skills, languages
 
-`src/data/skills.ts` — `lifecycle` is the horizontal "POC → Production"
-scroll (one card per stage), `skillGroups` the grid below it, `marquee` the
-scrolling stack strip under the hero.
+`src/data/content/skills.json` — `lifecycle` drives the interactive "POC → Production"
+pipeline (each stage: `short` node label, `icon`, `activities`, `outcome`, `pitch`, `tools`;
+`lifecycleLoop` is the caption on the loop-back arc), `skillGroups` the tabs of the
+interactive tech-stack explorer (each: `label`, `icon`, `blurb`, `items`). Known tools get
+their brand logo automatically (mapping in `src/lib/tech.ts`); concepts get a line icon,
+anything else shows its initials. Clicking a tile lists where that tool appears in your
+experience, projects and lifecycle stages — computed automatically, nothing to maintain.
+`skillGroups` the compact stack table below it.
 
 ## Update course progress
 
-`src/data/learning.ts` — bump `progress` (0–100) as you go. At 100 the card
+`src/data/content/learning.json` — bump `progress` (0–100) as you go. At 100 the card
 shows "✓ Done"; add `completed: "MM/YYYY"` too.
 
 ## Edit Physical AI lab, hackathons, hobbies, clubs
 
-`src/data/extras.ts` — `physicalAI` is the Lab section, `hackathons` the
+`src/data/content/extras.json` — `physicalAI` is the Lab section, `hackathons` the
 recent-builds list (each with its own `date`), `pastHackathons` the
 one-line "Earlier:" list. The InnoTrans blog post's date lives separately
 in `src/content/blog/nextmove-innotrans-2026.md` front matter.

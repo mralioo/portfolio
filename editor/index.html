@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="__PREFIX__/app.css" />
+    <script>window.SITE_BASE = __BASE__;</script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">Site editor <span>local</span></div>
+      <div class="status" data-status></div>
+      <div class="actions">
+        <button type="button" class="btn ghost" data-action="revert" disabled>Revert</button>
+        <button type="button" class="btn primary" data-action="save" disabled>Save <kbd>Ctrl S</kbd></button>
+        <button type="button" class="btn" data-action="preview">Preview</button>
+        <button type="button" class="btn" data-action="build">Build site</button>
+      </div>
+    </header>
+    <div class="shell">
+      <nav class="side" data-side aria-label="Editable content"></nav>
+      <main class="main" data-main><p class="empty">Loading…</p></main>
+      <aside class="preview" data-preview hidden>
+        <div class="preview-bar">
+          <span>Live preview</span>
+          <div>
+            <button type="button" class="btn small" data-action="reload-preview">Reload</button>
+            <a class="btn small" data-preview-open target="_blank" rel="noreferrer">Open ↗</a>
+          </div>
+        </div>
+        <iframe data-preview-frame title="Site preview"></iframe>
+      </aside>
+    </div>
+    <dialog class="build-dialog" data-build-dialog>
+      <header>
+        <h2 data-build-title>Building…</h2>
+        <button type="button" class="btn small" data-action="close-build">Close</button>
+      </header>
+      <pre data-build-log></pre>
+    </dialog>
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+    <script type="module" src="__PREFIX__/app.js"></script>
+  </body>
+</html>

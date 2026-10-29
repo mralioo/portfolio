@@ -1,338 +1,238 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import ExperienceItemCmp from '../components/ExperienceItem.astro';
-import EducationItemCmp from '../components/EducationItem.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import PersonaAvatar from '../components/PersonaAvatar.astro';
+import Journey from '../components/Journey.astro';
+import { experienceJourney, learningJourney } from '../lib/journey';
 import ProjectCard from '../components/ProjectCard.astro';
-import { profile, stats } from '../data/profile';
+import Lifecycle from '../components/Lifecycle.astro';
+import SkillExplorer from '../components/SkillExplorer.astro';
+import type { UsageSource } from '../lib/tech';
+import { profile, socials } from '../data/profile';
 import { experience } from '../data/experience';
 import { education, certificates } from '../data/education';
-import { lifecycle, skillGroups, languages, softSkills } from '../data/skills';
-import { physicalAI, hackathons, pastHackathons, hobbies, clubs } from '../data/extras';
+import { lifecycle, lifecycleLoop, skillGroups, languages, languagesPersona } from '../data/skills';
+import { physicalAI } from '../data/extras';
 import { courses } from '../data/learning';
+import { sections, blocks } from '../data/sections';
+import { sidebarVariants } from '../data/sidebarVariants';
+import VariantPicker from '../components/VariantPicker.astro';
+import { inlineMd } from '../lib/inline-md';
 import { withBase } from '../lib/url';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const featured = projects.filter((p) => p.data.featured);
-const more = projects.filter((p) => !p.data.featured);
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+  .slice(0, 4);
 
-// Right-hand section index (desktop). Ids must match the <section> ids below.
-const sections = [
-  { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'lab', label: 'Physical AI' },
-  { id: 'hackathons', label: 'Hackathons' },
-  { id: 'learning', label: 'Learning' },
-  { id: 'blog', label: 'Blog' },
-  { id: 'beyond', label: 'Beyond work' },
-  { id: 'contact', label: 'Contact' },
+// Where each technology shows up, for the Skills explorer's "used in" drawer.
+const usageSources: UsageSource[] = [
+  ...experience.map((e) => ({ label: e.org, detail: e.role, href: '#experience', terms: e.stack, text: e.bullets.join(' ') })),
+  ...projects.map((p) => ({ label: p.data.title, detail: 'Project', href: withBase(`/projects/${p.slug}`), terms: p.data.stack, text: p.data.summary })),
+  ...lifecycle.map((l) => ({ label: `Stage ${l.step}`, detail: l.short || l.title, href: '#skills', terms: l.tools, text: l.pitch })),
 ];
-const kicker = (id: string) => String(sections.findIndex((s) => s.id === id) + 1).padStart(2, '0');
----
-<BaseLayout>
-  <Hero profile={profile} />
 
-  <nav class="section-index" aria-label="Sections" data-section-index>
-    <ol>
-      {sections.map((s, i) => (
+// Section order, labels and visibility come from content/sections.json.
+const visible = sections.filter((s) => s.visible);
+const show = (key: keyof typeof blocks) => blocks[key].visible;
+---
+<BaseLayout home>
+  <div class="layout">
+    <header class="sidebar" data-lenis-prevent>
+      <div class="sidebar-top">
+        <div class="identity">
+          <PersonaAvatar />
+          <p class="persona-label" data-persona-text></p>
+        </div>
+        <h1 class="name"><a href={withBase('/')}>{profile.name}</a></h1>
+
+        {/* TEMPORARY design review: one intro per option, CSS shows the active one */}
+        {sidebarVariants.map((v) => (
+          <div class="intro" data-variant-block={v.id}>
+            <h2 class="role">{v.role}</h2>
+            <div class="statement">
+              {v.statement.map((line) => <p set:html={inlineMd(line)} />)}
+            </div>
+            <blockquote class="intro-quote">
+              <p>{v.quote}</p>
+              {v.quoteBy && <cite>— {v.quoteBy}</cite>}
+            </blockquote>
+          </div>
+        ))}
+
+        {profile.status && <p class="status"><span class="pulse-dot" aria-hidden="true"></span>{profile.status}</p>}
+
+        <div class="contact-row">
+          {profile.email && <a class="btn primary" href={`mailto:${profile.email}`}>Get in touch</a>}
+          {profile.resumeUrl && <a class="btn" href={withBase(profile.resumeUrl)} target="_blank" rel="noreferrer">Resume ↗</a>}
+          <ul class="socials" aria-label="Social media">
+            {socials.map((s) => (
+              <li>
+                <a href={s.url} aria-label={s.label} target={s.url.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
+                  <Icon name={s.icon} size={20} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+    </header>
+
+    <main id="content" class="content">
+      {visible.map((s, i) => (
+        <section id={s.id} data-section data-persona={s.persona} aria-label={s.label}>
+          <header class="sec-head reveal" data-heading={s.headingStyle}>
+            <p class="sec-kicker">
+              <span class="sec-num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="sec-rule" aria-hidden="true"></span>
+              <span>{s.label}</span>
+            </p>
+            <h2 class="sec-title">{s.title || s.label}</h2>
+            {s.lead && <p class="sec-lead" set:html={inlineMd(s.lead)} />}
+          </header>
+
+          {s.id === 'about' && (
+            <>
+              {profile.about.map((para) => <p class="reveal" set:html={inlineMd(para)} />)}
+              {show('motto') && profile.motto && <blockquote class="motto reveal">&ldquo;{profile.motto}&rdquo;</blockquote>}
+            </>
+          )}
+
+          {s.id === 'skills' && (
+            <>
+              <Lifecycle stages={lifecycle} loop={lifecycleLoop} />
+              {show('stack') && blocks.stack.title && (
+                <header class="sub-head reveal">
+                  <h3>{blocks.stack.title}</h3>
+                  {blocks.stack.kicker && <p>{blocks.stack.kicker}</p>}
+                </header>
+              )}
+              {show('stack') && <SkillExplorer groups={skillGroups} languages={languages} languagesPersona={languagesPersona} sources={usageSources} />}
+            </>
+          )}
+
+          {s.id === 'experience' && (
+            <>
+              <Journey items={experienceJourney(experience)} label="Work experience timeline" />
+              {show('resumeLink') && profile.resumeUrl && (
+                <a class="more-link reveal" href={withBase(profile.resumeUrl)} target="_blank" rel="noreferrer">
+                  {blocks.resumeLink.title} <span class="arrow" aria-hidden="true">→</span>
+                </a>
+              )}
+            </>
+          )}
+
+          {s.id === 'projects' && (
+            <>
+              <ul class="entries">
+                {projects.map((p) => (
+                  <ProjectCard
+                    title={p.data.title}
+                    summary={p.data.summary}
+                    stack={p.data.stack}
+                    repo={p.data.repo}
+                    demo={p.data.demo}
+                    badge={p.data.badge}
+                    image={p.data.image}
+                    href={withBase(`/projects/${p.slug}`)}
+                  />
+                ))}
+              </ul>
+
+              {show('githubLink') && profile.github && (
+                <a class="more-link reveal" href={profile.github} target="_blank" rel="noreferrer">
+                  {blocks.githubLink.title} <span class="arrow" aria-hidden="true">→</span>
+                </a>
+              )}
+            </>
+          )}
+
+          {s.id === 'lab' && (
+            <>
+              <div class="lab reveal">
+                {physicalAI.status && <p class="badge live"><span class="pulse-dot" aria-hidden="true"></span>{physicalAI.status}</p>}
+                <h3>{physicalAI.title}</h3>
+                <p>{physicalAI.summary}</p>
+                {physicalAI.tracks.length > 0 && (
+                  <div class="lab-tracks">
+                    {physicalAI.tracks.map((t) => (
+                      <div>
+                        <h4>{t.title}</h4>
+                        <ul>{t.items.map((i) => <li>{i}</li>)}</ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <img class="lab-img" src={withBase('/projects/robotic-arm.svg')} alt="" loading="lazy" />
+              </div>
+            </>
+          )}
+
+          {s.id === 'learning' && (
+            <Journey
+              items={learningJourney(education, certificates, courses, {
+                education: show('education'),
+                certificates: show('certificates'),
+                courses: show('courses'),
+              })}
+              label="Education, certificates and courses timeline"
+            />
+          )}
+
+          {s.id === 'writing' && (
+            <>
+              <ul class="entries">
+                {posts.map((post) => (
+                  <li class="entry post reveal">
+                    <div class="entry-hover" aria-hidden="true"></div>
+                    {post.data.cover ? (
+                      <img class="entry-thumb" src={withBase(post.data.cover)} alt="" loading="lazy" width="200" height="112" />
+                    ) : (
+                      <div class="entry-thumb placeholder" aria-hidden="true">✎</div>
+                    )}
+                    <div class="entry-body">
+                      <p class="entry-meta">{post.data.date.getFullYear()}</p>
+                      <h3>
+                        <a class="entry-link" href={withBase(`/blog/${post.slug}`)}>
+                          <span class="entry-link-cover" aria-hidden="true"></span>
+                          {post.data.title} <span class="arrow" aria-hidden="true">↗</span>
+                        </a>
+                      </h3>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              {show('allPosts') && (
+                <a class="more-link reveal" href={withBase('/blog')}>{blocks.allPosts.title} <span class="arrow" aria-hidden="true">→</span></a>
+              )}
+            </>
+          )}
+        </section>
+      ))}
+
+      <Footer />
+    </main>
+  </div>
+  <nav class="section-dock" aria-label="Sections" data-section-dock>
+    <span class="dock-arc" aria-hidden="true"></span>
+    <span class="dock-ticks" aria-hidden="true"></span>
+    <span class="dock-pin" aria-hidden="true"></span>
+    <ul>
+      {visible.map((s, i) => (
         <li>
-          <a href={`#${s.id}`} data-index-link={s.id}>
-            <span class="si-num">{String(i + 1).padStart(2, '0')}</span>
-            <span class="si-label">{s.label}</span>
+          <a href={`#${s.id}`} data-nav-link={s.id}>
+            <span class="dock-label">{s.label}</span>
+            <span class="dock-num">{String(i + 1).padStart(2, '0')}</span>
           </a>
         </li>
       ))}
-    </ol>
+    </ul>
   </nav>
-
-  <section id="about" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('about')}</span> About</h2>
-      <div class="about-grid">
-        <div>
-          <p class="motto reveal">&ldquo;{profile.motto}&rdquo;</p>
-          <p class="lead reveal">{profile.heroDescription}</p>
-          <p class="reveal text-dim">Based in {profile.location}.</p>
-        </div>
-        <div class="stats">
-          {stats.map((s) => (
-            <div class="stat reveal">
-              <span class="stat-value"><span data-count={s.value}>{s.value}</span>{s.suffix}</span>
-              <span class="stat-label">{s.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="skills" data-section>
-    <div class="lifecycle" data-hscroll>
-      <div class="wrap">
-        <h2 data-split><span class="kicker">{kicker('skills')}</span> From POC to Production</h2>
-        <p class="section-intro reveal">The full GenAI lifecycle, owned end to end — scroll through how an idea becomes a deployed, evaluated, agentic system.</p>
-      </div>
-      <div class="lifecycle-viewport">
-        <div class="lifecycle-track" data-hscroll-track>
-          {lifecycle.map((stage) => (
-            <article class="stage-card" data-spotlight>
-              <span class="stage-step">{stage.step}</span>
-              <h3>{stage.title}</h3>
-              <p>{stage.pitch}</p>
-              <div class="tag-row">
-                {stage.tools.map((t) => <span class="tag">{t}</span>)}
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-      <div class="wrap">
-        <div class="lifecycle-progress" aria-hidden="true"><span data-hscroll-progress></span></div>
-      </div>
-    </div>
-
-    <div class="wrap">
-      <div class="skill-grid">
-        {skillGroups.map((g) => (
-          <div class="skill-group reveal">
-            <h3>{g.label}</h3>
-            <div class="tag-row">
-              {g.items.map((i) => <span class="tag">{i}</span>)}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div class="two-col">
-        <div class="reveal">
-          <h3 class="mini-title">Languages</h3>
-          {languages.map((l) => (
-            <div class="lang-row">
-              <span style="width:80px;">{l.label}</span>
-              <span class="lang-dots">
-                {[1, 2, 3, 4, 5].map((i) => <span class={i <= l.level ? 'filled' : ''}></span>)}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div class="reveal">
-          <h3 class="mini-title">How I work</h3>
-          <div class="tag-row">
-            {softSkills.map((s) => <span class="tag">{s}</span>)}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('projects')}</span> Selected work</h2>
-      <div class="featured-grid">
-        {featured.map((p, i) => (
-          <ProjectCard
-            title={p.data.title}
-            summary={p.data.summary}
-            stack={p.data.stack}
-            repo={p.data.repo}
-            demo={p.data.demo}
-            badge={p.data.badge}
-            featured
-            index={i}
-            href={withBase(`/projects/${p.slug}`)}
-          />
-        ))}
-      </div>
-      <h3 class="mini-title reveal" style="margin-top:3rem;">Earlier research & open source</h3>
-      <div class="grid">
-        {more.map((p) => (
-          <ProjectCard
-            title={p.data.title}
-            summary={p.data.summary}
-            stack={p.data.stack}
-            repo={p.data.repo}
-            demo={p.data.demo}
-            badge={p.data.badge}
-            href={withBase(`/projects/${p.slug}`)}
-          />
-        ))}
-      </div>
-      <p class="reveal" style="margin-top:1.5rem;">
-        More on <a href={profile.github} target="_blank" rel="noreferrer">github.com/mralioo ↗</a>
-      </p>
-    </div>
-  </section>
-
-  <section id="experience" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('experience')}</span> Experience</h2>
-      <div class="timeline" data-timeline>
-        <span class="timeline-fill" data-timeline-fill aria-hidden="true"></span>
-        {experience.map((item) => <ExperienceItemCmp item={item} />)}
-      </div>
-    </div>
-  </section>
-
-  <section id="lab" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('lab')}</span> Physical AI lab</h2>
-      <div class="lab-card reveal" data-spotlight>
-        <div class="lab-head">
-          <span class="badge live"><span class="pulse-dot"></span>{physicalAI.status}</span>
-          <h3>{physicalAI.title}</h3>
-          <p>{physicalAI.summary}</p>
-        </div>
-        <div class="lab-tracks">
-          {physicalAI.tracks.map((t) => (
-            <div class="lab-track">
-              <h4>{t.title}</h4>
-              <ul>{t.items.map((i) => <li>{i}</li>)}</ul>
-            </div>
-          ))}
-        </div>
-        <svg class="arm-sketch" viewBox="0 0 220 160" aria-hidden="true" data-arm>
-          <line class="arm-base" x1="40" y1="150" x2="120" y2="150" />
-          <g class="arm-seg1">
-            <line x1="80" y1="150" x2="80" y2="90" />
-            <circle cx="80" cy="150" r="6" />
-            <g class="arm-seg2">
-              <line x1="80" y1="90" x2="140" y2="70" />
-              <circle cx="80" cy="90" r="5" />
-              <g class="arm-seg3">
-                <line x1="140" y1="70" x2="170" y2="95" />
-                <circle cx="140" cy="70" r="4.5" />
-                <path class="arm-grip" d="M170 95 l10 -4 M170 95 l6 9" />
-              </g>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <section id="hackathons" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('hackathons')}</span> Hackathons</h2>
-      <p class="section-intro reveal">Shipping under pressure is a skill. Recent builds — idea to deployed demo in a single day.</p>
-      <div class="hack-list">
-        {hackathons.map((h) => (
-          <a class="hack-item reveal" href={h.link} target="_blank" rel="noreferrer" data-spotlight>
-            <div class="hack-meta">
-              <span class="mono text-dim">{h.date}</span>
-              {h.result && <span class="badge">{h.result}</span>}
-            </div>
-            <div>
-              <h3>{h.project} <span class="text-dim">— {h.name}</span></h3>
-              <p>{h.summary}</p>
-            </div>
-            <span class="hack-arrow" aria-hidden="true">↗</span>
-          </a>
-        ))}
-      </div>
-      <p class="reveal text-dim" style="margin-top:1.5rem;">Earlier: {pastHackathons.join(' · ')}</p>
-    </div>
-  </section>
-
-  <section id="learning" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('learning')}</span> Always learning</h2>
-      <p class="section-intro reveal">Courses in progress and completed — the skill stack keeps compounding.</p>
-      <div class="course-list">
-        {courses.map((c) => (
-          <div class="course reveal">
-            <div class="course-head">
-              <div>
-                <h3>{c.url ? <a href={c.url} target="_blank" rel="noreferrer">{c.title}</a> : c.title}</h3>
-                <p class="text-dim">{c.provider}{c.completed && ` · completed ${c.completed}`}</p>
-              </div>
-              <span class:list={['course-pct', { done: c.progress >= 100 }]}>
-                {c.progress >= 100 ? '✓ Done' : `${c.progress}%`}
-              </span>
-            </div>
-            <div class="course-bar" role="progressbar" aria-valuenow={c.progress} aria-valuemin="0" aria-valuemax="100" aria-label={`${c.title} progress`}>
-              <span data-progress={c.progress} style={`--p:${c.progress}%`}></span>
-            </div>
-            <div class="tag-row">{c.focus.map((f) => <span class="tag">{f}</span>)}</div>
-          </div>
-        ))}
-      </div>
-
-      <div class="two-col" style="margin-top:4rem;">
-        <div>
-          <h3 class="mini-title reveal">Education</h3>
-          <div class="timeline">
-            {education.map((item) => <EducationItemCmp item={item} />)}
-          </div>
-        </div>
-        <div>
-          <h3 class="mini-title reveal">Certificates</h3>
-          <div class="cert-list">
-            {certificates.map((c) => (
-              <div class="card reveal">
-                <h3>{c.title}</h3>
-                <p>{c.org} — {c.date}</p>
-                {c.detail && <p>{c.detail}</p>}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="blog" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('blog')}</span> From the blog</h2>
-      <div class="post-list">
-        {posts.map((post) => (
-          <a class="post-item reveal" href={withBase(`/blog/${post.slug}`)}>
-            <div>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-            </div>
-            <span class="post-date">{post.data.date.toISOString().slice(0, 10)}</span>
-          </a>
-        ))}
-      </div>
-      <p class="reveal" style="margin-top:1.5rem;"><a href={withBase('/blog')}>All posts →</a></p>
-    </div>
-  </section>
-
-  <section id="beyond" data-section>
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('beyond')}</span> Beyond work</h2>
-      <div class="grid">
-        {hobbies.map((h) => (
-          <div class="card reveal" data-spotlight>
-            <h3>{h.title}</h3>
-            <p>{h.description}</p>
-          </div>
-        ))}
-      </div>
-      <p class="reveal text-dim" style="margin-top:1.5rem;">Clubs: {clubs.join(' · ')}</p>
-    </div>
-  </section>
-
-  <section id="contact" data-section class="contact">
-    <div class="wrap">
-      <h2 data-split><span class="kicker">{kicker('contact')}</span> Let's build something</h2>
-      <p class="contact-big reveal">
-        Hiring for <em>LLM</em>, <em>RAG</em>, <em>agentic</em> or <em>Physical AI</em> work?
-      </p>
-      <p class="reveal text-dim">Open to AI Engineering roles and collaborations. Fastest way to reach me:</p>
-      <div class="hero-actions reveal">
-        <a class="btn primary" href={`mailto:${profile.email}`} data-magnetic>Email me</a>
-        <a class="btn" href={profile.calendlyUrl} target="_blank" rel="noreferrer" data-magnetic>Book a call ↗</a>
-        <a class="btn" href={profile.linkedin} target="_blank" rel="noreferrer" data-magnetic>LinkedIn ↗</a>
-        <a class="btn" href={withBase(profile.resumeUrl)} target="_blank" rel="noreferrer" data-magnetic>Resume ↗</a>
-      </div>
-    </div>
-  </section>
+  <PersonaAvatar variant="float" />
+  <VariantPicker variants={sidebarVariants} />
 </BaseLayout>
 <script src="../scripts/home.js"></script>
+<script src="../scripts/persona.js"></script>

@@ -1,221 +1,100 @@
-// Homepage-only motion: hero intro, split-text headings, pinned horizontal
-// lifecycle scroll, timeline draw, counters, progress bars, robot arm, and
-// active-section tracking for the nav + section index.
-// Everything is skipped under prefers-reduced-motion — content is already
-// visible in its final state by default.
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
-
+// Homepage: track the section in view and turn the right-hand arc dial.
+// The dial is a large circle whose centre sits off-screen to the right, so
+// only its left edge shows: a full-height arc. Section labels ride along
+// it; `pos` (a continuous section index, 2.4 = 40% into the third section)
+// decides the rotation, so the current section always sits at the arc's
+// midpoint and the dial turns smoothly with scroll.
+const dock = document.querySelector('[data-section-dock]');
+const links = Array.from(document.querySelectorAll('[data-nav-link]'));
+const sections = Array.from(document.querySelectorAll('[data-section]'));
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const order = links.map((a) => a.dataset.navLink);
+const GAP = 16; // px between a label and the arc
+// each label's transform ends with translate(-100%, -50%), so its right-middle
+// point is what lands on the arc and what it rotates around
+let current = null;
+let shown = null;
+let geo = null;
 
-// Wraps each character (or word) of an element's text nodes in masked spans
-// so they can slide up from behind a clip. Keeps child elements (e.g. the
-// kicker) intact and screen-reader text unchanged via aria-label.
-function split(el, mode) {
-  el.setAttribute('aria-label', el.textContent.trim().replace(/\s+/g, ' '));
-  const pieces = [];
-  for (const node of Array.from(el.childNodes)) {
-    if (node.nodeType !== Node.TEXT_NODE || !node.textContent.trim()) continue;
-    // one wrapper per text node, so flex parents (h2) see a single item
-    const frag = document.createElement('span');
-    const tokens = node.textContent.split(/(\s+)/);
-    for (const token of tokens) {
-      if (!token) continue;
-      if (/^\s+$/.test(token)) {
-        frag.append(' ');
-        continue;
-      }
-      const word = document.createElement('span');
-      word.className = 'split-word';
-      word.setAttribute('aria-hidden', 'true');
-      const units = mode === 'chars' ? Array.from(token) : [token];
-      for (const u of units) {
-        const inner = document.createElement('span');
-        inner.className = 'split-inner';
-        inner.textContent = u;
-        word.append(inner);
-        pieces.push(inner);
-      }
-      frag.append(word);
-    }
-    node.replaceWith(frag);
-  }
-  return pieces;
+const VISIBLE = 3; // sections shown either side of the current one
+
+function measure() {
+  if (!dock) return;
+  const h = window.innerHeight;
+  const r = h * 1.2; // big radius = gentle arc
+  const spacing = Math.min(110, Math.max(70, h * 0.1));
+  const step = spacing / r; // radians between sections
+  const w = dock.clientWidth;
+  // the arc's ends bend right; keep the outermost visible label on screen
+  const shift = r * (1 - Math.cos(VISIBLE * step));
+  const apex = w - 14 - shift;
+  geo = { r, step, cx: apex + r, cy: h / 2 };
+  dock.style.setProperty('--r', `${r}px`);
+  dock.style.setProperty('--apex', `${apex}px`);
 }
 
-if (!reduceMotion) {
-  // ---------- pinned horizontal POC → Production scroll (desktop) ----------
-  // Created first: ScrollTriggers set up before a pin don't account for the
-  // pin's spacer, so everything further down the page would fire too early.
-  const mm = gsap.matchMedia();
-  mm.add('(min-width: 900px)', () => {
-    const wrapper = document.querySelector('[data-hscroll]');
-    const track = document.querySelector('[data-hscroll-track]');
-    const bar = document.querySelector('[data-hscroll-progress]');
-    if (!wrapper || !track) return;
-    const distance = () => Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
-    const tween = gsap.to(track, {
-      x: () => -distance(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: wrapper,
-        start: 'top top',
-        end: () => `+=${distance()}`,
-        pin: true,
-        scrub: 0.8,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => bar && (bar.style.transform = `scaleX(${self.progress})`),
-      },
-    });
-    // Each stage card lifts in as it slides into view.
-    track.querySelectorAll('.stage-card').forEach((card) => {
-      gsap.from(card, {
-        opacity: 0.25,
-        y: 40,
-        scrollTrigger: { trigger: card, containerAnimation: tween, start: 'left 90%', end: 'left 55%', scrub: true },
-      });
-    });
+function position() {
+  const line = window.innerHeight * 0.35;
+  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) return sections.length - 1;
+  let pos = 0;
+  sections.forEach((s, i) => {
+    const r = s.getBoundingClientRect();
+    if (r.top <= line) pos = i + Math.min(0.999, (line - r.top) / Math.max(1, r.height));
   });
+  // hold each section at the centre for most of its length, then glide on
+  const i = Math.floor(pos);
+  const f = pos - i;
+  const e = f < 0.7 ? 0 : (f - 0.7) / 0.3;
+  return i + e * e * (3 - 2 * e);
 }
 
-// ---------- hero ----------
-const title = document.querySelector('[data-hero-title]');
-const rotator = document.querySelector('[data-rotator]');
-
-if (title && !reduceMotion) {
-  const chars = split(title, 'chars');
-  title.classList.add('is-split');
-  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-  tl.from(chars, { yPercent: 115, rotate: 6, duration: 1.2, stagger: 0.035 })
-    .from('[data-hero-fade]', { y: 24, opacity: 0, duration: 0.9, stagger: 0.1 }, '-=0.9')
-    .from('[data-hero-graph] .node, [data-hero-graph] .hub, [data-hero-graph] .hub-label', {
-      scale: 0, opacity: 0, transformOrigin: 'center', duration: 0.8, stagger: 0.07, ease: 'back.out(1.8)',
-    }, '-=0.8')
-    .from('[data-hero-graph] .edge', { strokeDashoffset: 200, opacity: 0, duration: 1, stagger: 0.06 }, '-=0.7');
-
-  // Hero content drifts up and fades as you scroll away.
-  gsap.to('.hero-inner', {
-    yPercent: -12,
-    opacity: 0.2,
-    ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+function paint(pos) {
+  if (!geo) return;
+  const { r, step, cx, cy } = geo;
+  links.forEach((a, i) => {
+    const d = i - pos;
+    const ad = Math.abs(d);
+    const th = d * step;
+    const x = cx - r * Math.cos(th);
+    const y = cy + r * Math.sin(th);
+    const scale = Math.max(0.78, 1.14 - ad * 0.09);
+    a.style.transform = `translate(${x - GAP}px, ${y}px) rotate(${(-th * 180) / Math.PI}deg) scale(${scale}) translate(-100%, -50%)`;
+    a.style.opacity = String(Math.max(0, 1 - ad * 0.26));
+    a.style.visibility = ad > VISIBLE + 0.4 ? 'hidden' : 'visible';
+    a.classList.toggle('is-near', ad < 0.5);
   });
-
-  // Glow follows the cursor across the hero.
-  const glow = document.querySelector('[data-hero-glow]');
-  const hero = document.querySelector('.hero');
-  if (glow && window.matchMedia('(hover: hover)').matches) {
-    const gx = gsap.quickTo(glow, 'x', { duration: 1.2, ease: 'power3.out' });
-    const gy = gsap.quickTo(glow, 'y', { duration: 1.2, ease: 'power3.out' });
-    hero.addEventListener('mousemove', (e) => {
-      const r = hero.getBoundingClientRect();
-      gx(e.clientX - r.left - r.width / 2);
-      gy(e.clientY - r.top - r.height / 2);
-    });
-  }
+  dock.style.setProperty('--spin', `${(-pos * step * 180) / Math.PI}deg`);
 }
-
-if (rotator) {
-  const words = Array.from(rotator.children);
-  let i = 0;
-  if (!reduceMotion && words.length > 1) {
-    setInterval(() => {
-      const current = words[i];
-      i = (i + 1) % words.length;
-      const next = words[i];
-      gsap.to(current, { yPercent: -100, opacity: 0, duration: 0.6, ease: 'power3.in', onComplete: () => current.classList.remove('is-active') });
-      next.classList.add('is-active');
-      gsap.fromTo(next, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, delay: 0.35, ease: 'power3.out' });
-    }, 2600);
-  }
-}
-
-// ---------- active section → nav + section index ----------
-const navLinks = document.querySelectorAll('[data-nav-link]');
-const indexLinks = document.querySelectorAll('[data-index-link]');
-const sectionIndex = document.querySelector('[data-section-index]');
 
 function setActive(id) {
-  navLinks.forEach((a) => a.classList.toggle('active', a.dataset.navLink === id));
-  indexLinks.forEach((a) => a.classList.toggle('active', a.dataset.indexLink === id));
-  // The index only appears once you've scrolled past the hero.
-  sectionIndex?.classList.toggle('is-visible', Boolean(id));
+  if (id === current) return;
+  current = id;
+  links.forEach((a) => {
+    const on = a.dataset.navLink === id;
+    a.classList.toggle('active', on);
+    if (on) a.setAttribute('aria-current', 'true');
+    else a.removeAttribute('aria-current');
+  });
 }
 
-document.querySelectorAll('[data-section]').forEach((section) => {
-  ScrollTrigger.create({
-    trigger: section,
-    start: 'top 50%',
-    end: 'bottom 50%',
-    onToggle: (self) => self.isActive && setActive(section.id),
-  });
-});
-ScrollTrigger.create({
-  trigger: '.hero',
-  start: 'top top',
-  end: 'bottom 50%',
-  onEnterBack: () => setActive(null),
-});
-
-if (!reduceMotion) {
-  // ---------- split headings ----------
-  document.querySelectorAll('[data-split]').forEach((h) => {
-    const words = split(h, 'words');
-    gsap.from(words, {
-      yPercent: 110,
-      duration: 1,
-      stagger: 0.08,
-      ease: 'expo.out',
-      scrollTrigger: { trigger: h, start: 'top 85%' },
-    });
-  });
-
-  // ---------- counters ----------
-  document.querySelectorAll('[data-count]').forEach((el) => {
-    const target = Number(el.dataset.count);
-    const obj = { v: 0 };
-    el.textContent = '0';
-    gsap.to(obj, {
-      v: target,
-      duration: 1.6,
-      ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 90%' },
-      onUpdate: () => (el.textContent = Math.round(obj.v)),
-    });
-  });
-
-  // ---------- course progress bars ----------
-  document.querySelectorAll('[data-progress]').forEach((bar) => {
-    gsap.from(bar, {
-      scaleX: 0,
-      duration: 1.4,
-      ease: 'expo.out',
-      scrollTrigger: { trigger: bar, start: 'top 92%' },
-    });
-  });
-
-  // ---------- experience timeline draws as you read ----------
-  const fill = document.querySelector('[data-timeline-fill]');
-  if (fill) {
-    gsap.fromTo(fill, { scaleY: 0 }, {
-      scaleY: 1,
-      ease: 'none',
-      scrollTrigger: { trigger: '[data-timeline]', start: 'top 70%', end: 'bottom 60%', scrub: true },
-    });
-  }
-
-  // ---------- robot arm idles through a pick motion ----------
-  const arm = document.querySelector('[data-arm]');
-  if (arm) {
-    const tl = gsap.timeline({ repeat: -1, yoyo: true, defaults: { duration: 1.6, ease: 'sine.inOut' } });
-    tl.to(arm.querySelector('.arm-seg1'), { rotate: -14, svgOrigin: '80 150' }, 0)
-      .to(arm.querySelector('.arm-seg2'), { rotate: 22, svgOrigin: '80 90' }, 0)
-      .to(arm.querySelector('.arm-seg3'), { rotate: -28, svgOrigin: '140 70' }, 0);
-    ScrollTrigger.create({ trigger: arm, onToggle: (self) => (self.isActive ? tl.play() : tl.pause()) });
-  }
-
-  // Fonts/images change layout heights; recompute trigger positions.
-  window.addEventListener('load', () => ScrollTrigger.refresh());
+let raf = 0;
+function frame() {
+  raf = 0;
+  const target = position();
+  setActive(order[Math.round(target)] ?? order[0]);
+  if (!dock) return;
+  shown = shown === null || reduceMotion ? target : shown + (target - shown) * 0.2;
+  paint(shown);
+  if (Math.abs(target - shown) > 0.002) raf = requestAnimationFrame(frame);
 }
+const kick = () => {
+  if (!raf) raf = requestAnimationFrame(frame);
+};
+window.addEventListener('scroll', kick, { passive: true });
+window.addEventListener('resize', () => {
+  measure();
+  shown = null;
+  kick();
+});
+measure();
+frame();

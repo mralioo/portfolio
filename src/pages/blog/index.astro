@@ -7,21 +7,26 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 ---
-<BaseLayout title="Blog — Ali Alouane" description="Writing on machine learning, robotics, and the occasional detour into philosophy.">
-  <section>
-    <div class="wrap">
-      <h2><span class="kicker">~/blog</span> Posts</h2>
-      <div class="post-list">
-        {posts.map((post) => (
-          <a class="post-item reveal" href={withBase(`/blog/${post.slug}`)}>
-            <div>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-            </div>
-            <span class="post-date">{post.data.date.toISOString().slice(0, 10)}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+<BaseLayout title="Writing — Ali Alouane" description="Writing on LLMs, agentic systems, robotics, and the occasional detour into philosophy.">
+  <h1 class="page-title">Writing</h1>
+  <p class="page-lead">Notes on LLMs, agentic systems, robotics, and the occasional detour into philosophy.</p>
+  <table class="archive">
+    <thead>
+      <tr><th>Date</th><th>Title</th><th class="tags">Tags</th></tr>
+    </thead>
+    <tbody>
+      {posts.map((post) => (
+        <tr class="reveal">
+          <td class="year">{post.data.date.toISOString().slice(0, 10)}</td>
+          <td>
+            <a href={withBase(`/blog/${post.slug}`)}>{post.data.title}</a>
+            <p class="desc">{post.data.description}</p>
+          </td>
+          <td class="tags">
+            <ul class="tag-row">{post.data.tags.slice(0, 3).map((t: string) => <li class="tag">{t}</li>)}</ul>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 </BaseLayout>

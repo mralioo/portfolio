@@ -4,7 +4,8 @@ summary: "Ongoing Physical AI build: a self-built robotic arm with custom electr
 stack: ["VLA", "Imitation Learning", "Reinforcement Learning", "ROS 2", "Embedded C/C++", "Electronics"]
 featured: true
 badge: "Physical AI · in progress"
-order: 3
+image: "/projects/robotic-arm.svg"
+order: 5
 ---
 
 My current side build, bridging foundation models and the physical world.

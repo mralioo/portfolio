@@ -1,17 +1,21 @@
 ---
-import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import { withBase } from '../lib/url';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
+  // The homepage renders its own split layout; every other page gets a
+  // simple "← Ali Alouane" header and the footer.
+  home?: boolean;
 }
 
 const {
   title = 'Ali Alouane — AI Engineer · LLMs, RAG & Agentic Systems',
   description = 'AI Engineer shipping LLM, RAG, and multi-agent systems from proof-of-concept to production. Building Physical AI on the side: robotic arms driven by VLA models.',
+  home = false,
 } = Astro.props as Props;
 ---
 <!doctype html>
@@ -30,24 +34,45 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,400&family=Space+Grotesk:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap"
       rel="stylesheet"
     />
-    <!-- Flag motion support before first paint so CSS can hide elements
-         that JS is about to animate in (no flash, no hidden content when
-         the visitor prefers reduced motion). -->
+    <!-- Pick the theme before first paint (no flash): saved choice, else OS preference. -->
     <script is:inline>
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('motion');
-      }
+      (function () {
+        var t;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'night' && t !== 'day' && t !== 'dusk') {
+          t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'day' : 'night';
+        }
+        document.documentElement.dataset.theme = t;
+        // TEMPORARY design review: which sidebar option to show (a–d)
+        var v;
+        try { v = localStorage.getItem('sidebar-variant'); } catch (e) {}
+        document.documentElement.dataset.variant = /^[a-d]$/.test(v || '') ? v : 'a';
+      })();
     </script>
+    <meta property="og:image" content={new URL(withBase('/avatar.png'), Astro.site)} />
   </head>
   <body>
-    <Nav />
-    <main>
+    <!-- Cursor-following glow behind everything (site.js moves it). -->
+    <div class="spotlight" data-spotlight aria-hidden="true"></div>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <div class="read-progress" aria-hidden="true"><span data-read-progress></span></div>
+    <div class="top-controls"><ThemeToggle compact /></div>
+    {home ? (
       <slot />
-    </main>
-    <Footer />
+    ) : (
+      <div class="page">
+        <header class="page-header">
+          <a class="back-link" href={withBase('/')}><span aria-hidden="true">←</span> Ali Alouane</a>
+        </header>
+        <main id="content">
+          <slot />
+        </main>
+        <Footer />
+      </div>
+    )}
     <script src="../scripts/site.js"></script>
   </body>
 </html>

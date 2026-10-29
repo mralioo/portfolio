@@ -1,0 +1,671 @@
+---
+// Interactive "POC → Production" lifecycle: a clickable pipeline of stages
+// (tabs) with a flowing data packet, a loop-back arc from the last stage to
+// the first, autoplay with a countdown ring, and a detail panel per stage.
+// Without JS every panel renders stacked, so the content is never hidden.
+import type { LifecycleStage, LifecycleIcon } from '../data/skills';
+
+interface Props {
+  stages: LifecycleStage[];
+  loop?: string;
+}
+const { stages, loop } = Astro.props as Props;
+
+// 24×24 stroke icons (static markup, not user content)
+const icons: Record<LifecycleIcon, string> = {
+  lightbulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/>',
+  database: '<ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v6.5c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V5.5"/><path d="M4.5 12v6.3c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V12"/>',
+  agents: '<circle cx="12" cy="5" r="2.3"/><circle cx="5" cy="18.5" r="2.3"/><circle cx="19" cy="18.5" r="2.3"/><circle cx="12" cy="13" r="1.6"/><path d="M12 7.3v4.1M10.8 14.1l-4.2 2.9M13.2 14.1l4.2 2.9"/>',
+  gauge: '<path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l4.2-5.2"/><circle cx="12" cy="17" r="1.4"/><path d="M7 12.5l-.9-.6M12 9V8M17.9 11.9l-.9.6"/>',
+  rocket: '<path d="M14.5 4.2C17 2.3 21 2.6 21 2.6s.3 4-1.6 6.5L12.4 16 8 11.6l6.5-7.4Z"/><path d="M8 11.6H4.6l2.6-3.3h4.1M12.4 16v3.4l3.3-2.6v-4.1"/><path d="M6.2 15.4c-1.6.6-2.4 3.6-2.4 3.6s3-.8 3.6-2.4"/>',
+};
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<div class="lc" data-lifecycle data-persona-source data-persona={stages[0]?.persona} style={`--n:${stages.length}`}>
+  <div class="lc-track">
+    <div class="lc-rail" aria-hidden="true">
+      <span class="lc-rail-fill" data-lc-fill></span>
+      <span class="lc-packet"></span>
+      <span class="lc-packet lc-packet-2"></span>
+    </div>
+    <div class="lc-nodes" role="tablist" aria-label="GenAI lifecycle stages" data-lc-tabs>
+      {stages.map((s, i) => (
+        <button
+          type="button"
+          class:list={['lc-node', { 'is-active': i === 0 }]}
+          role="tab"
+          id={`lc-tab-${i}`}
+          aria-controls={`lc-panel-${i}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-lc-tab={i}
+          data-persona={s.persona}
+        >
+          <span class="lc-dot">
+            <svg class="lc-icon" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[s.icon] ?? icons.lightbulb} />
+            <svg class="lc-timer" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28" pathLength="100" /></svg>
+          </span>
+          <span class="lc-step">{s.step}</span>
+          <span class="lc-short">{s.short || s.title}</span>
+        </button>
+      ))}
+    </div>
+    {loop && (
+      <div class="lc-loop" aria-hidden="true">
+        <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+          <path d="M1000 0 V18 Q1000 38 980 38 H20 Q0 38 0 18 V0" vector-effect="non-scaling-stroke" />
+        </svg>
+        <span class="lc-loop-head"></span>
+        <span class="lc-loop-label">↻ {loop}</span>
+      </div>
+    )}
+  </div>
+
+  <div class="lc-stage" data-lc-stage>
+    {stages.map((s, i) => (
+      <div
+        class:list={['lc-panel', { 'is-active': i === 0 }]}
+        role="tabpanel"
+        id={`lc-panel-${i}`}
+        aria-labelledby={`lc-tab-${i}`}
+        data-lc-panel={i}
+      >
+        <span class="lc-watermark" aria-hidden="true">{s.step}</span>
+        <p class="lc-kicker">Stage {s.step} of {pad(stages.length)}</p>
+        <h3>{s.title}</h3>
+        <p class="lc-pitch">{s.pitch}</p>
+        {(s.activities || s.outcome) && (
+          <dl class="lc-meta">
+            {s.activities && <div><dt>What I do</dt><dd>{s.activities}</dd></div>}
+            {s.outcome && <div><dt>You get</dt><dd>{s.outcome}</dd></div>}
+          </dl>
+        )}
+        <ul class="tag-row lc-tags" aria-label="Tools">
+          {s.tools.map((t, k) => <li class="tag" style={`--k:${k}`}>{t}</li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="lc-controls">
+    <button type="button" class="lc-btn" data-lc-prev aria-label="Previous stage">←</button>
+    <span class="lc-count" data-lc-count aria-live="polite">01 / {pad(stages.length)}</span>
+    <button type="button" class="lc-btn" data-lc-next aria-label="Next stage">→</button>
+    <button type="button" class="lc-btn lc-play" data-lc-play aria-pressed="true">Pause tour</button>
+  </div>
+</div>
+
+<style>
+  .lc {
+    --node: 58px;
+    --dur: 6s;
+    position: relative;
+    margin-top: 0.5rem;
+  }
+
+  /* ---------- track ---------- */
+  .lc-track {
+    position: relative;
+    padding-bottom: 3.25rem;
+  }
+
+  .lc-rail {
+    position: absolute;
+    top: calc(var(--node) / 2 - 1px);
+    left: calc(100% / var(--n) / 2);
+    right: calc(100% / var(--n) / 2);
+    height: 2px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .lc-rail-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* data packets streaming through the pipeline */
+  .lc-packet {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 40px;
+    height: 6px;
+    border-radius: 6px;
+    background: radial-gradient(closest-side, var(--accent-ink), var(--accent) 45%, transparent);
+    filter: drop-shadow(0 0 6px var(--accent));
+    animation: lc-flow 3.2s linear infinite;
+  }
+
+  .lc-packet-2 {
+    animation-delay: -1.6s;
+  }
+
+  @keyframes lc-flow {
+    from { transform: translateX(-40px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    to { transform: translateX(var(--rail-w, 600px)); opacity: 0; }
+  }
+
+  .lc-nodes {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n), 1fr);
+  }
+
+  .lc-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .lc-dot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--node);
+    height: var(--node);
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--bg);
+    color: var(--text-muted);
+    transition: border-color 0.35s, color 0.35s, background 0.35s, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s;
+  }
+
+  .lc-icon {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .lc-timer {
+    position: absolute;
+    inset: -5px;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    transform: rotate(-90deg);
+    pointer-events: none;
+  }
+
+  .lc-timer circle {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+
+  .lc-step {
+    margin-top: 0.45rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    transition: color 0.3s;
+  }
+
+  .lc-short {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-align: center;
+    transition: color 0.3s;
+  }
+
+  .lc-node:hover .lc-dot {
+    border-color: color-mix(in srgb, var(--accent) 67%, transparent);
+    color: var(--text-strong);
+    transform: translateY(-3px);
+  }
+
+  .lc-node.is-done .lc-dot {
+    border-color: color-mix(in srgb, var(--accent-strong) 53%, transparent);
+    color: var(--accent);
+  }
+
+  .lc-node.is-active .lc-dot {
+    border-color: var(--accent);
+    background: var(--accent-deep);
+    color: var(--accent-ink);
+    transform: scale(1.12);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-strong) 10%, transparent), 0 0 28px color-mix(in srgb, var(--accent-strong) 25%, transparent);
+  }
+
+  .lc-node.is-active .lc-step,
+  .lc-node.is-active .lc-short {
+    color: var(--text-strong);
+  }
+
+  .lc-node:focus-visible {
+    outline: none;
+  }
+
+  .lc-node:focus-visible .lc-dot {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  /* autoplay countdown ring on the active node */
+  .lc.is-playing .lc-node.is-active .lc-timer circle {
+    opacity: 1;
+    animation: lc-countdown var(--dur) linear forwards;
+  }
+
+  .lc.is-playing:hover .lc-node.is-active .lc-timer circle,
+  .lc.is-playing:focus-within .lc-node.is-active .lc-timer circle {
+    animation-play-state: paused;
+  }
+
+  @keyframes lc-countdown {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* loop-back arc: last stage feeds back into the first */
+  .lc-loop {
+    position: absolute;
+    left: calc(100% / var(--n) / 2);
+    right: calc(100% / var(--n) / 2);
+    bottom: 0.4rem;
+    height: 2.4rem;
+    pointer-events: none;
+  }
+
+  .lc-loop svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .lc-loop path {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 6;
+    animation: lc-dash 1.2s linear infinite;
+  }
+
+  @keyframes lc-dash {
+    to { stroke-dashoffset: 20; }
+  }
+
+  .lc-loop-head {
+    position: absolute;
+    left: -4.5px;
+    top: -4px;
+    border: 5px solid transparent;
+    border-bottom: 7px solid var(--line-strong);
+    border-top: 0;
+  }
+
+  .lc-loop-label {
+    position: absolute;
+    left: 50%;
+    bottom: -0.55rem;
+    transform: translateX(-50%);
+    padding: 0 0.75rem;
+    background: var(--bg, var(--bg));
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* ---------- detail panel ---------- */
+  .lc-stage {
+    position: relative;
+    margin-top: 1.75rem;
+  }
+
+  .lc.is-ready .lc-stage {
+    display: grid;
+  }
+
+  .lc-panel {
+    position: relative;
+    overflow: hidden;
+    padding: 1.75rem 1.75rem 1.5rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background:
+      radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--accent-deep) 25%, transparent), transparent 55%),
+      color-mix(in srgb, var(--surface-base) 30%, transparent);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 10%, transparent);
+  }
+
+  .lc:not(.is-ready) .lc-panel + .lc-panel {
+    margin-top: 1rem;
+  }
+
+  .lc.is-ready .lc-panel {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(calc(var(--dir, 1) * 28px));
+    transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0.45s;
+  }
+
+  .lc.is-ready .lc-panel.is-leaving {
+    transform: translateX(calc(var(--dir, 1) * -28px));
+  }
+
+  .lc.is-ready .lc-panel.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity 0.45s ease 0.1s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, visibility 0s;
+  }
+
+  .lc-watermark {
+    position: absolute;
+    right: 1.25rem;
+    top: -0.9rem;
+    font-size: 7rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in srgb, var(--accent) 13%, transparent);
+    pointer-events: none;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lc.is-ready .lc-panel:not(.is-active) .lc-watermark {
+    transform: translateY(18px);
+  }
+
+  .lc-kicker {
+    margin: 0 0 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+
+  .lc-panel h3 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .lc-pitch {
+    margin: 0.6rem 0 0;
+    max-width: 62ch;
+    font-size: 0.95rem;
+  }
+
+  .lc-meta {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1.25rem 0 0;
+  }
+
+  @media (min-width: 640px) {
+    .lc-meta {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .lc-meta div {
+    padding: 0.75rem 0.9rem;
+    border-left: 2px solid color-mix(in srgb, var(--accent-strong) 40%, transparent);
+    background: color-mix(in srgb, var(--bg) 50%, transparent);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .lc-meta dt {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .lc-meta dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.88rem;
+    color: var(--text-strong);
+  }
+
+  .lc-tags {
+    margin-top: 1.25rem;
+  }
+
+  /* tools pop in one after another on the active stage */
+  .lc.is-ready .lc-panel .tag {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .lc.is-ready .lc-panel.is-active .tag {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.25s + var(--k) * 45ms);
+  }
+
+  /* ---------- controls ---------- */
+  .lc-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .lc:not(.is-ready) .lc-controls {
+    display: none;
+  }
+
+  .lc-btn {
+    min-width: 36px;
+    height: 32px;
+    padding: 0 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-strong);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .lc-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .lc-play {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--text);
+  }
+
+  .lc-count {
+    min-width: 4.5rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  @media (max-width: 560px) {
+    .lc {
+      --node: 46px;
+    }
+
+    .lc-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .lc-short {
+      font-size: 0.66rem;
+    }
+
+    .lc-step {
+      display: none;
+    }
+
+    .lc-panel {
+      padding: 1.25rem 1.1rem;
+    }
+
+    .lc-watermark {
+      font-size: 5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lc-packet,
+    .lc-loop path {
+      animation: none;
+    }
+
+    .lc-packet {
+      display: none;
+    }
+
+    .lc *,
+    .lc.is-ready .lc-panel {
+      transition-duration: 0.01ms !important;
+      transition-delay: 0s !important;
+    }
+  }
+</style>
+
+<script>
+  // Tabs behavior + autoplay tour. Autoplay runs only while the lifecycle is
+  // on screen, pauses on hover/focus (CSS pauses the ring), and stops for
+  // good once the visitor picks a stage themselves.
+  document.querySelectorAll<HTMLElement>('[data-lifecycle]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-lc-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-lc-panel]'));
+    const fill = root.querySelector<HTMLElement>('[data-lc-fill]');
+    const rail = root.querySelector<HTMLElement>('.lc-rail');
+    const count = root.querySelector<HTMLElement>('[data-lc-count]');
+    const playBtn = root.querySelector<HTMLButtonElement>('[data-lc-play]');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const n = tabs.length;
+    const pad = (v: number) => String(v).padStart(2, '0');
+    let active = 0;
+    let autoplay = !reduceMotion;
+    let onScreen = false;
+
+    root.classList.add('is-ready');
+
+    const syncRail = () => rail && root.style.setProperty('--rail-w', `${rail.offsetWidth + 40}px`);
+    syncRail();
+    window.addEventListener('resize', syncRail);
+
+    function show(next: number, focus = false) {
+      next = (next + n) % n;
+      const dir = next >= active ? 1 : -1;
+      root.style.setProperty('--dir', String(dir));
+      panels.forEach((p, i) => {
+        p.classList.toggle('is-leaving', i === active && i !== next);
+        p.classList.toggle('is-active', i === next);
+      });
+      tabs.forEach((t, i) => {
+        const on = i === next;
+        t.classList.toggle('is-active', on);
+        t.classList.toggle('is-done', i < next);
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        // restart the countdown ring animation on the new node
+        if (on) {
+          const c = t.querySelector('circle');
+          if (c) {
+            c.style.animation = 'none';
+            void c.getBoundingClientRect();
+            c.style.animation = '';
+          }
+        }
+      });
+      if (fill) fill.style.transform = `scaleX(${n > 1 ? next / (n - 1) : 1})`;
+      if (count) count.textContent = `${pad(next + 1)} / ${pad(n)}`;
+      // let the avatar change hats for this stage
+      const persona = tabs[next].dataset.persona;
+      if (persona && root.dataset.persona !== persona) {
+        root.dataset.persona = persona;
+        document.dispatchEvent(new CustomEvent('persona:hint'));
+      }
+      if (focus) tabs[next].focus();
+      active = next;
+    }
+
+    function setPlaying(on: boolean) {
+      autoplay = on;
+      if (playBtn) {
+        playBtn.textContent = on ? 'Pause tour' : 'Play tour';
+        playBtn.setAttribute('aria-pressed', String(on));
+      }
+      root.classList.toggle('is-playing', autoplay && onScreen);
+    }
+
+    // the countdown ring finishing = time to advance
+    root.addEventListener('animationend', (e) => {
+      if ((e as AnimationEvent).animationName.includes('lc-countdown') && autoplay) show(active + 1);
+    });
+
+    const pick = (i: number, focus = false) => {
+      setPlaying(false);
+      show(i, focus);
+    };
+
+    tabs.forEach((t, i) => t.addEventListener('click', () => pick(i)));
+
+    // Mouse/trackpad: hovering a stage reveals it. A short intent delay keeps
+    // a quick sweep across the row from flickering; hover doesn't stop the
+    // tour for good (the ring just pauses), only a click does.
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let hoverTimer: number | undefined;
+      tabs.forEach((t, i) => {
+        t.addEventListener('pointerenter', () => {
+          clearTimeout(hoverTimer);
+          hoverTimer = window.setTimeout(() => i !== active && show(i), 110);
+        });
+        t.addEventListener('pointerleave', () => clearTimeout(hoverTimer));
+      });
+    }
+    root.querySelector('[data-lc-prev]')?.addEventListener('click', () => pick(active - 1));
+    root.querySelector('[data-lc-next]')?.addEventListener('click', () => pick(active + 1));
+    playBtn?.addEventListener('click', () => setPlaying(!autoplay));
+
+    root.querySelector('[data-lc-tabs]')?.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      const map: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: n - 1 };
+      if (key in map) {
+        e.preventDefault();
+        pick(map[key], true);
+      }
+    });
+
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      root.classList.toggle('is-playing', autoplay && onScreen);
+    }, { threshold: 0.4 }).observe(root);
+
+    if (reduceMotion) setPlaying(false);
+    show(0);
+  });
+</script>

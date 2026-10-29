@@ -5,6 +5,7 @@ stack: ["NVIDIA Nemotron", "Multi-Agent", "Nebius Token Factory", "Tavily", "Fas
 repo: "https://github.com/EmilieD8/Track_records"
 featured: true
 badge: "Nebius × NVIDIA Hackathon · 10.2026"
+image: "/projects/supplyguard-agents.png"
 order: 1
 ---
 

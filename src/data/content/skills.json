@@ -1,0 +1,196 @@
+{
+  "languages": [
+    {
+      "label": "German",
+      "level": 4
+    },
+    {
+      "label": "English",
+      "level": 4
+    },
+    {
+      "label": "French",
+      "level": 4
+    },
+    {
+      "label": "Arabic",
+      "level": 5
+    }
+  ],
+  "lifecycle": [
+    {
+      "step": "01",
+      "title": "Discover & Prototype",
+      "short": "Discover",
+      "icon": "lightbulb",
+      "outcome": "Clickable GenAI demo in days",
+      "activities": "Use-case framing, model choice, prompt prototypes",
+      "pitch": "Turn a fuzzy business problem into a working GenAI proof-of-concept in days, not quarters — rapid prompting, model selection, and a demo stakeholders can click.",
+      "tools": [
+        "Prompt Engineering",
+        "Claude / GPT / Gemini",
+        "Llama · Qwen · Nemotron",
+        "Streamlit",
+        "Jupyter",
+        "Design Thinking"
+      ],
+      "persona": "minimalist"
+    },
+    {
+      "step": "02",
+      "title": "Retrieve & Ground",
+      "short": "Ground",
+      "icon": "database",
+      "outcome": "Answers cited to your own data",
+      "activities": "Ingestion, chunking, hybrid search, re-ranking",
+      "pitch": "Production-grade RAG: ingestion, chunking, hybrid search, re-ranking, and knowledge graphs — so every answer is grounded and cited, never hallucinated.",
+      "tools": [
+        "RAG",
+        "GraphRAG",
+        "Vector DBs (Qdrant, pgvector)",
+        "Neo4j",
+        "Embeddings & Re-rankers",
+        "Hybrid Search",
+        "Docling / OCR"
+      ],
+      "persona": "researcher"
+    },
+    {
+      "step": "03",
+      "title": "Orchestrate Agents",
+      "short": "Orchestrate",
+      "icon": "agents",
+      "outcome": "Multi-agent system with guardrails",
+      "activities": "Supervisor + specialists, MCP tools, human-in-the-loop",
+      "pitch": "Multi-agent systems with supervisors, specialists, and verifiers — tool calling over MCP, guardrails, and human-in-the-loop by design.",
+      "tools": [
+        "LangGraph",
+        "LangChain",
+        "Google ADK",
+        "MCP / FastMCP",
+        "Tool Calling",
+        "Guardrails",
+        "LiteLLM"
+      ],
+      "persona": "engineer"
+    },
+    {
+      "step": "04",
+      "title": "Evaluate & Optimize",
+      "short": "Evaluate",
+      "icon": "gauge",
+      "outcome": "Measured quality, latency & cost",
+      "activities": "Golden sets, LLM-as-judge, regression suites, tuning",
+      "pitch": "If it isn't measured, it isn't shipped. LLM-as-a-judge, golden datasets, regression suites, latency/cost tuning, and fine-tuning when prompting hits its ceiling.",
+      "tools": [
+        "LLM Evals",
+        "LLM-as-a-Judge",
+        "RAGAS",
+        "LoRA / PEFT Fine-tuning",
+        "Quantization",
+        "Observability (Langfuse)"
+      ],
+      "persona": "researcher"
+    },
+    {
+      "step": "05",
+      "title": "Deploy & Scale",
+      "short": "Deploy",
+      "icon": "rocket",
+      "outcome": "Production service that scales",
+      "activities": "CI/CD, containers, serving, monitoring, cost control",
+      "pitch": "Containerized, CI/CD-driven, cloud-native deployments with streaming APIs, model serving, monitoring, and cost control — LLMOps end to end.",
+      "tools": [
+        "FastAPI + SSE",
+        "Docker",
+        "Kubernetes",
+        "vLLM",
+        "AWS · GCP · Nebius",
+        "GitHub Actions",
+        "MLflow",
+        "Airflow"
+      ],
+      "persona": "builder"
+    }
+  ],
+  "skillGroups": [
+    {
+      "label": "Generative AI",
+      "icon": "spark",
+      "blurb": "LLM products, RAG and multi-agent systems, designed for real users rather than demos.",
+      "items": [
+        "LLMs",
+        "Agentic AI",
+        "Multi-Agent Systems",
+        "RAG",
+        "Prompt Engineering",
+        "Fine-tuning",
+        "Context Engineering"
+      ],
+      "persona": "engineer"
+    },
+    {
+      "label": "ML & Deep Learning",
+      "icon": "brain",
+      "blurb": "Classic ML and deep learning, from sensor time-series to reinforcement learning.",
+      "items": [
+        "PyTorch",
+        "TensorFlow",
+        "Hugging Face",
+        "Scikit-learn",
+        "Time-Series",
+        "Sensor Fusion",
+        "Reinforcement Learning"
+      ],
+      "persona": "researcher"
+    },
+    {
+      "label": "LLMOps & Cloud",
+      "icon": "cloud",
+      "blurb": "Pipelines, tracking and cloud infrastructure that keep models reliable in production.",
+      "items": [
+        "MLOps / LLMOps",
+        "Docker",
+        "CI/CD",
+        "AWS",
+        "GCP",
+        "MLflow",
+        "Airflow",
+        "DVC"
+      ],
+      "persona": "builder"
+    },
+    {
+      "label": "Engineering",
+      "icon": "code",
+      "blurb": "Solid software engineering: typed code, clean APIs and streaming backends.",
+      "items": [
+        "Python",
+        "TypeScript",
+        "C++",
+        "Swift",
+        "FastAPI",
+        "REST & Streaming APIs",
+        "SQL"
+      ],
+      "persona": "minimalist"
+    },
+    {
+      "label": "Physical AI & Embedded",
+      "icon": "robot",
+      "blurb": "Robots that learn: VLA policies, simulation, edge inference and the electronics underneath.",
+      "items": [
+        "VLA Models",
+        "Imitation Learning",
+        "ROS 2",
+        "MuJoCo / Isaac Sim",
+        "Edge AI (CoreML)",
+        "Microcontrollers",
+        "Electronics & PCB"
+      ],
+      "persona": "illustrated"
+    }
+  ],
+  "lifecycleLoop": "Monitor in production → learn → iterate",
+  "languagesPersona": "original"
+}

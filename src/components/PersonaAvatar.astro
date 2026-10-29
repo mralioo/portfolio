@@ -1,0 +1,135 @@
+---
+// Profile avatar that can "change hats": every persona image is stacked
+// inside, and persona.js shows the one matching what the visitor is
+// reading (section, lifecycle stage, tech-stack tab).
+import { personas, personasEnabled } from '../data/personas';
+import { withBase } from '../lib/url';
+
+interface Props {
+  variant?: 'sidebar' | 'float';
+}
+const { variant = 'sidebar' } = Astro.props as Props;
+const list = personasEnabled ? personas : personas.slice(0, 1);
+---
+<div class:list={['persona-avatar', `is-${variant}`]} data-persona-avatar aria-hidden="true">
+  {list.map((p, i) => (
+    <img
+      class:list={['persona-img', { 'is-on': i === 0 }]}
+      src={withBase(p.image)}
+      alt=""
+      width="320"
+      height="320"
+      data-persona-id={p.id}
+      data-persona-label={p.label}
+      loading={i === 0 ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  ))}
+</div>
+
+<style>
+  .persona-avatar {
+    position: relative;
+    flex: none;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(160deg, var(--avatar-from), var(--avatar-to));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent), 0 12px 30px -12px var(--shadow);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* slow rotating light ring */
+  .persona-avatar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0 70%, color-mix(in srgb, var(--accent) 60%, transparent) 85%, transparent);
+    mask: radial-gradient(circle, transparent 64%, #000 66%);
+    animation: pa-spin 7s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes pa-spin {
+    to { transform: rotate(1turn); }
+  }
+
+  /* stacked looks: the incoming one drops in like a hat being put on */
+  .persona-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: translateY(-14%) scale(1.12) rotate(-6deg);
+    transition: opacity 0.45s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .persona-img.is-on {
+    opacity: 1;
+    transform: none;
+    z-index: 1;
+  }
+
+  .persona-img.is-leaving {
+    opacity: 0;
+    transform: translateY(10%) scale(0.92) rotate(4deg);
+  }
+
+  .persona-avatar.is-swapping {
+    animation: pa-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes pa-pop {
+    40% { transform: scale(0.9) rotate(-3deg); }
+    100% { transform: none; }
+  }
+
+  .is-sidebar {
+    width: clamp(96px, 26vw, 128px);
+    height: clamp(96px, 26vw, 128px);
+  }
+
+  @media (min-width: 1024px) {
+    .is-sidebar {
+      width: clamp(80px, 14vh, 160px);
+      height: clamp(80px, 14vh, 160px);
+    }
+  }
+
+  /* floating mini avatar: appears when the sidebar avatar is off screen (phones) */
+  .is-float {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 40;
+    width: 58px;
+    height: 58px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .is-float.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .persona-avatar::after,
+    .persona-avatar.is-swapping {
+      animation: none;
+    }
+
+    .persona-img,
+    .persona-img.is-leaving {
+      transform: none;
+      transition: opacity 0.2s;
+    }
+  }
+</style>

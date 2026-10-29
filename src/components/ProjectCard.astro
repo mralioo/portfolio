@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/url';
+
 interface Props {
   title: string;
   summary: string;
@@ -7,24 +9,37 @@ interface Props {
   demo?: string;
   href?: string;
   badge?: string;
-  featured?: boolean;
-  index?: number;
+  image?: string;
 }
-const { title, summary, stack, repo, demo, href, badge, featured = false, index } = Astro.props as Props;
+const { title, summary, stack, repo, demo, href, badge, image } = Astro.props as Props;
+const link = href ?? repo ?? demo;
 ---
-<article class:list={['card', 'project-card', 'reveal', { featured }]} data-spotlight>
-  <div class="project-head">
-    {index !== undefined && <span class="project-index">{String(index + 1).padStart(2, '0')}</span>}
-    {badge && <span class="badge">{badge}</span>}
+<li class="entry project reveal">
+  <div class="entry-hover" aria-hidden="true"></div>
+  <div class="entry-body">
+    {badge && <p class="badge">{badge}</p>}
+    <h3>
+      {link ? (
+        <a class="entry-link" href={link}>
+          <span class="entry-link-cover" aria-hidden="true"></span>
+          {title} <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      ) : title}
+    </h3>
+    <p>{summary}</p>
+    <ul class="tag-row" aria-label="Technologies used">
+      {stack.map((s) => <li class="tag">{s}</li>)}
+    </ul>
+    {(repo || demo) && (
+      <p class="entry-extra">
+        {repo && <a href={repo} target="_blank" rel="noreferrer">GitHub ↗</a>}
+        {demo && <a href={demo} target="_blank" rel="noreferrer">Live ↗</a>}
+      </p>
+    )}
   </div>
-  <h3>{href ? <a href={href}>{title}</a> : title}</h3>
-  <p>{summary}</p>
-  <div class="tag-row" style="margin-bottom:1rem;">
-    {stack.map((s) => <span class="tag">{s}</span>)}
-  </div>
-  <div class="links">
-    {href && <a href={href}>Case study →</a>}
-    {repo && <a href={repo} target="_blank" rel="noreferrer">GitHub ↗</a>}
-    {demo && <a href={demo} target="_blank" rel="noreferrer">Live ↗</a>}
-  </div>
-</article>
+  {image ? (
+    <img class="entry-thumb" src={withBase(image)} alt="" loading="lazy" width="200" height="112" />
+  ) : (
+    <div class="entry-thumb placeholder" aria-hidden="true">{title.slice(0, 2)}</div>
+  )}
+</li>

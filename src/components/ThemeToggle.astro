@@ -1,0 +1,103 @@
+---
+// Night / Day / Dusk switch. The choice is saved per visitor; the first
+// visit follows the OS light/dark preference (see BaseLayout's head script).
+// site.js wires the clicks and plays a circular reveal between themes.
+interface Props {
+  // icon-only pill for the fixed top-right corner
+  compact?: boolean;
+}
+const { compact = false } = Astro.props as Props;
+const themes = [
+  { id: 'night', label: 'Night', icon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/>' },
+  { id: 'day', label: 'Day', icon: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>' },
+  { id: 'dusk', label: 'Dusk', icon: '<path d="M3 18h18M6 14a6 6 0 0 1 12 0"/><path d="M12 4v3M4.2 8.2l2 2M19.8 8.2l-2 2M8 22h8"/>' },
+];
+---
+<div class:list={['theme-toggle', { compact }]} role="radiogroup" aria-label="Color theme" data-theme-toggle>
+  <span class="tt-pill" aria-hidden="true"></span>
+  {themes.map((t) => (
+    <button type="button" role="radio" aria-checked="false" aria-label={`${t.label} theme`} data-theme-option={t.id} title={`${t.label} theme`}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" set:html={t.icon} />
+      {!compact && <span>{t.label}</span>}
+    </button>
+  ))}
+</div>
+
+<style>
+  .theme-toggle {
+    position: relative;
+    display: inline-grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-sunk);
+  }
+
+  .tt-pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / 3);
+    border-radius: 999px;
+    background: var(--accent-bg);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
+    transform: translateX(calc(var(--tt-i, 0) * 100%));
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  button {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  button:hover {
+    color: var(--text-strong);
+  }
+
+  button[aria-checked='true'] {
+    color: var(--accent);
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .compact {
+    background: color-mix(in srgb, var(--bg-sunk) 80%, transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .compact button {
+    width: 30px;
+    height: 28px;
+    padding: 0;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

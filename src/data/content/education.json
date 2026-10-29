@@ -1,0 +1,65 @@
+{
+  "certificates": [
+    {
+      "title": "10-Week Startup Bootcamp",
+      "org": "Berlin Startup School",
+      "date": "Summer 2026",
+      "detail": "Validated H.AI (Humanized AI), an agentic co-planner for railway electrical engineering, through structured customer discovery with practising planners; MVP and business-model fundamentals.",
+      "milestones": [
+        {
+          "date": "",
+          "title": "Validated H.AI with practising railway planners",
+          "link": "/projects/humanized-ai"
+        }
+      ]
+    },
+    {
+      "title": "Design Thinking Intensive Training",
+      "org": ".msg",
+      "date": "05/2024",
+      "detail": "User research, problem definition, prototyping, and user testing.",
+      "milestones": []
+    }
+  ],
+  "education": [
+    {
+      "degree": "M.Sc. Electrical Engineering",
+      "org": "Technical University of Berlin",
+      "start": "2018",
+      "end": "2024",
+      "detail": "Specializing in communication networks and signal processing.",
+      "thesis": {
+        "title": "Deep Learning Approaches to Decoding Sensorimotor Rhythms for Brain-Computer Interfaces",
+        "group": "Neurotechnology Group"
+      },
+      "milestones": [
+        {
+          "date": "2024",
+          "title": "Master's thesis: deep learning for decoding sensorimotor rhythms (BCI)"
+        },
+        {
+          "date": "",
+          "title": "Built BBCPy_DNN, the deep-learning interface for TU Berlin's BBCPy toolbox",
+          "link": "/projects/bbcpy-dnn"
+        }
+      ]
+    },
+    {
+      "degree": "B.Sc. Electrical Engineering and Information Technology",
+      "org": "University of Stuttgart",
+      "start": "2013",
+      "end": "2017",
+      "detail": "Specializing in communication networks and signal processing.",
+      "thesis": {
+        "title": "Multidimensional Energy Disaggregation in Residential Buildings via Deep Learning",
+        "group": "Institute for Signal Processing"
+      },
+      "milestones": [
+        {
+          "date": "2017",
+          "title": "Bachelor's thesis: multidimensional energy disaggregation via deep learning"
+        }
+      ]
+    }
+  ]
+}

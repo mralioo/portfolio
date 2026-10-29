@@ -1,0 +1,36 @@
+{
+  "physicalAI": {
+    "title": "Robotic arm × Vision-Language-Action models",
+    "status": "Building now",
+    "summary": "Designing and building a robotic arm from the motors up, then giving it a brain: embedding VLA models trained with imitation learning from teleoperated demonstrations and refined with reinforcement learning — closing the loop between foundation models and the physical world.",
+    "tracks": [
+      {
+        "title": "Learning",
+        "items": [
+          "Vision-Language-Action (VLA) policies",
+          "Imitation learning from teleop demos",
+          "RL fine-tuning",
+          "Sim-to-real transfer"
+        ]
+      },
+      {
+        "title": "Hardware",
+        "items": [
+          "Arm mechanics & servo actuation",
+          "Sensors & cameras",
+          "Power electronics",
+          "Wiring & PCB prototyping"
+        ]
+      },
+      {
+        "title": "Embedded",
+        "items": [
+          "Microcontroller firmware",
+          "Motor control loops",
+          "On-device inference",
+          "ROS 2 integration"
+        ]
+      }
+    ]
+  }
+}
